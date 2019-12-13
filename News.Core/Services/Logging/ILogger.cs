@@ -18,5 +18,10 @@ namespace News.Core.Services.Logging
         /// Error logging
         /// </summary>
         void Error(Exception exception);
+
+        /// <summary>
+        /// Last error string
+        /// </summary>
+        string LastError { get; }
     }
 }

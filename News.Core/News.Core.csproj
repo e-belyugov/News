@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="Current">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Services\Web\TestData\kuzpresseconomy29-11-201971483.html" />
+    <None Remove="Services\Web\TestData\kuzpresspolitics29-11-201971551.html" />
+    <None Remove="Services\Web\TestData\kuzpresssport29-11-201971552.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Services\Web\TestData\kuzpress.html" />
+    <EmbeddedResource Include="Services\Web\TestData\kuzpresseconomy29-11-201971483.html" />
+    <EmbeddedResource Include="Services\Web\TestData\kuzpresspolitics29-11-201971551.html" />
+    <EmbeddedResource Include="Services\Web\TestData\kuzpresssport29-11-201971552.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.17" />
+    <PackageReference Include="MvvmCross" Version="6.4.1" />
+    <PackageReference Include="MvvmCross.Plugin.Json" Version="6.4.1" />
+  </ItemGroup>
+</Project>

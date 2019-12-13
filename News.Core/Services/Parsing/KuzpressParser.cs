@@ -40,10 +40,9 @@ namespace News.Core.Services.Parsing
         {
             try
             {
-                // Тест
+                // Тест 2
                 //byte[] image = await _webService.GetImageAsync("http://kuzpress.ru/i/info/600x600/35/35921.jpg");
                 //byte[] image = await _webService.GetImageAsync("http://kuzpress.ru");
-
 
                 _articles.Clear();
 

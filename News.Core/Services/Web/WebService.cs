@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
 using System.Net;
+using News.Core.Services.Logging;
 
 namespace News.Core.Services.Web
 {
@@ -14,6 +15,17 @@ namespace News.Core.Services.Web
     /// </summary>
     public class WebService : IWebService
     {
+        // Logger
+        private readonly ILogger _logger;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public WebService(ILogger logger)
+        {
+            _logger = logger;
+        }
+
         /// <summary>
         /// Getting image data from web page
         /// </summary>
@@ -32,9 +44,9 @@ namespace News.Core.Services.Web
                 }
                 return request;
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Debug.WriteLine("\tERROR {0}", ex.Message);
+                _logger.Error(e);
                 return null;
             }
         }
@@ -64,9 +76,9 @@ namespace News.Core.Services.Web
 
                 return content;
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Debug.WriteLine("\tERROR {0}", ex.Message);
+                _logger.Error(e);
                 return content;
             }
         }
@@ -100,9 +112,9 @@ namespace News.Core.Services.Web
 
                 return image;
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Debug.WriteLine("\tERROR {0}", ex.Message);
+                _logger.Error(e);
                 return null;
             }
         }

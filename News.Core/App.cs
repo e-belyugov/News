@@ -9,6 +9,7 @@ using News.Core.Services;
 using News.Core.Services.Parsing;
 using News.Core.Services.Web;
 using News.Core.Services.Database;
+using News.Core.Services.Logging;
 using MvvmCross.Plugin.Json;
 using MvvmCross.Base;
 
@@ -24,7 +25,7 @@ namespace News.Core
         /// </summary>
         public override void Initialize()
         {
-            //Mvx.IoCProvider.RegisterType<IWebService, MockWebService>();
+            Mvx.IoCProvider.RegisterType<ILogger, Logger>();
             Mvx.IoCProvider.RegisterType<IWebService, WebService>();
             Mvx.IoCProvider.RegisterType<IParserList, ParserList>();
             Mvx.IoCProvider.RegisterType<IArticleDatabase, ArticleDatabase>();

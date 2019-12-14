@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using News.Core.Models;
 using News.Core.Services.Web;
+using News.Core.Services.Logging;
 using System.Diagnostics;
 using HtmlAgilityPack;
 using System.Threading.Tasks;
@@ -25,12 +26,16 @@ namespace News.Core.Services.Parsing
         // Web service
         private readonly IWebService _webService;
 
+        // Logger
+        private readonly ILogger _logger;
+
         /// <summary>
         /// Constructor
         /// </summary>
-        public KuzpressParser(IWebService webService)
+        public KuzpressParser(IWebService webService, ILogger logger)
         {
             _webService = webService;
+            _logger = logger;
         }
 
         /// <summary>
@@ -137,9 +142,9 @@ namespace News.Core.Services.Parsing
 
                 return _articles;
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Debug.WriteLine("\tERROR {0}", ex.Message);
+                _logger.Error(e);
                 _articles.Clear();
                 return _articles;
             }

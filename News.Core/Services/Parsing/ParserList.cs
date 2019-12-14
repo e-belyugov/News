@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using News.Core.Services.Web;
+using News.Core.Services.Logging;
 
 namespace News.Core.Services.Parsing
 {
@@ -13,9 +14,9 @@ namespace News.Core.Services.Parsing
         /// <summary>
         /// Constructor
         /// </summary>
-        public ParserList(IWebService webService)
+        public ParserList(IWebService webService, ILogger logger)
         {
-            IParser kuzpressParser = new KuzpressParser(webService);
+            IParser kuzpressParser = new KuzpressParser(webService, logger);
             Parsers.Add(kuzpressParser);
         }
 

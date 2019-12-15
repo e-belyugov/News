@@ -38,9 +38,12 @@ namespace News.Core.Services.Web
                 if (proxy != null)
                 {
                     string proxyuri = proxy.GetProxy(request.RequestUri).ToString();
-                    request.UseDefaultCredentials = true;
-                    request.Proxy = new WebProxy(proxyuri, false);
-                    request.Proxy.Credentials = new NetworkCredential("e_belyugov", "CrystalPalace22");
+                    if (!proxyuri.Contains(url))
+                    {
+                        request.UseDefaultCredentials = true;
+                        request.Proxy = new WebProxy(proxyuri, false);
+                        request.Proxy.Credentials = new NetworkCredential("e_belyugov", "CrystalPalace22");
+                    }
                 }
                 return request;
             }

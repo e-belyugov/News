@@ -25,8 +25,9 @@ namespace News.Core
         /// </summary>
         public override void Initialize()
         {
-            Mvx.IoCProvider.RegisterType<ILogger, Logger>();
-            Mvx.IoCProvider.RegisterType<IWebService, WebService>();
+            Mvx.IoCProvider.RegisterSingleton<ILogger>(new Logger());
+            //Mvx.IoCProvider.RegisterType<IWebService, WebService>();
+            Mvx.IoCProvider.RegisterType<IWebService, MockWebService>();
             Mvx.IoCProvider.RegisterType<IParserList, ParserList>();
             Mvx.IoCProvider.RegisterType<IArticleDatabase, ArticleDatabase>();
             Mvx.IoCProvider.RegisterType<IArticleService, ArticleService>();

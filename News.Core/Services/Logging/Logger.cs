@@ -11,8 +11,14 @@ namespace News.Core.Services.Logging
         /// <summary>
         /// Last error description
         /// </summary>
-        private string _lastError = "";
-        public string LastError { get => _lastError; }
+        public Logger()
+        {
+        }
+
+        /// <summary>
+        /// Last error description
+        /// </summary>
+        public string LastError { get; private set; } = "";
 
         /// <summary>
         /// Info logging
@@ -28,7 +34,7 @@ namespace News.Core.Services.Logging
         public void Error(Exception exception)
         {
             string errorMessage = exception.Message;
-            _lastError = errorMessage;
+            if (LastError == "") LastError = errorMessage;
             Debug.WriteLine("\tERROR {0}", errorMessage);
         }
     }

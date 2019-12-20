@@ -78,7 +78,11 @@ namespace News.Core.ViewModels
         /// Last error string
         /// </summary>
         private string _lastError = "";
-        public string LastError { get => _lastError; }
+        public string LastError 
+        { 
+            get => _lastError;
+            set => SetProperty(ref _lastError, value);
+        }
 
         /// <summary>
         /// Constructor
@@ -120,12 +124,14 @@ namespace News.Core.ViewModels
                 _articles = await _articleService.GetArticlesAsync();
                 await RaisePropertyChanged(nameof(Articles));
 
+                _lastError = _articleService.LastError;
+                await RaisePropertyChanged(nameof(LastError));
+
                 IsBusy = false;
             }
             catch (Exception)
             {
                 IsBusy = false;
-                _lastError = _articleService.LastError;
             }
         }
 

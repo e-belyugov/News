@@ -105,6 +105,8 @@ namespace News.Core.Services.Parsing
                                                 innerText = innerText.Replace("&nbsp;", "");
                                                 innerText = innerText.Replace("&hellip;", "...");
                                                 innerText = innerText.Replace("&mdash;", "-");
+                                                innerText = innerText.Replace("&laquo;", "\"");
+                                                innerText = innerText.Replace("&raquo;", "\"");
                                                 text += innerText + Environment.NewLine;
                                             }
                                         }

@@ -1,17 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows;
 using MvvmCross.Platforms.Wpf.Views;
 using News.Core.ViewModels;
 
@@ -22,12 +9,18 @@ namespace News.Wpf.Views
     /// </summary>
     public partial class ArticleView : MvxWpfView
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public ArticleView()
         {
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Back button click
+        /// </summary>
+        private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             ArticleViewModel articleViewModel = DataContext as ArticleViewModel;
             articleViewModel.NavigateCommand.Execute();

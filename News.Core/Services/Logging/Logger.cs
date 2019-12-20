@@ -9,9 +9,9 @@ namespace News.Core.Services.Logging
     public class Logger : ILogger
     {
         /// <summary>
-        /// Last error string
+        /// Last error description
         /// </summary>
-        private string _lastError;
+        private string _lastError = "";
         public string LastError { get => _lastError; }
 
         /// <summary>

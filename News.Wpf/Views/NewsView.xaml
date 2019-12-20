@@ -23,9 +23,11 @@
                     </Style>
                 </Button.Style>
             </Button>
+            <TextBlock Text="{Binding LastError}" Height="30"/>
             <ListView x:Name="NewsListView" Grid.RowSpan="3"
                   SelectedItem="{Binding SelectedArticle}"
                   SelectionChanged="ListView_SelectionChanged"
+                      Loaded="NewsListView_Loaded"
                   BorderThickness="0"
                   ItemsSource="{Binding Articles}" Width="Auto" Height="760">
                 <ListView.ItemTemplate>

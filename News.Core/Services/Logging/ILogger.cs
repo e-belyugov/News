@@ -20,7 +20,7 @@ namespace News.Core.Services.Logging
         void Error(Exception exception);
 
         /// <summary>
-        /// Last error string
+        /// Last error description
         /// </summary>
         string LastError { get; }
     }

@@ -17,5 +17,10 @@ namespace News.Core.Services
         /// Getting string data from web page
         /// </summary>
         Task<IList<Article>> GetArticlesAsync();
+
+        /// <summary>
+        /// Last error description
+        /// </summary>
+        string LastError { get; }
     }
 }

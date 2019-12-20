@@ -75,6 +75,12 @@ namespace News.Core.ViewModels
         }
 
         /// <summary>
+        /// Last error string
+        /// </summary>
+        private string _lastError = "";
+        public string LastError { get => _lastError; }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public NewsViewModel(IArticleService articleService, IMvxNavigationService navigationService)
@@ -108,6 +114,7 @@ namespace News.Core.ViewModels
         {
             try
             {
+                _lastError = "";
                 IsBusy = true;
 
                 _articles = await _articleService.GetArticlesAsync();
@@ -115,10 +122,10 @@ namespace News.Core.ViewModels
 
                 IsBusy = false;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 IsBusy = false;
-                Debug.WriteLine("\tERROR {0}", ex.Message);
+                _lastError = _articleService.LastError;
             }
         }
 

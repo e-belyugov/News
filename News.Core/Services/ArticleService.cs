@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using News.Core.Models;
 using News.Core.Services.Parsing;
 using News.Core.Services.Database;
+using News.Core.Services.Logging;
 using System.Diagnostics;
 
 namespace News.Core.Services
@@ -20,13 +21,22 @@ namespace News.Core.Services
         // Article database
         readonly IArticleDatabase _database;
 
+        // Logger
+        private readonly ILogger _logger;
+
+        /// <summary>
+        /// Last error description
+        /// </summary>
+        public string LastError { get => _logger.LastError; }
+
         /// <summary>
         /// Getting string data from web page
         /// </summary>
-        public ArticleService(IParserList parsers, IArticleDatabase database)
+        public ArticleService(IParserList parsers, IArticleDatabase database, ILogger logger)
         {
             _parsers = parsers;
             _database = database;
+            _logger = logger;
         }
 
         /// <summary>
@@ -39,10 +49,10 @@ namespace News.Core.Services
                 IList<ParserData> parserDataList = _database.GetParserDataAsync();
                 return await _parsers.Parsers[0].Parse(parserDataList[0]);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Debug.WriteLine("\tERROR {0}", ex.Message);
-                return null;
+                _logger.Error(e);
+                return new List<Article>();
             }
         }
     }

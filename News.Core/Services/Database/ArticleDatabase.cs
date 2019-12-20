@@ -17,7 +17,7 @@ namespace News.Core.Services.Database
         public List<ParserData> GetParserDataAsync()
         {
             List<ParserData> list = new List<ParserData>() {
-                    new ParserData() { SourceMainLink = "http://kuzpress.ru", SourceEncoding = "windows-1251"} };
+                    new ParserData() { SourceMainLink = "http://kuzpress.ru", SourceTitle = "kuzpress.ru", SourceEncoding = "windows-1251"} };
 
             return list;
         }

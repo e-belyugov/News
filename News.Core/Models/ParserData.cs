@@ -32,6 +32,11 @@ namespace News.Core.Models
         public string SourceMainLink { get; set; }
 
         /// <summary>
+        /// Source title
+        /// </summary>
+        public string SourceTitle { get; set; }
+
+        /// <summary>
         /// Source encoding
         /// </summary>
         public string SourceEncoding { get; set; }

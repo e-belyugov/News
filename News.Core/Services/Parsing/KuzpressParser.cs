@@ -16,10 +16,6 @@ namespace News.Core.Services.Parsing
     /// </summary>
     public class KuzpressParser : IParser
     {
-        // Source data
-        private readonly string _sourceMainLink = "http://kuzpress.ru";
-        private readonly string _sourceTitle = "kuzpress.ru";
-
         // Parsed articles
         private readonly IList<Article> _articles = new List<Article>();
 
@@ -74,7 +70,7 @@ namespace News.Core.Services.Parsing
                         {
                             node = node.ChildNodes["h2"];
                             if (node != null) title = node.InnerText;
-                            link = _sourceMainLink + attribute.Value;
+                            link = parserData.SourceMainLink + attribute.Value;
 
                             // Filtering atricles
                             if (title != null && title.Contains("видео")) continue;
@@ -93,7 +89,6 @@ namespace News.Core.Services.Parsing
                                     var articleItem = articlesHeaders[0];
                                     foreach (HtmlNode articleNode in articleItem.ChildNodes)
                                     {
-                                        //if (articleNode.Name == "p")
                                         if (articleNode.Name == "p" || articleNode.Name == "div")
                                         {
                                             var innerText = articleNode.InnerText;
@@ -115,6 +110,17 @@ namespace News.Core.Services.Parsing
                                     text = text.TrimEnd('\r', '\n', ' ');
                                 }
                             }
+
+                            // img node
+                            //var imgNode = node.ChildNodes["img"];
+                            //if (imgNode != null)
+                            //{
+                            //    attribute = imgNode.Attributes["src"];
+                            //    if (attribute != null)
+                            //    {
+                            //        var imageLink = parserData.SourceMainLink + attribute.Value;
+                            //    }
+                            //}
                         }
                     }
 
@@ -126,13 +132,24 @@ namespace News.Core.Services.Parsing
                         introText = introText.Replace(@"\","");
                     }
 
+                    // img node
+                    node = item.ChildNodes["img"];
+                    if (node != null)
+                    {
+                        var attribute = node.Attributes["src"];
+                        if (attribute != null)
+                        {
+                            var imageLink = parserData.SourceMainLink + attribute.Value;
+                        }
+                    }
+
                     // Adding article to list
                     if (title != null && link != null && introText != null && text != null)
                     {
                         Article article = new Article
                         {
-                            SourceMainLink = _sourceMainLink,
-                            SourceTitle = _sourceTitle,
+                            SourceMainLink = parserData.SourceMainLink,
+                            SourceTitle = parserData.SourceTitle,
                             SourceLink = link,
                             Title = title,
                             IntroText = introText,

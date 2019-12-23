@@ -41,10 +41,6 @@ namespace News.Core.Services.Parsing
         {
             try
             {
-                // Тест 3
-                //byte[] image = await _webService.GetImageAsync("http://kuzpress.ru/i/info/600x600/35/35921.jpg");
-                //byte[] image = await _webService.GetImageAsync("http://kuzpress.ru");
-
                 _articles.Clear();
 
                 string html = await _webService.GetDataAsync(parserData.SourceMainLink, 
@@ -60,6 +56,8 @@ namespace News.Core.Services.Parsing
                     string link = null;
                     string introText = null;
                     string text = null;
+                    byte[] image = null;
+                    DateTime timeStamp = DateTime.MinValue;
 
                     // a node
                     var node = item.ChildNodes["a"];
@@ -75,7 +73,7 @@ namespace News.Core.Services.Parsing
                             // Filtering atricles
                             if (title != null && title.Contains("видео")) continue;
 
-                            // Parsing article text
+                            // Article text
                             html = await _webService.GetDataAsync(link, Encoding.GetEncoding(parserData.SourceEncoding));
                             if (html != "")
                             {
@@ -105,22 +103,38 @@ namespace News.Core.Services.Parsing
                                                 text += innerText + Environment.NewLine;
                                             }
                                         }
+
+                                        // Article image
+                                        if (articleNode.Name == "a" && image == null)
+                                        {
+                                            var imgNode = articleNode.ChildNodes["img"];
+                                            if (imgNode != null)
+                                            {
+                                                attribute = imgNode.Attributes["src"];
+                                                if (attribute != null)
+                                                {
+                                                    var imageLink = parserData.SourceMainLink + attribute.Value;
+                                                    image = await _webService.GetImageAsync(imageLink);
+                                                }
+                                            }
+                                        }
                                     }
                                     text = text.Replace("<br /><br />", Environment.NewLine);
                                     text = text.TrimEnd('\r', '\n', ' ');
                                 }
-                            }
 
-                            // img node
-                            //var imgNode = node.ChildNodes["img"];
-                            //if (imgNode != null)
-                            //{
-                            //    attribute = imgNode.Attributes["src"];
-                            //    if (attribute != null)
-                            //    {
-                            //        var imageLink = parserData.SourceMainLink + attribute.Value;
-                            //    }
-                            //}
+                                // Article date
+                                articlesHeaders = articleDoc.DocumentNode.SelectNodes("//div[@class='newsLineTime']");
+                                if (articlesHeaders.Count > 0)
+                                {
+                                    var articleItem = articlesHeaders[0];
+                                    if (articleItem != null)
+                                    {
+                                        var dateString = articleItem.InnerText;
+                                        if (!DateTime.TryParse(dateString, out timeStamp)) timeStamp = DateTime.MinValue;
+                                    }
+                                }
+                            }
                         }
                     }
 
@@ -144,7 +158,14 @@ namespace News.Core.Services.Parsing
                     }
 
                     // Adding article to list
-                    if (title != null && link != null && introText != null && text != null)
+                    if (
+                        title != null 
+                        && link != null 
+                        && introText != null 
+                        && text != null 
+                        && image != null
+                        && timeStamp != DateTime.MinValue
+                        )
                     {
                         Article article = new Article
                         {
@@ -153,7 +174,8 @@ namespace News.Core.Services.Parsing
                             SourceLink = link,
                             Title = title,
                             IntroText = introText,
-                            Text = text
+                            Text = text,
+                            Image = image
                         };
                         _articles.Add(article);
                     }

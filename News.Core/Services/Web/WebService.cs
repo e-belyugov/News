@@ -11,7 +11,7 @@ using News.Core.Services.Logging;
 namespace News.Core.Services.Web
 {
     /// <summary>
-    /// WebService
+    /// Web service
     /// </summary>
     public class WebService : IWebService
     {

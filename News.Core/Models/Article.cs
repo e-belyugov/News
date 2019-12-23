@@ -48,5 +48,10 @@ namespace News.Core.Models
         /// Article source link
         /// </summary>
         public string SourceLink { get; set; }
+
+        /// <summary>
+        /// Article image
+        /// </summary>
+        public byte[] Image { get; set; }
     }
 }

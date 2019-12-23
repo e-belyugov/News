@@ -38,12 +38,13 @@
             <ListView x:Name="NewsListView" Grid.RowSpan="3"
                   SelectedItem="{Binding SelectedArticle}"
                   SelectionChanged="ListView_SelectionChanged"
-                      Loaded="NewsListView_Loaded"
+                  Loaded="NewsListView_Loaded"
                   BorderThickness="0"
                   ItemsSource="{Binding Articles}" Width="Auto" Height="760">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Margin="20" Orientation="Vertical">
+                            <Image Source="{Binding Image}" />
                             <TextBlock TextWrapping="Wrap"  MaxWidth="750" FontSize="20" FontWeight="Bold" Text="{Binding Path=Title}"/>
                             <TextBlock TextWrapping="Wrap" MaxWidth="750" Text="{Binding Path=IntroText}"/>
                         </StackPanel>

@@ -7,13 +7,30 @@ using System.IO;
 using System.Net.Http;
 using System.Net;
 using System.Reflection;
+using System.Resources;
+using News.Core.Services.Logging;
+
 
 namespace News.Core.Services.Web
 {
+    /// <summary>
+    /// Mock web service
+    /// </summary>
     public class MockWebService : IWebService
     {
+        // Logger
+        private readonly ILogger _logger;
+
         // Resource name array
         string[] resourceNames;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public MockWebService(ILogger logger)
+        {
+            _logger = logger;
+        }
 
         // Checking if resource exists
         private bool ResourceExists(string resourceName)
@@ -38,7 +55,6 @@ namespace News.Core.Services.Web
                 url = url.Replace("http://","").Replace("https://", "").Replace("/", "").Replace(".ru", "").Replace(".html","");
                 string resourceName = "News.Core.Services.Web.TestData." + url + ".html";
 
-                //if (!String.IsNullOrEmpty(resourceName))
                 if (ResourceExists(resourceName))
                 {
                     Stream stream = assembly.GetManifestResourceStream(resourceName);
@@ -50,9 +66,9 @@ namespace News.Core.Services.Web
 
                 return content;
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Debug.WriteLine("\tERROR {0}", ex.Message);
+                _logger.Error(e);
                 return content;
             }
         }
@@ -60,9 +76,33 @@ namespace News.Core.Services.Web
         /// <summary>
         /// Getting image data from web page
         /// </summary>
-        public Task<byte[]> GetImageAsync(string url)
+        public async Task<byte[]> GetImageAsync(string url)
         {
-            throw new NotImplementedException();
+            byte[] image = null;
+            try
+            {
+                var assembly = IntrospectionExtensions.GetTypeInfo(typeof(WebService)).Assembly;
+
+                url = url.Replace("http://", "").Replace("https://", "").Replace("/", "").Replace(".ru", "").Replace(".jpg", "");
+                string resourceName = "News.Core.Services.Web.TestData." + url + ".jpg";
+
+                if (ResourceExists(resourceName))
+                {
+                    using (var stream = assembly.GetManifestResourceStream(resourceName))
+                    {
+                        byte[] buffer = new byte[stream.Length];
+                        stream.Read(buffer, 0, buffer.Length);
+                        image = buffer;
+                    }
+                }
+
+                return image;
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e);
+                return image;
+            }
         }
     }
 }

@@ -1,7 +1,8 @@
 ﻿using MvvmCross.Platforms.Wpf.Views;
 using News.Core.ViewModels;
 using MvvmCross.Platforms.Wpf.Presenters.Attributes;
-//using System.Windows.Controls;
+using System.Windows.Controls;
+using News.Core.Models;
 
 namespace News.WPF.Views
 {
@@ -27,7 +28,10 @@ namespace News.WPF.Views
         private void NewsListView_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
             _newsViewModel = DataContext as NewsViewModel;
-            if (_newsViewModel != null && _newsViewModel.SelectedArticle != null)
+
+            // Some article selected
+            if (_newsViewModel != null 
+                && _newsViewModel.SelectedArticle != null)
                 NewsListView.ScrollIntoView(_newsViewModel.SelectedArticle);
         }
 
@@ -46,6 +50,15 @@ namespace News.WPF.Views
         private void RefreshButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             if (_newsViewModel != null) _newsViewModel.RefreshDataCommand.Execute();
+        }
+
+        /// <summary>
+        /// Listview preview mouse down event
+        /// </summary>
+        private void NewsListView_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (!NewsListView.IsLoaded) return;
+            if (_newsViewModel != null) _newsViewModel.NavigateCommand.Execute();
         }
     }
 }

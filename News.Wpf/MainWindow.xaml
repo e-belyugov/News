@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="clr-namespace:MvvmCross.Platforms.Wpf.Views;assembly=MvvmCross.Platforms.Wpf"
         mc:Ignorable="d"
+        ResizeMode="CanMinimize"
         Icon="Images/radar.png"
         WindowStartupLocation="CenterScreen"
         Title="Новости Новокузнецка" Height="800" Width="800">

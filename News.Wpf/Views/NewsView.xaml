@@ -37,17 +37,31 @@
             </TextBlock>
             <ListView x:Name="NewsListView" Grid.RowSpan="3"
                   SelectedItem="{Binding SelectedArticle}"
-                  SelectionChanged="ListView_SelectionChanged"
                   Loaded="NewsListView_Loaded"
+                  PreviewMouseDown="NewsListView_PreviewMouseDown"
                   BorderThickness="0"
-                  ItemsSource="{Binding Articles}" Width="Auto" Height="760">
+                  ItemsSource="{Binding Articles}" Width="Auto" Height="730">
+               
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel Margin="20" Orientation="Vertical">
-                            <Image Source="{Binding Image}" />
-                            <TextBlock TextWrapping="Wrap"  MaxWidth="750" FontSize="20" FontWeight="Bold" Text="{Binding Path=Title}"/>
-                            <TextBlock TextWrapping="Wrap" MaxWidth="750" Text="{Binding Path=IntroText}"/>
-                        </StackPanel>
+                        <Border BorderBrush="LightGray" Margin="5" Width="749" BorderThickness="1">
+                            <StackPanel Margin="20" Orientation="Horizontal">
+                                <Image Source="{Binding Image, TargetNullValue={x:Null}}" Width="200" HorizontalAlignment="Left"/>
+                                <StackPanel Orientation="Vertical" Margin="20, 0, 0, 0">
+                                    <Grid Width="485" Margin="0, 0, 0, 10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Padding="5" Background="LightGray" Text="{Binding TimeStamp, StringFormat=\{0:dd.MM.yy\}}"/>
+                                        <TextBlock Grid.Column="2" Padding="5" Background="LightGreen" Text="{Binding SourceTitle}"/>
+                                    </Grid>
+                                    <TextBlock TextWrapping="Wrap"  MaxWidth="500" FontSize="20" FontWeight="Bold" Text="{Binding Title}"/>
+                                    <TextBlock TextWrapping="Wrap" MaxWidth="500" Text="{Binding IntroText}"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>

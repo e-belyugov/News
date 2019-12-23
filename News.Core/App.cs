@@ -31,7 +31,6 @@ namespace News.Core
             Mvx.IoCProvider.RegisterType<IParserList, ParserList>();
             Mvx.IoCProvider.RegisterType<IArticleDatabase, ArticleDatabase>();
             Mvx.IoCProvider.RegisterType<IArticleService, ArticleService>();
-            Mvx.IoCProvider.RegisterType<IMvxJsonConverter, MvxJsonConverter>();
 
             RegisterAppStart<NewsViewModel>();
         }

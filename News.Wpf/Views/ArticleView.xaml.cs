@@ -2,6 +2,8 @@
 using MvvmCross.Platforms.Wpf.Views;
 using News.Core.ViewModels;
 using MvvmCross.Platforms.Wpf.Presenters.Attributes;
+using System.Diagnostics;
+using System.Windows.Navigation;
 
 namespace News.Wpf.Views
 {
@@ -26,6 +28,15 @@ namespace News.Wpf.Views
         {
             ArticleViewModel articleViewModel = DataContext as ArticleViewModel;
             articleViewModel.NavigateCommand.Execute();
+        }
+
+        /// <summary>
+        /// Navigate to web page
+        /// </summary>
+        private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
+            e.Handled = true;
         }
     }
 }

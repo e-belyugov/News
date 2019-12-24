@@ -10,33 +10,35 @@
     <Grid>
         <StackPanel>
             <Button x:Name="BackButton" Margin="0, 10, 0, 0" Click="BackButton_Click" Height="40" Width="100">Назад</Button>
+            <Grid Margin="23, 0, 21, 0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Padding="5" Background="LightGray" Text="{Binding SelectedArticle.TimeStamp, 
+                                StringFormat=\{0:dd.MM.yy\}}"/>
+                <TextBlock Grid.Column="2" Padding="5" Background="LightGreen" Text="{Binding SelectedArticle.SourceTitle}"/>
+            </Grid>
             <FlowDocumentScrollViewer VerticalScrollBarVisibility="Auto">
                 <FlowDocument FontFamily="Segoe UI">
                     <Paragraph>
-                        <Floater Width="230" HorizontalAlignment="Left">
+                        <Floater Width="200" HorizontalAlignment="Left" Padding="0, 0, 20. 0" Margin="0">
                             <BlockUIContainer>
-                                <Image Source="{Binding SelectedArticle.Image}" Width="230" />
+                                <Image Source="{Binding SelectedArticle.Image}" Width="200"/>
                             </BlockUIContainer>
                         </Floater>
                         <Run FontSize="20" FontWeight="Bold" Text="{Binding SelectedArticle.Title}" />
-                    </Paragraph>
-                    <Paragraph FontSize="12">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Padding="5" Background="LightGray" Text="{Binding SelectedArticle.TimeStamp, 
-                                StringFormat=\{0:dd.MM.yy\}}"/>
-                            <TextBlock Grid.Column="2" Padding="5" Background="LightGreen" Text="{Binding SelectedArticle.SourceTitle}"/>
-                        </Grid>
                     </Paragraph>
                     <Paragraph>
                         <Run FontSize="12" Text="{Binding SelectedArticle.Text}" />
                     </Paragraph>
                 </FlowDocument>
             </FlowDocumentScrollViewer>
+            <TextBlock Margin="20, 0, 0, 0">
+                Источник: <Hyperlink NavigateUri="{Binding SelectedArticle.SourceLink}" RequestNavigate="Hyperlink_RequestNavigate">
+                    <Run Text="{Binding SelectedArticle.SourceLink}" /></Hyperlink>
+            </TextBlock>
         </StackPanel>
     </Grid>
 </views:MvxWpfView>

@@ -87,9 +87,16 @@ namespace News.Core.Services.Parsing
                                     {
                                         text = "";
                                         var articleItem = articlesHeaders[0];
+
+                                        //text = articleItem.InnerText;
+
                                         foreach (HtmlNode articleNode in articleItem.ChildNodes)
                                         {
-                                            if (articleNode.Name == "p" || articleNode.Name == "div")
+                                            if (
+                                                articleNode.Name == "p"
+                                                || articleNode.Name == "div"
+                                                || articleNode.Name == "h5"
+                                                )
                                             {
                                                 var innerText = articleNode.InnerText;
                                                 innerText = innerText.Trim();
@@ -105,6 +112,23 @@ namespace News.Core.Services.Parsing
                                                     text += innerText + Environment.NewLine;
                                                 }
                                             }
+
+                                            //foreach (HtmlNode pChildNode in articleNode.ChildNodes)
+                                            //{
+                                            //    var innerText = pChildNode.InnerText;
+                                            //    innerText = innerText.Trim();
+
+                                            //    if (innerText != "")
+                                            //    {
+                                            //        innerText = innerText.Replace("&quot;", "\"");
+                                            //        innerText = innerText.Replace("&nbsp;", "");
+                                            //        innerText = innerText.Replace("&hellip;", "...");
+                                            //        innerText = innerText.Replace("&mdash;", "-");
+                                            //        innerText = innerText.Replace("&laquo;", "\"");
+                                            //        innerText = innerText.Replace("&raquo;", "\"");
+                                            //        text += innerText + Environment.NewLine;
+                                            //    }
+                                            //}
 
                                             // Article image
                                             if (articleNode.Name == "a" && image == null)

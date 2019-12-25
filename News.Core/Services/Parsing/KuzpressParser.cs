@@ -35,6 +35,39 @@ namespace News.Core.Services.Parsing
         }
 
         /// <summary>
+        /// Cleaning html
+        /// </summary>
+        public string CleanHtml(string html)
+        {
+            string cleaned = html;
+            try
+            {
+                //string oldArticle = cleaned.SubstringBetweenSubstrings("</h1>", "<div class=\"pub\">");
+                string oldArticle = cleaned.SubstringBetweenSubstrings("</h1>", "<div class=\"newsLineTime\">");
+
+                string newArticle = oldArticle;
+                newArticle = newArticle.ReplaceTags("<strong", "</strong>", "h");
+                newArticle = newArticle.ReplaceTags("<span", "</span>", "*");
+                newArticle = newArticle.ReplaceTags("<div", "</div>", "*");
+                newArticle = newArticle.ReplaceTags("<h2", "</h2>", "h");
+                newArticle = newArticle.ReplaceTags("<h3", "</h3>", "h");
+                newArticle = newArticle.ReplaceTags("<h4", "</h4>", "h");
+                newArticle = newArticle.ReplaceTags("<h5", "</h5>", "h");
+                newArticle = newArticle.ReplaceTags("<h6", "</h6>", "h");
+                newArticle = newArticle.ReplaceTags("<h7", "</h7>", "h");
+
+                cleaned = cleaned.Replace(oldArticle, newArticle);
+
+                return cleaned;
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e);
+                return html;
+            }
+        }
+
+        /// <summary>
         /// Parsing html
         /// </summary>
         public async Task<IList<Article>> Parse(ParserData parserData)
@@ -45,7 +78,6 @@ namespace News.Core.Services.Parsing
 
                 string html = await _webService.GetDataAsync(parserData.SourceMainLink, 
                     Encoding.GetEncoding(parserData.SourceEncoding));
-
                 HtmlDocument doc = new HtmlDocument();
                 doc.LoadHtml(html);
                 var headers = doc.DocumentNode.SelectNodes("//div[@class='outer-info inList']");
@@ -80,22 +112,22 @@ namespace News.Core.Services.Parsing
                                 if (html != "")
                                 {
                                     HtmlDocument articleDoc = new HtmlDocument();
+                                    html = CleanHtml(html); // Cleaning html
                                     articleDoc.LoadHtml(html);
+
                                     var articlesHeaders = articleDoc.DocumentNode.SelectNodes("//div[@class='outer-info']");
 
-                                    if (articlesHeaders.Count > 0)
+                                    if (articlesHeaders != null && articlesHeaders.Count > 0)
                                     {
                                         text = "";
                                         var articleItem = articlesHeaders[0];
-
-                                        //text = articleItem.InnerText;
 
                                         foreach (HtmlNode articleNode in articleItem.ChildNodes)
                                         {
                                             if (
                                                 articleNode.Name == "p"
-                                                || articleNode.Name == "div"
-                                                || articleNode.Name == "h5"
+                                                //|| articleNode.Name == "div"
+                                                //|| articleNode.Name == "h5"
                                                 )
                                             {
                                                 var innerText = articleNode.InnerText;
@@ -112,23 +144,6 @@ namespace News.Core.Services.Parsing
                                                     text += innerText + Environment.NewLine;
                                                 }
                                             }
-
-                                            //foreach (HtmlNode pChildNode in articleNode.ChildNodes)
-                                            //{
-                                            //    var innerText = pChildNode.InnerText;
-                                            //    innerText = innerText.Trim();
-
-                                            //    if (innerText != "")
-                                            //    {
-                                            //        innerText = innerText.Replace("&quot;", "\"");
-                                            //        innerText = innerText.Replace("&nbsp;", "");
-                                            //        innerText = innerText.Replace("&hellip;", "...");
-                                            //        innerText = innerText.Replace("&mdash;", "-");
-                                            //        innerText = innerText.Replace("&laquo;", "\"");
-                                            //        innerText = innerText.Replace("&raquo;", "\"");
-                                            //        text += innerText + Environment.NewLine;
-                                            //    }
-                                            //}
 
                                             // Article image
                                             if (articleNode.Name == "a" && image == null)
@@ -147,11 +162,15 @@ namespace News.Core.Services.Parsing
                                         }
                                         text = text.Replace("<br /><br />", Environment.NewLine);
                                         text = text.TrimEnd('\r', '\n', ' ');
+                                        text = text.Replace("^h", "<Bold>");
+                                        text = text.Replace("h^", "</Bold>");
+                                        text = text.Replace("^*", "<Italic>");
+                                        text = text.Replace("*^", "</Italic>");
                                     }
 
                                     // Article date
                                     articlesHeaders = articleDoc.DocumentNode.SelectNodes("//div[@class='newsLineTime']");
-                                    if (articlesHeaders.Count > 0)
+                                    if (articlesHeaders != null && articlesHeaders.Count > 0)
                                     {
                                         var articleItem = articlesHeaders[0];
                                         if (articleItem != null)

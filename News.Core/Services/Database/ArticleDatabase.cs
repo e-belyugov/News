@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using News.Core.Models;
+using SQLite;
+using System.IO;
 
 namespace News.Core.Services.Database
 {
@@ -11,6 +13,20 @@ namespace News.Core.Services.Database
     /// </summary>
     public class ArticleDatabase : IArticleDatabase
     {
+        readonly SQLiteAsyncConnection _database;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public ArticleDatabase()
+        {
+            string dbPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "News.db3");
+            
+            _database = new SQLiteAsyncConnection(dbPath);
+            _database.CreateTableAsync<ParserData>().Wait();
+        }
+
         /// <summary>
         /// Loading ParserData from database
         /// </summary>

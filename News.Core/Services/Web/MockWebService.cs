@@ -88,7 +88,7 @@ namespace News.Core.Services.Web
 
                 if (ResourceExists(resourceName))
                 {
-                    using (var stream = assembly.GetManifestResourceStream(resourceName))
+                    using (var stream = await Task.Run(() => assembly.GetManifestResourceStream(resourceName)))
                     {
                         byte[] buffer = new byte[stream.Length];
                         stream.Read(buffer, 0, buffer.Length);

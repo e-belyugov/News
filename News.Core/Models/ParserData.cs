@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using SQLite;
 
 namespace News.Core.Models
 {
@@ -9,6 +10,7 @@ namespace News.Core.Models
         /// <summary>
         /// Parser identifier
         /// </summary>
+        [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
 
         /// <summary>

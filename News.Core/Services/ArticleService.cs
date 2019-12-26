@@ -46,7 +46,7 @@ namespace News.Core.Services
         {
             try
             {
-                IList<ParserData> parserDataList = _database.GetParserDataAsync();
+                IList<ParserData> parserDataList = await _database.GetParserDataAsync();
                 return await _parsers.Parsers[0].Parse(parserDataList[0]);
             }
             catch (Exception e)

@@ -14,6 +14,6 @@ namespace News.Core.Services.Database
         /// <summary>
         /// Loading ParserData from database
         /// </summary>
-        List<ParserData> GetParserDataAsync();
+        Task<List<ParserData>> GetParserDataAsync();
     }
 }

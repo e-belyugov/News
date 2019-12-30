@@ -16,10 +16,11 @@ namespace News.Core.Services
     public class ArticleService : IArticleService
     {
         // Parser list
-        readonly IParserList _parsers;
+        private readonly IParserList _parsers;
 
         // Article database
-        readonly IArticleDatabase _database;
+        private readonly IArticleDatabase _database;
+        private bool _databasePrepared = false;
 
         // Logger
         private readonly ILogger _logger;
@@ -46,8 +47,19 @@ namespace News.Core.Services
         {
             try
             {
+                // Preparing database
+                if (!_databasePrepared)
+                {
+                    await _database.PrepareAsync();
+                    _databasePrepared = true;
+                }
+
                 IList<ParserData> parserDataList = await _database.GetParserDataAsync();
-                return await _parsers.Parsers[0].Parse(parserDataList[0]);
+
+                //var articles = await _parsers.Parsers[0].Parse(parserDataList[0]);
+                var articles = await _database.GetArticlesAsync();
+
+                return articles;
             }
             catch (Exception e)
             {

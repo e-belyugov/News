@@ -14,11 +14,14 @@ namespace News.Core.Services.Database
     /// </summary>
     public class ArticleDatabase : IArticleDatabase
     {
+        // User version
+        private readonly int _userVersion = 6;
+
         // Logger
         private readonly ILogger _logger;
 
-        // Logger
-        readonly SQLiteAsyncConnection _database;
+        // Connection
+        private SQLiteAsyncConnection _connection;
 
         /// <summary>
         /// Constructor
@@ -26,39 +29,68 @@ namespace News.Core.Services.Database
         public ArticleDatabase(ILogger logger)
         {
             _logger = logger;
+        }
 
-            string dbPath = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "NewsRadar.db3");
-            
-            _database = new SQLiteAsyncConnection(dbPath);
-            _database.CreateTableAsync<ParserData>().Wait();
+        /// <summary>
+        /// Preparing database
+        /// </summary>
+        public async Task<bool> PrepareAsync()
+        {
+            try
+            {
+                // Setting connection
+                string dbPath = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "NewsRadar.db3");
+                _connection = new SQLiteAsyncConnection(dbPath, storeDateTimeAsTicks:false);
+
+                // Checking database version
+                int oldUserVersion = await _connection.ExecuteScalarAsync<int>("pragma user_version;");
+                if (oldUserVersion != _userVersion)
+                {
+                    await _connection.ExecuteAsync($"pragma user_version = {_userVersion};");
+
+                    // Recreating tables for new version
+                    await _connection.DropTableAsync<ParserData>();
+                    await _connection.CreateTableAsync<ParserData>();
+                    await _connection.DropTableAsync<Article>();
+                    await _connection.CreateTableAsync<Article>();
+                }
+
+                return true;
+
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e);
+                return false;
+            }
         }
 
         /// <summary>
         /// Loading parser data from database
         /// </summary>
-        public async Task<List<ParserData>> GetParserDataAsync()
+        public async Task<IList<ParserData>> GetParserDataAsync()
         {
-            List<ParserData> list = await _database.Table<ParserData>().ToListAsync();
+            List<ParserData> parserDataList = await _connection.Table<ParserData>().ToListAsync();
 
-            if (list.Count == 0)
+            if (parserDataList.Count == 0)
             {
-                list = new List<ParserData>() {
+                parserDataList = new List<ParserData>() {
                     new ParserData() { Id = 0, 
                         SourceMainLink = "http://kuzpress.ru", 
                         SourceTitle = "kuzpress.ru", 
                         SourceEncoding = "windows-1251"} };
             }
 
-            var result = await SaveParserDataAsync(list);
+            //var result = await SaveParserDataAsync(parserDataList);
 
-            return list;
+            return parserDataList;
         }
 
         /// <summary>
         /// Saving parser data to database
         /// </summary>
-        public async Task<bool> SaveParserDataAsync(List<ParserData> parsers)
+        public async Task<bool> SaveParserDataAsync(IList<ParserData> parsers)
         {
             try
             {
@@ -66,11 +98,55 @@ namespace News.Core.Services.Database
                 {
                     if (parser.Id == 0)
                     {
-                        var result = await _database.InsertAsync(parser);
+                        var result = await _connection.InsertAsync(parser);
                     }
                     else
                     {
-                        var result = await _database.UpdateAsync(parser);
+                        var result = await _connection.UpdateAsync(parser);
+                    }
+                }
+                return true;
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Loading articles from database
+        /// </summary>
+        public async Task<IList<Article>> GetArticlesAsync()
+        {
+            try
+            {
+                List<Article> articleList = await _connection.Table<Article>().ToListAsync();
+                return articleList;
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e);
+                return new List<Article>();
+            }
+        }
+
+        /// <summary>
+        /// Saving articles to database
+        /// </summary>
+        public async Task<bool> SaveArticlesAsync(IList<Article> articles)
+        {
+            try
+            {
+                foreach (var article in articles)
+                {
+                    if (article.Id == 0)
+                    {
+                        var result = await _connection.InsertAsync(article);
+                    }
+                    else
+                    {
+                        var result = await _connection.UpdateAsync(article);
                     }
                 }
                 return true;

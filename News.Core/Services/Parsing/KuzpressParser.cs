@@ -214,6 +214,7 @@ namespace News.Core.Services.Parsing
                         {
                             Article article = new Article
                             {
+                                Id = 0,
                                 SourceMainLink = parserData.SourceMainLink,
                                 SourceTitle = parserData.SourceTitle,
                                 SourceLink = link,

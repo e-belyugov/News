@@ -12,8 +12,23 @@ namespace News.Core.Services.Database
     public interface IArticleDatabase
     {
         /// <summary>
+        /// Preparing database
+        /// </summary>
+        Task<bool> PrepareAsync();
+
+        /// <summary>
         /// Loading ParserData from database
         /// </summary>
-        Task<List<ParserData>> GetParserDataAsync();
+        Task<IList<ParserData>> GetParserDataAsync();
+
+        /// <summary>
+        /// Loading articles from database
+        /// </summary>
+        Task<IList<Article>> GetArticlesAsync();
+
+        /// <summary>
+        /// Saving articles to database
+        /// </summary>
+        Task<bool> SaveArticlesAsync(IList<Article> articles);
     }
 }

@@ -5,6 +5,9 @@ using SQLite;
 
 namespace News.Core.Models
 {
+    /// <summary>
+    /// Parser data
+    /// </summary>
     public class ParserData
     {
         /// <summary>

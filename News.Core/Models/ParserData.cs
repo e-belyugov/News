@@ -29,7 +29,7 @@ namespace News.Core.Models
         /// <summary>
         /// Parser last timestamp
         /// </summary>
-        public int LastTimeStamp { get; set; }
+        public DateTime LastTimeStamp { get; set; }
 
         /// <summary>
         /// Source main link
@@ -50,5 +50,10 @@ namespace News.Core.Models
         /// Parser last data
         /// </summary>
         public string LastData { get; set; }
+
+        /// <summary>
+        /// Parser last data length
+        /// </summary>
+        public int LastDataLength { get; set; }
     }
 }

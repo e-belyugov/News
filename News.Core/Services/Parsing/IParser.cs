@@ -14,6 +14,6 @@ namespace News.Core.Services.Parsing
         /// <summary>
         /// Parsing html
         /// </summary>
-        Task<IList<Article>> Parse(ParserData parserData);
+        Task<IList<Article>> Parse(ParserData parserData, IList<Article> existingArticles);
     }
 }

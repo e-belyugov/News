@@ -54,10 +54,19 @@ namespace News.Core.Services
                     _databasePrepared = true;
                 }
 
+                // Loading articles from database
+                var articles = await _database.GetArticlesAsync();
+
+                // Loading parser list
                 IList<ParserData> parserDataList = await _database.GetParserDataAsync();
 
-                //var articles = await _parsers.Parsers[0].Parse(parserDataList[0]);
-                var articles = await _database.GetArticlesAsync();
+                // Checking for new articles
+                var newArticles = await _parsers.Parsers[0].Parse(parserDataList[0], articles);
+
+                // Saving parser data
+                var result = await _database.SaveParserDataAsync(parserDataList);
+
+                //var result = await _database.SaveArticlesAsync(articles);
 
                 return articles;
             }

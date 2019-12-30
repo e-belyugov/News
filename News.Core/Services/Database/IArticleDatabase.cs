@@ -22,6 +22,11 @@ namespace News.Core.Services.Database
         Task<IList<ParserData>> GetParserDataAsync();
 
         /// <summary>
+        /// Saving parser data to database
+        /// </summary>
+        Task<bool> SaveParserDataAsync(IList<ParserData> parserList);
+
+        /// <summary>
         /// Loading articles from database
         /// </summary>
         Task<IList<Article>> GetArticlesAsync();

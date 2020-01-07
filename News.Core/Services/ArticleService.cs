@@ -63,21 +63,24 @@ namespace News.Core.Services
 
                 // Checking for new articles
                 bool gotNewArticles = false;
-                foreach (var parser in _parsers.Parsers)
+                if (true)
                 {
-                    string parserType = parser.ToString(); // Parser type
-
-                    var parserData = parserDataList.Where(x => parserType.Contains(x.TypeName)).FirstOrDefault();
-                    if (
-                        parserData != null 
-                        && DateTime.Now >= parserData.LastTimeStamp.AddSeconds(parserData.Period) // Checking parsing period
-                        )
+                    foreach (var parser in _parsers.Parsers)
                     {
-                        var newArticles = await parser.Parse(parserData, articles);
-                        if (newArticles.Any())
+                        string parserType = parser.ToString(); // Parser type
+
+                        var parserData = parserDataList.Where(x => parserType.Contains(x.TypeName)).FirstOrDefault();
+                        if (
+                            parserData != null
+                            && DateTime.Now >= parserData.LastTimeStamp.AddSeconds(parserData.Period) // Checking parsing period
+                            )
                         {
-                            foreach (var newArticle in newArticles) articles.Add(newArticle);
-                            if (!gotNewArticles) gotNewArticles = true;
+                            var newArticles = await parser.Parse(parserData, articles);
+                            if (newArticles.Any())
+                            {
+                                foreach (var newArticle in newArticles) articles.Add(newArticle);
+                                if (!gotNewArticles) gotNewArticles = true;
+                            }
                         }
                     }
                 }

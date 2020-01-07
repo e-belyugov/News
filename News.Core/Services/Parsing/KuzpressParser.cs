@@ -140,7 +140,7 @@ namespace News.Core.Services.Parsing
                                 // Checking new data
                                 if (articleCount == 1)
                                 {
-                                    if (parserData.LastData == title)
+                                    if (parserData.LastData == title) 
                                     {
                                         // No new data
                                         break;

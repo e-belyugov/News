@@ -22,6 +22,11 @@ namespace News.Core.Models
         public DateTime TimeStamp { get; set; }
 
         /// <summary>
+        /// Article serial timestamp
+        /// </summary>
+        public DateTime SerialTimeStamp { get; set; }
+
+        /// <summary>
         /// Article title
         /// </summary>
         public string Title { get; set; }
@@ -55,5 +60,10 @@ namespace News.Core.Models
         /// Article image
         /// </summary>
         public byte[] Image { get; set; }
+
+        /// <summary>
+        /// New article flag
+        /// </summary>
+        public bool New { get; set; }
     }
 }

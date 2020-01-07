@@ -7,6 +7,7 @@ using News.Core.Services.Parsing;
 using News.Core.Services.Database;
 using News.Core.Services.Logging;
 using System.Diagnostics;
+using System.Linq;
 
 namespace News.Core.Services
 {
@@ -61,12 +62,34 @@ namespace News.Core.Services
                 IList<ParserData> parserDataList = await _database.GetParserDataAsync();
 
                 // Checking for new articles
-                var newArticles = await _parsers.Parsers[0].Parse(parserDataList[0], articles);
+                bool gotNewArticles = false;
+                foreach (var parser in _parsers.Parsers)
+                {
+                    string parserType = parser.ToString(); // Parser type
+
+                    var parserData = parserDataList.Where(x => parserType.Contains(x.TypeName)).FirstOrDefault();
+                    if (
+                        parserData != null 
+                        && DateTime.Now >= parserData.LastTimeStamp.AddSeconds(parserData.Period) // Checking parsing period
+                        )
+                    {
+                        var newArticles = await parser.Parse(parserData, articles);
+                        if (newArticles.Any())
+                        {
+                            foreach (var newArticle in newArticles) articles.Add(newArticle);
+                            if (!gotNewArticles) gotNewArticles = true;
+                        }
+                    }
+                }
 
                 // Saving parser data
                 var result = await _database.SaveParserDataAsync(parserDataList);
 
-                //var result = await _database.SaveArticlesAsync(articles);
+                // Saving articles (if got new)
+                if (gotNewArticles) result = await _database.SaveArticlesAsync(articles);
+
+                // Sorting and filtering articles
+                articles = articles.OrderByDescending(x => x.SerialTimeStamp).Where(x => x.New == true).Take(25).ToList();
 
                 return articles;
             }

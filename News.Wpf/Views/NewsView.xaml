@@ -23,10 +23,10 @@
                     </Style>
                 </Button.Style>
             </Button>
-            <TextBlock HorizontalAlignment="Center" Foreground="Red" Text="{Binding LastError}">
+            <TextBlock HorizontalAlignment="Center" Foreground="Red" TextWrapping="Wrap" Text="{Binding LastError}">
                 <TextBlock.Style>
                     <Style TargetType="{x:Type TextBlock}">
-                        <Setter Property="Height" Value="30"/>
+                        <Setter Property="Height" Value="Auto"/>
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding LastError}" Value="">
                                 <Setter Property="Height" Value="0"/>

@@ -130,7 +130,7 @@ namespace News.Core.ViewModels
                 IsBusy = false;
             }
             catch (Exception)
-            {
+            { 
                 IsBusy = false;
             }
         }

@@ -15,7 +15,7 @@ namespace News.Core.Services.Database
     public class ArticleDatabase : IArticleDatabase
     {
         // User version
-        private readonly int _userVersion = 12;
+        private readonly int _userVersion = 43;
 
         // Logger
         private readonly ILogger _logger;
@@ -79,7 +79,7 @@ namespace News.Core.Services.Database
                     new ParserData() 
                     { 
                         Id = 0, 
-                        Period = 30,
+                        Period = 10,
                         TypeName = "KuzpressParser",
                         SourceMainLink = "http://kuzpress.ru", 
                         SourceTitle = "kuzpress.ru", 

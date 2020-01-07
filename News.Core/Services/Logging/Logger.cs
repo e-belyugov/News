@@ -34,7 +34,8 @@ namespace News.Core.Services.Logging
         public void Error(Exception exception)
         {
             string errorMessage = exception.Message;
-            if (LastError == "") LastError = errorMessage;
+            //if (LastError == "") LastError = errorMessage;
+            if (LastError == "") LastError = exception.StackTrace + Environment.NewLine + errorMessage;
             Debug.WriteLine("\tERROR {0}", errorMessage);
         }
     }

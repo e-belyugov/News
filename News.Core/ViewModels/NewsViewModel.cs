@@ -77,7 +77,7 @@ namespace News.Core.ViewModels
         /// <summary>
         /// Last error string
         /// </summary>
-        private string _lastError = "";
+        private string _lastError = "Test";
         public string LastError 
         { 
             get => _lastError;

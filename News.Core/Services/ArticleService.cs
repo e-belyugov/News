@@ -63,7 +63,7 @@ namespace News.Core.Services
 
                 // Checking for new articles
                 bool gotNewArticles = false;
-                if (true)
+                if (false)
                 {
                     foreach (var parser in _parsers.Parsers)
                     {

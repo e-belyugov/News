@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "News.Core", "News.Core\News
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "News.Wpf", "News.Wpf\News.Wpf.csproj", "{C533AAF2-01B7-400C-ABF9-98C2DB06DAE5}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "News.Forms.UI", "News.Forms.UI\News.Forms.UI.csproj", "{66DACDCB-7387-45D6-A9CD-C45FFA6BED95}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "News.Forms.Droid", "News.Forms.Droid\News.Forms.Droid.csproj", "{8B24B7C6-17F2-4F94-8F3D-78A5CE0952A1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,16 @@ Global
 		{C533AAF2-01B7-400C-ABF9-98C2DB06DAE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C533AAF2-01B7-400C-ABF9-98C2DB06DAE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C533AAF2-01B7-400C-ABF9-98C2DB06DAE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66DACDCB-7387-45D6-A9CD-C45FFA6BED95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66DACDCB-7387-45D6-A9CD-C45FFA6BED95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66DACDCB-7387-45D6-A9CD-C45FFA6BED95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66DACDCB-7387-45D6-A9CD-C45FFA6BED95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B24B7C6-17F2-4F94-8F3D-78A5CE0952A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B24B7C6-17F2-4F94-8F3D-78A5CE0952A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B24B7C6-17F2-4F94-8F3D-78A5CE0952A1}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{8B24B7C6-17F2-4F94-8F3D-78A5CE0952A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B24B7C6-17F2-4F94-8F3D-78A5CE0952A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B24B7C6-17F2-4F94-8F3D-78A5CE0952A1}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

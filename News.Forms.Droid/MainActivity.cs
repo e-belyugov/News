@@ -12,9 +12,9 @@ using News.Forms.UI;
 namespace News.Forms.Droid
 {
     [Activity(
-        Label = "TipCalc.Forms.Droid",
+        Label = "News.Forms.Droid",
         Icon = "@drawable/icon",
-        Theme = "@style/MyTheme",
+        Theme = "@style/AppTheme",
         MainLauncher = true,
         ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation,
         LaunchMode = LaunchMode.SingleTask)]

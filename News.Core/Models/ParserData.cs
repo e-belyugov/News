@@ -37,6 +37,11 @@ namespace News.Core.Models
         public string SourceMainLink { get; set; }
 
         /// <summary>
+        /// Source parse link
+        /// </summary>
+        public string SourceParseLink { get; set; }
+
+        /// <summary>
         /// Source title
         /// </summary>
         public string SourceTitle { get; set; }
@@ -50,10 +55,5 @@ namespace News.Core.Models
         /// Parser last data
         /// </summary>
         public string LastData { get; set; }
-
-        /// <summary>
-        /// Parser last data length
-        /// </summary>
-        public int LastDataLength { get; set; }
     }
 }

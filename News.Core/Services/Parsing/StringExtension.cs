@@ -56,5 +56,20 @@ namespace News.Core.Services.Parsing
 
             return str;
         }
+
+        /// <summary>
+        /// Removing special tags
+        /// </summary>
+        public static string RemoveSpecialTags(this string str)
+        {
+            str = str.Replace("&quot;", "\"");
+            str = str.Replace("&nbsp;", "");
+            str = str.Replace("&hellip;", "...");
+            str = str.Replace("&mdash;", "-");
+            str = str.Replace("&laquo;", "\"");
+            str = str.Replace("&raquo;", "\"");
+
+            return str;
+        }
     }
 }

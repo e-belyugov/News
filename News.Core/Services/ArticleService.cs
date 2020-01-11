@@ -63,13 +63,13 @@ namespace News.Core.Services
 
                 // Checking for new articles
                 bool gotNewArticles = false;
-                if (false)
+                if (true)
                 {
                     foreach (var parser in _parsers.Parsers)
                     {
                         string parserType = parser.ToString(); // Parser type
 
-                        var parserData = parserDataList.Where(x => parserType.Contains(x.TypeName)).FirstOrDefault();
+                        var parserData = parserDataList.FirstOrDefault(x => parserType.Contains(x.TypeName));
                         if (
                             parserData != null
                             && DateTime.Now >= parserData.LastTimeStamp.AddSeconds(parserData.Period) // Checking parsing period
@@ -86,13 +86,13 @@ namespace News.Core.Services
                 }
 
                 // Saving parser data
-                var result = await _database.SaveParserDataAsync(parserDataList);
+                await _database.SaveParserDataAsync(parserDataList);
 
                 // Saving articles (if got new)
-                if (gotNewArticles) result = await _database.SaveArticlesAsync(articles);
+                if (gotNewArticles) await _database.SaveArticlesAsync(articles);
 
                 // Sorting and filtering articles
-                articles = articles.OrderByDescending(x => x.SerialTimeStamp).Where(x => x.New == true).Take(25).ToList();
+                articles = articles.OrderByDescending(x => x.TimeStamp).Where(x => x.New == true).Take(25).ToList();
 
                 return articles;
             }

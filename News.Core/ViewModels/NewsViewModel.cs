@@ -74,10 +74,10 @@ namespace News.Core.ViewModels
             private set => SetProperty(ref _myTaskNotifier, value);
         }
 
-        /// <summary>
+        /// <summary> 
         /// Last error string
         /// </summary>
-        private string _lastError = "Test";
+        private string _lastError = "";
         public string LastError 
         { 
             get => _lastError;

@@ -58,7 +58,7 @@
                                         <TextBlock Grid.Column="2" Padding="5" Background="LightGreen" Text="{Binding SourceTitle}"/>
                                     </Grid>
                                     <TextBlock TextWrapping="Wrap"  MaxWidth="500" FontSize="20" FontWeight="Bold" Text="{Binding Title}"/>
-                                    <TextBlock TextWrapping="Wrap" MaxWidth="500" Text="{Binding IntroText}"/>
+                                    <TextBlock TextWrapping="Wrap" MaxWidth="500" FontSize="14" Text="{Binding IntroText}"/>
                                 </StackPanel>
                             </StackPanel>
                         </Border>

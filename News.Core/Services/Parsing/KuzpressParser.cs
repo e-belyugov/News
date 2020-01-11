@@ -223,45 +223,53 @@ namespace News.Core.Services.Parsing
         /// </summary>
         private async Task<bool> ParseArticle(ParserData parserData, string link, Article article)
         {
-            // Loading article text from web
-            string html = await _webService.GetDataAsync(link, Encoding.GetEncoding(parserData.SourceEncoding));
-
-            if (html != "")
+            try
             {
-                // Article text
-                string text = GetArticleText(html, false);
-                if (text.Contains("Skip")) return false; // Skipping article
+                // Loading article text from web
+                string html = await _webService.GetDataAsync(link, Encoding.GetEncoding(parserData.SourceEncoding));
 
-                // Article image
-                byte[] image = null;
-                var articleDoc = new HtmlDocument();
-                articleDoc.LoadHtml(html);
-                var articlesHeaders = articleDoc.DocumentNode.SelectNodes("//div[@class='outer-info']");
-                if (articlesHeaders != null && articlesHeaders.Count > 0)
+                if (html != "")
                 {
-                    var articleItem = articlesHeaders[0];
+                    // Article text
+                    string text = GetArticleText(html, false);
+                    if (text.Contains("Skip")) return false; // Skipping article
 
-                    foreach (HtmlNode articleNode in articleItem.ChildNodes)
+                    // Article image
+                    byte[] image = null;
+                    var articleDoc = new HtmlDocument();
+                    articleDoc.LoadHtml(html);
+                    var articlesHeaders = articleDoc.DocumentNode.SelectNodes("//div[@class='outer-info']");
+                    if (articlesHeaders != null && articlesHeaders.Count > 0)
                     {
-                        if (articleNode.Name == "a" && image == null)
+                        var articleItem = articlesHeaders[0];
+
+                        foreach (HtmlNode articleNode in articleItem.ChildNodes)
                         {
-                            var imgNode = articleNode.ChildNodes["img"];
-                            var attribute = imgNode?.Attributes["src"];
-                            if (attribute != null)
+                            if (articleNode.Name == "a" && image == null)
                             {
-                                var imageLink = parserData.SourceMainLink + attribute.Value;
-                                if (Path.HasExtension(imageLink)) image = await _webService.GetImageAsync(imageLink);
+                                var imgNode = articleNode.ChildNodes["img"];
+                                var attribute = imgNode?.Attributes["src"];
+                                if (attribute != null)
+                                {
+                                    var imageLink = parserData.SourceMainLink + attribute.Value;
+                                    if (Path.HasExtension(imageLink)) image = await _webService.GetImageAsync(imageLink);
+                                }
                             }
                         }
                     }
+
+                    // Saving article fields
+                    article.Text = text;
+                    article.Image = image;
                 }
 
-                // Saving article fields
-                article.Text = text;
-                article.Image = image;
+                return true;
             }
-
-            return true;
+            catch (Exception e)
+            {
+                _logger.Error(e);
+                return false;
+            }
         }
 
         /*

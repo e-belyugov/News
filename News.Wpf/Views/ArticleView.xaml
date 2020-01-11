@@ -33,9 +33,10 @@
                     </Paragraph>
                 </FlowDocument>
             </FlowDocumentScrollViewer>
-            <ScrollViewer Height="305">
-                <TextBlock TextWrapping="Wrap" Margin="20, 0, 0, 0" u:MyBehavior.FormattedText="{Binding SelectedArticle.Text}">
-                </TextBlock>
+            <ScrollViewer Margin="10" Height="305" VerticalScrollBarVisibility="Auto">
+                <!--<TextBlock TextWrapping="Wrap" Margin="20, 0, 0, 0" u:MyBehavior.FormattedText="{Binding SelectedArticle.Text}">
+                </TextBlock>-->
+                <WebBrowser u:BrowserBehavior.Html="{Binding SelectedArticle.Text}" />
             </ScrollViewer>
             <TextBlock Margin="20, 10, 0, 0">
                 Источник: <Hyperlink NavigateUri="{Binding SelectedArticle.SourceLink}" RequestNavigate="Hyperlink_RequestNavigate">

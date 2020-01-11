@@ -92,6 +92,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Helpers\BrowserBehavior.cs" />
     <Compile Include="Helpers\MyBehavior.cs" />
     <Compile Include="Views\ArticleView.xaml.cs">
       <DependentUpon>ArticleView.xaml</DependentUpon>

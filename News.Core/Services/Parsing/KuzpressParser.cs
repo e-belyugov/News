@@ -17,7 +17,7 @@ namespace News.Core.Services.Parsing
     /// </summary>
     public class KuzpressParser : IParser
     {
-        // Parsed articles
+        // Parsed articles 
         private readonly IList<Article> _articles = new List<Article>();
 
         // Web service
@@ -38,7 +38,7 @@ namespace News.Core.Services.Parsing
         /// <summary>
         /// Cleaning html
         /// </summary>
-        public string CleanHtml(string html)
+        private string GetArticleText(string html, bool clean)
         {
             string cleaned = html;
             try
@@ -46,29 +46,41 @@ namespace News.Core.Services.Parsing
                 string oldArticle = cleaned.SubstringBetweenSubstrings("</h1>", "<div class=\"newsLine\">");
 
                 // Filter by article text
-                bool skip = oldArticle.Contains("youtube")
-                            || oldArticle.Contains("<table");
+                bool skip = oldArticle.Contains("youtube") || oldArticle.Contains("<table");
 
-                // Replacing tags
                 if (!skip)
                 {
-                    string newArticle = oldArticle;
+                    if (clean)
+                    {
+                        // Cleaning html 
 
-                    newArticle = newArticle.Replace("<p></h5></p>","</h5");
+                        string newArticle = oldArticle;
 
-                    newArticle = newArticle.ReplaceTags("<strong", "</strong>", "h");
-                    newArticle = newArticle.ReplaceTags("<span", "</span>", "*");
-                    newArticle = newArticle.ReplaceTags("<div", "</div>", "*");
-                    newArticle = newArticle.ReplaceTags("<h2", "</h2>", "h");
-                    newArticle = newArticle.ReplaceTags("<h3", "</h3>", "h");
-                    newArticle = newArticle.ReplaceTags("<h4", "</h4>", "h");
-                    newArticle = newArticle.ReplaceTags("<h5", "</h5>", "h");
-                    newArticle = newArticle.ReplaceTags("<h6", "</h6>", "h");
-                    newArticle = newArticle.ReplaceTags("<h7", "</h7>", "h");
+                        newArticle = newArticle.Replace("<p></h5></p>", "</h5");
 
-                    if (Regex.Matches(newArticle, "<p").Count == 1) newArticle = newArticle.Replace("</p>", "</p><p>") + "</p>";
+                        newArticle = newArticle.ReplaceTags("<strong", "</strong>", "h");
+                        newArticle = newArticle.ReplaceTags("<span", "</span>", "*");
+                        newArticle = newArticle.ReplaceTags("<div", "</div>", "*");
+                        newArticle = newArticle.ReplaceTags("<h2", "</h2>", "h");
+                        newArticle = newArticle.ReplaceTags("<h3", "</h3>", "h"); 
+                        newArticle = newArticle.ReplaceTags("<h4", "</h4>", "h");
+                        newArticle = newArticle.ReplaceTags("<h5", "</h5>", "h");
+                        newArticle = newArticle.ReplaceTags("<h6", "</h6>", "h");
+                        newArticle = newArticle.ReplaceTags("<h7", "</h7>", "h");
 
-                    cleaned = cleaned.Replace(oldArticle, newArticle);
+                        if (Regex.Matches(newArticle, "<p").Count == 1) newArticle = newArticle.Replace("</p>", "</p><p>") + "</p>";
+
+                        cleaned = cleaned.Replace(oldArticle, newArticle);
+                    }
+                    else
+                    {
+                        oldArticle = oldArticle.Replace("h5", "h3");
+                        oldArticle = oldArticle.Replace("h4", "h3");
+                        oldArticle = oldArticle.Replace("src=\"", "src=\"http://kuzpress.ru");
+                        oldArticle = "<font style=\"font-family:segoe ui; font-size:14px\">" + oldArticle + "</font>";
+                        cleaned = oldArticle;
+                    }
+
                 }
                 else
                 {
@@ -138,6 +150,15 @@ namespace News.Core.Services.Parsing
                                     article.New = false;
                             }
 
+                            // Checking if article exists already
+                            var existingArticle = existingArticles.SingleOrDefault(x =>
+                                x.SourceMainLink == parserData.SourceMainLink && x.Title == title);
+                            if (existingArticle != null)
+                            {
+                                existingArticle.New = true;
+                                continue;
+                            }
+
                             // Article link
                             node = item.ChildNodes["link"];
                             string link = "";
@@ -197,6 +218,53 @@ namespace News.Core.Services.Parsing
             }
         }
 
+        /// <summary>
+        /// Parsing article 
+        /// </summary>
+        private async Task<bool> ParseArticle(ParserData parserData, string link, Article article)
+        {
+            // Loading article text from web
+            string html = await _webService.GetDataAsync(link, Encoding.GetEncoding(parserData.SourceEncoding));
+
+            if (html != "")
+            {
+                // Article text
+                string text = GetArticleText(html, false);
+                if (text.Contains("Skip")) return false; // Skipping article
+
+                // Article image
+                byte[] image = null;
+                var articleDoc = new HtmlDocument();
+                articleDoc.LoadHtml(html);
+                var articlesHeaders = articleDoc.DocumentNode.SelectNodes("//div[@class='outer-info']");
+                if (articlesHeaders != null && articlesHeaders.Count > 0)
+                {
+                    var articleItem = articlesHeaders[0];
+
+                    foreach (HtmlNode articleNode in articleItem.ChildNodes)
+                    {
+                        if (articleNode.Name == "a" && image == null)
+                        {
+                            var imgNode = articleNode.ChildNodes["img"];
+                            var attribute = imgNode?.Attributes["src"];
+                            if (attribute != null)
+                            {
+                                var imageLink = parserData.SourceMainLink + attribute.Value;
+                                if (Path.HasExtension(imageLink)) image = await _webService.GetImageAsync(imageLink);
+                            }
+                        }
+                    }
+                }
+
+                // Saving article fields
+                article.Text = text;
+                article.Image = image;
+            }
+
+            return true;
+        }
+
+        /*
         /// <summary>
         /// Parsing article 
         /// </summary>
@@ -276,5 +344,6 @@ namespace News.Core.Services.Parsing
 
             return true;
         }
+        */
     }
 }

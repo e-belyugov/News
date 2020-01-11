@@ -4,10 +4,39 @@
     xmlns:views="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
     xmlns:mvx="clr-namespace:MvvmCross.Forms.Bindings;assembly=MvvmCross.Forms"
     xmlns:viewModels="clr-namespace:News.Core.ViewModels;assembly=News.Core"
+    xmlns:helpers="clr-namespace:News.Forms.UI.Helpers"
     x:Class="News.Forms.UI.Pages.NewsView">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <helpers:ByteToImageFieldConverter x:Key="bic" />
+        </ResourceDictionary>
+        
+    </ContentPage.Resources>
     <ContentPage.Content>
-        <StackLayout Margin="10">
-            <Label Text="{Binding LastError}" />
+        <StackLayout>
+            <Button x:Name="RefreshButton" Text="Обновить" Clicked="RefreshButton_Clicked">
+            </Button>
+            <CollectionView x:Name="NewsCollectionView" ItemsSource="{Binding Articles}"
+                        BindingContextChanged="NewsCollectionView_BindingContextChanged"
+                        SelectionMode="Single"
+                        SelectedItem="{Binding SelectedArticle}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout Padding="10,10">
+                            <Frame>
+                                <StackLayout>
+                                    <Label FontSize="Large" Text="{Binding Title}" VerticalTextAlignment="Center"/>
+                                    <Image Source="{Binding Image, Converter={StaticResource bic}}" 
+                                           VerticalOptions="FillAndExpand"
+                                           HorizontalOptions="FillAndExpand"
+                                           Aspect="AspectFill"/>
+                                </StackLayout>
+                            </Frame>
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
         </StackLayout>
     </ContentPage.Content>
 </views:MvxContentPage>

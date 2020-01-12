@@ -38,7 +38,7 @@ namespace News.Core.Services.Parsing
         /// <summary>
         /// Cleaning html
         /// </summary>
-        private string GetArticleText(string html, bool clean)
+        private string GetArticleText(ParserData parserData, string html, bool clean)
         {
             string cleaned = html;
             try
@@ -76,11 +76,16 @@ namespace News.Core.Services.Parsing
                     {
                         oldArticle = oldArticle.Replace("h5", "h3");
                         oldArticle = oldArticle.Replace("h4", "h3");
-                        oldArticle = oldArticle.Replace("src=\"", "src=\"http://kuzpress.ru");
+                        oldArticle = oldArticle.Replace("src=\"/i", "src=\"" + parserData.SourceMainLink + "/i");
+                        oldArticle = oldArticle.Replace("src=", "width=\"500\" src=");
+
+                        oldArticle = oldArticle.ReplaceSubstringBetweenSubstrings("<a", ">", "");
+                        oldArticle = oldArticle.Replace("<a>", "<font style=\"text-decoration:underline\">");
+                        oldArticle = oldArticle.Replace("</a>", "</font>");
+
                         oldArticle = "<font style=\"font-family:segoe ui; font-size:14px\">" + oldArticle + "</font>";
                         cleaned = oldArticle;
                     }
-
                 }
                 else
                 {
@@ -231,7 +236,7 @@ namespace News.Core.Services.Parsing
                 if (html != "")
                 {
                     // Article text
-                    string text = GetArticleText(html, false);
+                    string text = GetArticleText(parserData, html, false);
                     if (text.Contains("Skip")) return false; // Skipping article
 
                     // Article image

@@ -35,5 +35,13 @@ namespace News.Forms.UI.Pages
         {
             _newsViewModel = DataContext as NewsViewModel;
         }
+
+        /// <summary>
+        /// Home button click
+        /// </summary>
+        private void HomeButton_Clicked(object sender, System.EventArgs e)
+        {
+            NewsCollectionView.ScrollTo(0);
+        }
     }
 }

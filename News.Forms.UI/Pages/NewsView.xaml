@@ -14,29 +14,49 @@
         
     </ContentPage.Resources>
     <ContentPage.Content>
-        <StackLayout>
-            <Button x:Name="RefreshButton" Text="Обновить" Clicked="RefreshButton_Clicked">
-            </Button>
-            <CollectionView x:Name="NewsCollectionView" ItemsSource="{Binding Articles}"
+        <StackLayout BackgroundColor="LightGray">
+            <StackLayout Padding="0,0,0,-5">
+                <CollectionView x:Name="NewsCollectionView" ItemsSource="{Binding Articles}"
                         BindingContextChanged="NewsCollectionView_BindingContextChanged"
                         SelectionMode="Single"
                         SelectedItem="{Binding SelectedArticle}">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <StackLayout Padding="10,10">
-                            <Frame>
-                                <StackLayout>
-                                    <Label FontSize="Large" Text="{Binding Title}" VerticalTextAlignment="Center"/>
-                                    <Image Source="{Binding Image, Converter={StaticResource bic}}" 
-                                           VerticalOptions="FillAndExpand"
-                                           HorizontalOptions="FillAndExpand"
-                                           Aspect="AspectFill"/>
-                                </StackLayout>
-                            </Frame>
-                        </StackLayout>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout Padding="10,10,10,2" BackgroundColor="LightGray">
+                                <Frame>
+                                    <StackLayout>
+                                        <Grid Width="485" Margin="0, 0, 0, 5">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label Grid.Column="0" Padding="5" BackgroundColor="LightGray" Text="{Binding TimeStamp, StringFormat=\{0:dd.MM hh:mm\}}"/>
+                                            <Label Grid.Column="2" Padding="5" BackgroundColor="LightGreen" Text="{Binding SourceTitle}"/>
+                                        </Grid>
+                                        <Label Margin="0,-8" FontSize="Large" TextColor="#1976D2" Text="{Binding Title}" VerticalTextAlignment="Center"/>
+                                        <Label Margin="0,5,0,5" FontSize="Small" Text="{Binding IntroText}" VerticalTextAlignment="Center"/>
+                                        <Image Source="{Binding Image, TargetNullValue={x:Null}, Converter={StaticResource bic}}"
+                                           IsVisible="{Binding Image, Converter={helpers:NullValueBoolConverter}}"
+                                           HeightRequest="300"
+                                           Aspect="AspectFill"
+                                           HorizontalOptions="FillAndExpand">
+                                        </Image>
+                                    </StackLayout>
+                                </Frame>
+                            </StackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </StackLayout>
+            <Grid Padding="10,5,10,5" BackgroundColor="White">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Button x:Name="HomeButton" HeightRequest="70" Grid.Column="0" Text="В начало" Clicked="HomeButton_Clicked" ImageSource="home.png"/>
+                <Button x:Name="RefreshButton" Grid.Column="1" Text="Обновить" Clicked="RefreshButton_Clicked" ImageSource="refresh.png" />
+            </Grid>
         </StackLayout>
     </ContentPage.Content>
 </views:MvxContentPage>

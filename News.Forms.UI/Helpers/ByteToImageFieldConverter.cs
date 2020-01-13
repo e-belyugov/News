@@ -7,7 +7,7 @@ using System.Text;
 namespace News.Forms.UI.Helpers
 {
     /// <summary>
-    /// Image converter
+    /// Byte to image converter
     /// </summary>
     public class ByteToImageFieldConverter : IValueConverter
     {

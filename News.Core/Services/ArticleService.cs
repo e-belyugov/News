@@ -20,6 +20,7 @@ namespace News.Core.Services
         private readonly IParserList _parsers;
 
         // Article database
+        private bool _onlyDatabase = true;
         private readonly IArticleDatabase _database;
         private bool _databasePrepared = false;
 
@@ -63,7 +64,7 @@ namespace News.Core.Services
 
                 // Checking for new articles
                 bool gotNewArticles = false;
-                if (true)
+                if (!_onlyDatabase)
                 {
                     foreach (var parser in _parsers.Parsers)
                     {

@@ -74,16 +74,21 @@ namespace News.Core.Services.Parsing
                     }
                     else
                     {
-                        oldArticle = oldArticle.Replace("h5", "h3");
                         oldArticle = oldArticle.Replace("h4", "h3");
+                        oldArticle = oldArticle.Replace("h5", "h3");
+                        oldArticle = oldArticle.Replace("h6", "h3");
                         oldArticle = oldArticle.Replace("src=\"/i", "src=\"" + parserData.SourceMainLink + "/i");
                         oldArticle = oldArticle.Replace("src=", "width=\"500\" src=");
 
+                        /*
                         oldArticle = oldArticle.ReplaceSubstringBetweenSubstrings("<a", ">", "");
                         oldArticle = oldArticle.Replace("<a>", "<font style=\"text-decoration:underline\">");
                         oldArticle = oldArticle.Replace("</a>", "</font>");
+                        */
+                        oldArticle = oldArticle.Replace("<a", "<a target=\"_blank\"");
 
-                        oldArticle = "<font style=\"font-family:segoe ui; font-size:14px\">" + oldArticle + "</font>";
+                        oldArticle = "<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head>"
+                            + "<font style=\"font-family:segoe ui; font-size:14px\">" + oldArticle + "</font>";
                         cleaned = oldArticle;
                     }
                 }

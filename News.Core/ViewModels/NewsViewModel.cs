@@ -1,23 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using MvvmCross.ViewModels;
 using MvvmCross.Navigation;
 using MvvmCross.Commands;
 using System.Threading.Tasks;
 using News.Core.Services;
 using News.Core.Models;
-using System.Diagnostics;
-using System.Collections.ObjectModel;
-using MvvmCross.Base;
-using MvvmCross;
+using System.Linq;
 
 namespace News.Core.ViewModels
 {
     /// <summary>
     /// News ViewModel
     /// </summary>
-    public class NewsViewModel : MvxViewModel<ArticleBundle>
+    public class NewsViewModel : MvxViewModel
     {
         // Article service
         readonly IArticleService _articleService;
@@ -25,55 +20,87 @@ namespace News.Core.ViewModels
         // Navigation service
         readonly IMvxNavigationService _navigationService;
 
-        // Article list
-        private IList<Article> _articles = new List<Article>();
-
+        // -----------------------------------------------
         /// <summary>
         /// Article observable collection
         /// </summary>
-        public ObservableCollection<Article> Articles { get { return new ObservableCollection<Article>(_articles); } set { _articles = value; } }
+        private MvxObservableCollection<Article> _articles;
+        public MvxObservableCollection<Article> Articles
+        {
+            get => _articles;
+            set
+            {
+                _articles = value;
+                RaisePropertyChanged(() => Articles);
+            }
+        }
 
+        // -----------------------------------------------
+        /// <summary>
+        /// Article selected command
+        /// </summary>
+        public IMvxCommand<Article> ArticleSelectedCommand { get; private set; }
+
+        // -----------------------------------------------
         /// <summary>
         /// Selected article
         /// </summary>
         public Article SelectedArticle { get; set; }
 
+        // -----------------------------------------------
+        /// <summary>
+        /// Refresh articles command
+        /// </summary>
+        public IMvxCommand RefreshArticlesCommand { get; private set; }
+
+        // -----------------------------------------------
+        /// <summary>
+        /// Navigate to article command
+        /// </summary>
+        private IMvxAsyncCommand _navigateToArticleCommand;
+        public IMvxAsyncCommand NavigateToArticleCommand
+        {
+            get
+            {
+                _navigateToArticleCommand = _navigateToArticleCommand ?? new MvxAsyncCommand(() =>
+                                       _navigationService.Navigate<ArticleViewModel, Article>(SelectedArticle));
+                return _navigateToArticleCommand;
+            }
+        }
+
+        // -----------------------------------------------
+        /// <summary>
+        /// Refresh data command
+        /// </summary>
+        //private MvxNotifyTask _refreshArticlesCommand;
+        //public IMvxCommand RefreshArticlesCommand { get; private set; }
+        //public MvxNotifyTask MyTaskNotifier
+        //{
+        //    get => _refreshArticlesCommand;
+        //    private set => SetProperty(ref _refreshArticlesCommand, value);
+        //}
+
+        // -----------------------------------------------
         /// <summary>
         /// Busy flag
         /// </summary>
         private bool _isBusy;
         public bool IsBusy {
-            get => _isBusy; 
-            set => SetProperty(ref _isBusy, value); 
-        }
-
-        /// <summary>
-        /// Navigate command
-        /// </summary>
-        private IMvxAsyncCommand _navigateCommand;
-        public IMvxAsyncCommand NavigateCommand
-        {
-            get
+            get => _isBusy;
+            set
             {
-                var articleBundle = new ArticleBundle() { ArticleList = _articles, SelectedArticle = SelectedArticle };
-
-                _navigateCommand = _navigateCommand ?? new MvxAsyncCommand(() => 
-                    _navigationService.Navigate<ArticleViewModel, ArticleBundle>(articleBundle));
-                return _navigateCommand;
+                _isBusy = value;
+                RaisePropertyChanged(() => IsBusy);
             }
         }
 
+        // -----------------------------------------------
         /// <summary>
-        /// Refresh data command
+        /// Load articles task
         /// </summary>
-        private MvxNotifyTask _myTaskNotifier;
-        public IMvxCommand RefreshDataCommand { get; private set; }
-        public MvxNotifyTask MyTaskNotifier
-        {
-            get => _myTaskNotifier;
-            private set => SetProperty(ref _myTaskNotifier, value);
-        }
+        public MvxNotifyTask LoadArticlesTask { get; private set; }
 
+        // -----------------------------------------------
         /// <summary> 
         /// Last error string
         /// </summary>
@@ -81,8 +108,16 @@ namespace News.Core.ViewModels
         public string LastError 
         { 
             get => _lastError;
-            set => SetProperty(ref _lastError, value);
+            set
+            {
+                _lastError = value;
+                RaisePropertyChanged(() => LastError);
+            }
         }
+
+        // -----------------------------------------------
+        // -----------------------------------------------
+        // -----------------------------------------------
 
         /// <summary>
         /// Constructor
@@ -91,38 +126,39 @@ namespace News.Core.ViewModels
         {
             _articleService = articleService;
             _navigationService = navigationService;
+
+            Articles = new MvxObservableCollection<Article>();
+
+            ArticleSelectedCommand = new MvxAsyncCommand<Article>(ArticleSelected);
+            RefreshArticlesCommand = new MvxCommand(RefreshArticles);
+
             IsBusy = false;
-
-            RefreshDataCommand = new MvxCommand(() => MyTaskNotifier = MvxNotifyTask.Create(() => RefreshDataAsync(), 
-                onException: ex => OnException(ex)));
         }
 
+        // -----------------------------------------------
         /// <summary>
-        /// Initialization
+        /// Initializing ViewModel
         /// </summary>
-        public override async Task Initialize()
+        public override Task Initialize()
         {
-            await base.Initialize();
+            LoadArticlesTask = MvxNotifyTask.Create(LoadArticles);
 
-            //if (_firstRun)
-            //{
-            //    _firstRun = false;
-            //    RefreshDataCommand.Execute();
-            //}
+            return base.Initialize();
         }
 
         /// <summary>
-        /// Refresh data
+        /// Loading articles
         /// </summary>
-        public async Task RefreshDataAsync()
+        public async Task LoadArticles()
         {
             try
             {
                 _lastError = "";
                 IsBusy = true;
 
-                _articles = await _articleService.GetArticlesAsync();
-                await RaisePropertyChanged(nameof(Articles));
+                var result = await _articleService.GetArticlesAsync();
+                Articles.Clear();
+                foreach (var article in result) Articles.Add(article);
 
                 _lastError = _articleService.LastError;
                 await RaisePropertyChanged(nameof(LastError));
@@ -136,20 +172,20 @@ namespace News.Core.ViewModels
         }
 
         /// <summary>
-        /// Exception handler
+        /// Selecting article
         /// </summary>
-        private void OnException(Exception exception)
+        private async Task ArticleSelected(Article selectedArticle)
         {
-            // log the handled exception!
+            var result = await _navigationService.Navigate<ArticleViewModel, Article>(selectedArticle);
         }
 
         /// <summary>
-        /// Preparing view model
+        /// Refreshing articles
         /// </summary>
-        public override void Prepare(ArticleBundle articleBundle)
+        private void RefreshArticles()
         {
-            _articles = articleBundle.ArticleList;
-            SelectedArticle = articleBundle.SelectedArticle;
+            LoadArticlesTask = MvxNotifyTask.Create(LoadArticles);
+            RaisePropertyChanged(() => LoadArticlesTask);
         }
     }
 }

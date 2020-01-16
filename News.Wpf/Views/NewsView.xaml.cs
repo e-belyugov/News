@@ -32,7 +32,7 @@ namespace News.WPF.Views
             _newsViewModel = DataContext as NewsViewModel;
 
             // Scroll to selected article
-            if (_newsViewModel != null 
+            if (_newsViewModel != null
                 && _newsViewModel.SelectedArticle != null)
             {
                 NewsListView.ScrollIntoView(_newsViewModel.SelectedArticle);
@@ -40,20 +40,11 @@ namespace News.WPF.Views
         }
 
         /// <summary>
-        /// Listview selection changed event
-        /// </summary>
-        private void ListView_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            if (!NewsListView.IsLoaded) return;
-            if (_newsViewModel != null) _newsViewModel.NavigateCommand.Execute();
-        }
-
-        /// <summary>
         /// Refresh button click
         /// </summary>
         private void RefreshButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (_newsViewModel != null) _newsViewModel.RefreshDataCommand.Execute();
+            _newsViewModel?.RefreshArticlesCommand.Execute();
         }
 
         /// <summary>
@@ -72,7 +63,7 @@ namespace News.WPF.Views
             if (listViewItem != null)
             {
                 NewsListView.SelectedItem = ((ListViewItem)listViewItem).Content;
-                if (_newsViewModel != null) _newsViewModel.NavigateCommand.Execute();
+                _newsViewModel?.NavigateToArticleCommand.Execute();
             }
         }
     }

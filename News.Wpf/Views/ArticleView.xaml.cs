@@ -27,7 +27,7 @@ namespace News.Wpf.Views
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             ArticleViewModel articleViewModel = DataContext as ArticleViewModel;
-            articleViewModel.NavigateCommand.Execute();
+            articleViewModel?.NavigateToNewsCommand.Execute();
         }
 
         /// <summary>

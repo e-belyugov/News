@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using MvvmCross.ViewModels;
 using News.Core.Models;
 using MvvmCross.Commands;
@@ -11,40 +12,39 @@ namespace News.Core.ViewModels
     /// <summary>
     /// Article ViewModel
     /// </summary>
-    public class ArticleViewModel : MvxViewModel<ArticleBundle>
+    public class ArticleViewModel : MvxViewModel<Article>
     {
-        // Article list
-        private IList<Article> _articles = new List<Article>();
-
         // Navigation service
         readonly IMvxNavigationService _navigationService;
 
         /// <summary>
-        /// Navigate command
+        /// Active article
         /// </summary>
-        private IMvxAsyncCommand _navigateCommand;
-        public IMvxAsyncCommand NavigateCommand
+        private Article _article;
+        public Article Article
         {
-            get
+            get => _article;
+            set
             {
-                var articleBundle = new ArticleBundle() { ArticleList = _articles, SelectedArticle = _selectedArticle };
-
-                _navigateCommand = _navigateCommand ?? new MvxAsyncCommand(() =>
-                    _navigationService.Navigate<NewsViewModel, ArticleBundle>(articleBundle));
-                return _navigateCommand;
+                _article = value;
+                RaisePropertyChanged(() => Article);
             }
         }
 
         /// <summary>
-        /// Selected article (backend field)
+        /// Navigate command
         /// </summary>
-        public Article _selectedArticle;
+        private IMvxAsyncCommand _navigateToNewsCommand;
+        public IMvxAsyncCommand NavigateToNewsCommand
+        {
+            get
+            {
+                _navigateToNewsCommand = _navigateToNewsCommand ?? new MvxAsyncCommand(() => _navigationService.Navigate<NewsViewModel>());
+                return _navigateToNewsCommand;
+            }
+        }
 
-        /// <summary>
-        /// Selected article
-        /// </summary>
-        public Article SelectedArticle { get { return _selectedArticle; } set { _selectedArticle = value; } }
-
+        // -----------------------------------------------
         /// <summary>
         /// Constructor
         /// </summary>
@@ -53,13 +53,22 @@ namespace News.Core.ViewModels
             _navigationService = navigationService;
         }
 
+        // -----------------------------------------------
         /// <summary>
-        /// Preparing view model
+        /// Initializing ViewModel
         /// </summary>
-        public override void Prepare(ArticleBundle articleBundle)
+        public override Task Initialize()
         {
-            _articles = articleBundle.ArticleList;
-            _selectedArticle = articleBundle.SelectedArticle;
+            return Task.FromResult(0);
+        }
+
+        // -----------------------------------------------
+        /// <summary>
+        /// Preparing ViewModel
+        /// </summary>
+        public override void Prepare(Article parameter)
+        {
+            Article = parameter;
         }
     }
 }

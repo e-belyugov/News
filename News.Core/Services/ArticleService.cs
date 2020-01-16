@@ -45,7 +45,7 @@ namespace News.Core.Services
         /// <summary>
         /// Getting string data from web page
         /// </summary>
-        public async Task<IList<Article>> GetArticlesAsync()
+        public async Task<IEnumerable<Article>> GetArticlesAsync()
         {
             try
             {

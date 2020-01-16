@@ -1,4 +1,5 @@
-﻿using Xamarin.Forms;
+﻿using MvvmCross.Forms.Presenters.Attributes;
+using Xamarin.Forms;
 using MvvmCross.Forms.Views;
 using News.Core.ViewModels;
 
@@ -7,6 +8,7 @@ namespace News.Forms.UI.Pages
     /// <summary>
     /// News view
     /// </summary>
+    [MvxMasterDetailPagePresentation(MasterDetailPosition.Detail, WrapInNavigationPage = true, NoHistory = true)]
     public partial class NewsView : MvxContentPage<NewsViewModel>
     {
         // ViewModel
@@ -21,11 +23,18 @@ namespace News.Forms.UI.Pages
         }
 
         /// <summary>
+        /// OnAppearing event
+        /// </summary>
+        protected override void OnAppearing()
+        {
+        }
+
+        /// <summary>
         /// Refresh button click
         /// </summary>
         private void RefreshButton_Clicked(object sender, System.EventArgs e)
         {
-            if (_newsViewModel != null) _newsViewModel.RefreshDataCommand.Execute();
+            //if (_newsViewModel != null) _newsViewModel.RefreshDataCommand.Execute();
         }
 
         /// <summary>
@@ -41,7 +50,27 @@ namespace News.Forms.UI.Pages
         /// </summary>
         private void HomeButton_Clicked(object sender, System.EventArgs e)
         {
-            NewsCollectionView.ScrollTo(0);
+            //NewsCollectionView.ScrollTo(0);
+        }
+
+        /// <summary>
+        /// News CollectionView selection changed event
+        /// </summary>
+        private void NewsCollectionView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //if (_newsViewModel != null) _newsViewModel.NavigateCommand.Execute();
+        }
+
+        /// <summary>
+        /// News CollectionView size changed event
+        /// </summary>
+        private void NewsCollectionView_SizeChanged(object sender, System.EventArgs e)
+        {
+            //NewsCollectionView.IsVisible = true;
+            //if (_newsViewModel != null && _newsViewModel.SelectedArticle != null)
+            //{
+            //    NewsCollectionView.ScrollTo(_newsViewModel.SelectedArticle);
+            //}
         }
     }
 }

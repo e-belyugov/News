@@ -35,12 +35,14 @@
                     </Style>
                 </TextBlock.Style>
             </TextBlock>
+
             <ListView x:Name="NewsListView" Grid.RowSpan="3"
                   SelectedItem="{Binding SelectedArticle}"
                   Loaded="NewsListView_Loaded"
                   PreviewMouseDown="NewsListView_PreviewMouseDown"
                   BorderThickness="0"
-                  ItemsSource="{Binding Articles}" Width="Auto" Height="730">
+                  ItemsSource="{Binding Articles}"
+                  Width="Auto" Height="730">
                
                 <ListView.ItemTemplate>
                     <DataTemplate>

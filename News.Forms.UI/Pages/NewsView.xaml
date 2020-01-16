@@ -5,27 +5,74 @@
     xmlns:mvx="clr-namespace:MvvmCross.Forms.Bindings;assembly=MvvmCross.Forms"
     xmlns:viewModels="clr-namespace:News.Core.ViewModels;assembly=News.Core"
     xmlns:helpers="clr-namespace:News.Forms.UI.Helpers"
+    NavigationPage.HasBackButton="False"
     x:Class="News.Forms.UI.Pages.NewsView">
 
     <ContentPage.Resources>
         <ResourceDictionary>
             <helpers:ByteToImageFieldConverter x:Key="bic" />
         </ResourceDictionary>
-        
     </ContentPage.Resources>
+    
     <ContentPage.Content>
-        <StackLayout BackgroundColor="LightGray">
+        <views:MvxListView
+            ItemsSource="{mvx:MvxBind Articles}"
+            ItemClick="{mvx:MvxBind ArticleSelectedCommand}"
+            SelectionMode="None">
+            <ListView.ItemTemplate>
+                <!--<DataTemplate>
+                    <StackLayout Padding="10,10,10,2" BackgroundColor="LightGray">
+                        <Frame>
+                            <StackLayout>
+                                <Grid Margin="0, 0, 0, 5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0" Padding="5" BackgroundColor="LightGray" mvx:Bi.nd="Text TimeStamp"/>
+                                    <Label Grid.Column="2" Padding="5" BackgroundColor="LightGreen" mvx:Bi.nd="Text SourceTitle"/>
+                                </Grid>
+                                <Label Margin="0,-8" FontSize="Large" TextColor="#1976D2" mvx:Bi.nd="Text Title" VerticalTextAlignment="Center"/>
+                                <Label Margin="0,5,0,5" FontSize="Small" mvx:Bi.nd="Text IntroText" VerticalTextAlignment="Center"/>
+                                <Image mvx:Bi.nd="Source Image"
+                                           HeightRequest="300"
+                                           Aspect="AspectFill"
+                                           HorizontalOptions="FillAndExpand">
+                                </Image>
+                            </StackLayout>
+                        </Frame>
+                    </StackLayout>
+                </DataTemplate>-->
+                <DataTemplate>
+                    <views:MvxViewCell>
+                        <StackLayout>
+                            <Label mvx:Bi.nd="Text Title"></Label>
+                            <Image Source="{Binding Image, TargetNullValue={x:Null}, Converter={StaticResource bic}}"
+                                   IsVisible="{Binding Image, TargetNullValue={x:Null}, Converter={helpers:NullValueBoolConverter}}"
+                                   HeightRequest="300"
+                                   Aspect="AspectFill"
+                                   VerticalOptions="FillAndExpand"
+                                   HorizontalOptions="FillAndExpand">
+                            </Image>
+                        </StackLayout>
+                    </views:MvxViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </views:MvxListView>
+        <!--<StackLayout BackgroundColor="LightGray">
             <StackLayout Padding="0,0,0,-5">
                 <CollectionView x:Name="NewsCollectionView" ItemsSource="{Binding Articles}"
                         BindingContextChanged="NewsCollectionView_BindingContextChanged"
                         SelectionMode="Single"
+                        SelectionChanged="NewsCollectionView_SelectionChanged"
                         SelectedItem="{Binding SelectedArticle}">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <StackLayout Padding="10,10,10,2" BackgroundColor="LightGray">
                                 <Frame>
                                     <StackLayout>
-                                        <Grid Width="485" Margin="0, 0, 0, 5">
+                                        <Grid Margin="0, 0, 0, 5">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="*" />
@@ -37,7 +84,7 @@
                                         <Label Margin="0,-8" FontSize="Large" TextColor="#1976D2" Text="{Binding Title}" VerticalTextAlignment="Center"/>
                                         <Label Margin="0,5,0,5" FontSize="Small" Text="{Binding IntroText}" VerticalTextAlignment="Center"/>
                                         <Image Source="{Binding Image, TargetNullValue={x:Null}, Converter={StaticResource bic}}"
-                                           IsVisible="{Binding Image, Converter={helpers:NullValueBoolConverter}}"
+                                           IsVisible="{Binding Image, TargetNullValue={x:Null}, Converter={helpers:NullValueBoolConverter}}"
                                            HeightRequest="300"
                                            Aspect="AspectFill"
                                            HorizontalOptions="FillAndExpand">
@@ -58,6 +105,6 @@
                 <Button x:Name="HomeButton" HeightRequest="70" Grid.Column="0" Text="В начало" Clicked="HomeButton_Clicked" ImageSource="home.png"/>
                 <Button x:Name="RefreshButton" Grid.Column="2" Text="Обновить" Clicked="RefreshButton_Clicked" ImageSource="refresh.png" />
             </Grid>
-        </StackLayout>
+        </StackLayout>-->
     </ContentPage.Content>
 </views:MvxContentPage>

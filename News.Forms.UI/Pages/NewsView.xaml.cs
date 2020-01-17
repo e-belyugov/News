@@ -8,7 +8,7 @@ namespace News.Forms.UI.Pages
     /// <summary>
     /// News view
     /// </summary>
-    [MvxMasterDetailPagePresentation(MasterDetailPosition.Detail, WrapInNavigationPage = true, NoHistory = true)]
+    //[MvxMasterDetailPagePresentation(MasterDetailPosition.Detail, WrapInNavigationPage = true, NoHistory = true)]
     public partial class NewsView : MvxContentPage<NewsViewModel>
     {
         // ViewModel

@@ -18,43 +18,28 @@
         <views:MvxListView
             ItemsSource="{mvx:MvxBind Articles}"
             ItemClick="{mvx:MvxBind ArticleSelectedCommand}"
+            RowHeight="165"
+            SeparatorVisibility="None"
             SelectionMode="None">
+            <!--<ListView.Triggers>
+                <DataTrigger Binding="{Binding Image, TargetNullValue={x:Null}, Converter={helpers:NullValueBoolConverter}}" Value="x:Null">
+                    <Setter Property="RowHeight" Value="65"></Setter>
+                </DataTrigger>
+            </ListView.Triggers>-->
             <ListView.ItemTemplate>
-                <!--<DataTemplate>
-                    <StackLayout Padding="10,10,10,2" BackgroundColor="LightGray">
-                        <Frame>
-                            <StackLayout>
-                                <Grid Margin="0, 0, 0, 5">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Grid.Column="0" Padding="5" BackgroundColor="LightGray" mvx:Bi.nd="Text TimeStamp"/>
-                                    <Label Grid.Column="2" Padding="5" BackgroundColor="LightGreen" mvx:Bi.nd="Text SourceTitle"/>
-                                </Grid>
-                                <Label Margin="0,-8" FontSize="Large" TextColor="#1976D2" mvx:Bi.nd="Text Title" VerticalTextAlignment="Center"/>
-                                <Label Margin="0,5,0,5" FontSize="Small" mvx:Bi.nd="Text IntroText" VerticalTextAlignment="Center"/>
-                                <Image mvx:Bi.nd="Source Image"
-                                           HeightRequest="300"
-                                           Aspect="AspectFill"
-                                           HorizontalOptions="FillAndExpand">
-                                </Image>
-                            </StackLayout>
-                        </Frame>
-                    </StackLayout>
-                </DataTemplate>-->
                 <DataTemplate>
                     <views:MvxViewCell>
                         <StackLayout>
-                            <Label mvx:Bi.nd="Text Title"></Label>
-                            <Image Source="{Binding Image, TargetNullValue={x:Null}, Converter={StaticResource bic}}"
-                                   IsVisible="{Binding Image, TargetNullValue={x:Null}, Converter={helpers:NullValueBoolConverter}}"
-                                   HeightRequest="300"
-                                   Aspect="AspectFill"
-                                   VerticalOptions="FillAndExpand"
-                                   HorizontalOptions="FillAndExpand">
-                            </Image>
+                            <BoxView HeightRequest="10" Color="LightGray"></BoxView>
+                            <StackLayout Padding="10">
+                                <Label mvx:Bi.nd="Text Title"></Label>
+                                <Image Source="{Binding Image, TargetNullValue={x:Null}, Converter={StaticResource bic}}"
+                                       HorizontalOptions="FillAndExpand"
+                                       HeightRequest="100"
+                                       Aspect="AspectFill">
+                                </Image>
+                            </StackLayout>
+                            <BoxView HeightRequest="10"></BoxView>
                         </StackLayout>
                     </views:MvxViewCell>
                 </DataTemplate>

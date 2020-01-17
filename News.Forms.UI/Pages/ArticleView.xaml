@@ -9,12 +9,12 @@
 
     <ContentPage.Resources>
         <ResourceDictionary>
-            <helpers:ByteToImageFieldConverter x:Key="bic" />
+            <helpers:ByteToImageFieldConverter x:Key="Bic" />
         </ResourceDictionary>
 
     </ContentPage.Resources>
     <ContentPage.Content>
-        <StackLayout Padding="10,10,10,2" BackgroundColor="LightGray">
+        <StackLayout Padding="0" BackgroundColor="LightGray">
             <Frame>
                 <StackLayout>
                     <Grid Width="485" Margin="0, 0, 0, 5">
@@ -28,7 +28,7 @@
                     </Grid>
                     <Label Margin="0,-8" FontSize="Large" TextColor="#1976D2" Text="{Binding Article.Title}" VerticalTextAlignment="Center"/>
                     <Label Margin="0,5,0,5" FontSize="Small" Text="{Binding Article.IntroText}" VerticalTextAlignment="Center"/>
-                    <Image Source="{Binding Article.Image, TargetNullValue={x:Null}, Converter={StaticResource bic}}"
+                    <Image Source="{Binding Article.Image, TargetNullValue={x:Null}, Converter={StaticResource Bic}}"
                                            IsVisible="{Binding Article.Image, Converter={helpers:NullValueBoolConverter}}"
                                            HeightRequest="300"
                                            Aspect="AspectFill"

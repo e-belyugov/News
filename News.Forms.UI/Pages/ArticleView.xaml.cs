@@ -9,7 +9,7 @@ namespace News.Forms.UI.Pages
     /// <summary>
     /// Article view
     /// </summary>
-    [MvxMasterDetailPagePresentation(WrapInNavigationPage = true)]
+    //[MvxMasterDetailPagePresentation(WrapInNavigationPage = true)]
     public partial class ArticleView : MvxContentPage<ArticleViewModel>
     {
         /// <summary>

@@ -15,7 +15,7 @@ namespace News.Core.Services.Database
     public class ArticleDatabase : IArticleDatabase
     {
         // User version
-        private readonly int _userVersion = 68;
+        private readonly int _userVersion = 72;
 
         // Logger
         private readonly ILogger _logger;

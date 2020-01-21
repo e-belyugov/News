@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using System.Linq;
 using System.IO;
+using News.Core.Helpers;
 
 namespace News.Core.Services.Parsing
 {
@@ -88,7 +89,7 @@ namespace News.Core.Services.Parsing
                         oldArticle = oldArticle.Replace("<a", "<a target=\"_blank\"");
 
                         oldArticle = "<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head>"
-                            + "<font style=\"font-family:segoe ui; font-size:14px\">" + oldArticle + "</font>";
+                            + "<font style=\"font-family:segoe ui; font-size:18px\">" + oldArticle + "</font>";
                         cleaned = oldArticle;
                     }
                 }
@@ -186,7 +187,11 @@ namespace News.Core.Services.Parsing
                             // Article time stamp
                             node = item.ChildNodes["pubDate"];
                             DateTime timeStamp = DateTime.MinValue;
-                            if (node != null) timeStamp = Convert.ToDateTime(node.InnerText);
+                            if (node != null)
+                            {
+                                timeStamp = Convert.ToDateTime(node.InnerText);
+                                timeStamp = timeStamp.AddHours(7);
+                            }
 
                             // Creating article
                             if (
@@ -267,6 +272,10 @@ namespace News.Core.Services.Parsing
                             }
                         }
                     }
+
+                    // Logo if no image
+                    //var resourceHelper = new ResourceHelper(_logger);
+                    //if (image == null) image = resourceHelper.GetParserLogo(parserData.SourceTitle);
 
                     // Saving article fields
                     article.Text = text;

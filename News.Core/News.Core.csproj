@@ -8,26 +8,28 @@
     <OldToolsVersion>2.0</OldToolsVersion>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="Services\Web\TestData\kuzpresseconomy29-11-201971483.html" />
-    <None Remove="Services\Web\TestData\kuzpressiinfo260x2603535921.jpg" />
-    <None Remove="Services\Web\TestData\kuzpressiinfo260x2603535958.jpg" />
-    <None Remove="Services\Web\TestData\kuzpressiinfo260x2603535973.jpg" />
-    <None Remove="Services\Web\TestData\kuzpressiinfo260x2603535981.jpg" />
-    <None Remove="Services\Web\TestData\kuzpressinfo260x2603535973.jpg" />
-    <None Remove="Services\Web\TestData\kuzpresspolitics29-11-201971551.html" />
-    <None Remove="Services\Web\TestData\kuzpresssociety29-11-201971535.html" />
-    <None Remove="Services\Web\TestData\kuzpresssport29-11-201971552.html" />
+    <None Remove="Resources\Logos\kuzpress.jpg" />
+    <None Remove="Resources\TestData\kuzpresseconomy29-11-201971483.html" />
+    <None Remove="Resources\TestData\kuzpressiinfo260x2603535921.jpg" />
+    <None Remove="Resources\TestData\kuzpressiinfo260x2603535958.jpg" />
+    <None Remove="Resources\TestData\kuzpressiinfo260x2603535973.jpg" />
+    <None Remove="Resources\TestData\kuzpressiinfo260x2603535981.jpg" />
+    <None Remove="Resources\TestData\kuzpressinfo260x2603535973.jpg" />
+    <None Remove="Resources\TestData\kuzpresspolitics29-11-201971551.html" />
+    <None Remove="Resources\TestData\kuzpresssociety29-11-201971535.html" />
+    <None Remove="Resources\TestData\kuzpresssport29-11-201971552.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Services\Web\TestData\kuzpress.html" />
-    <EmbeddedResource Include="Services\Web\TestData\kuzpressiinfo260x2603535958.jpg" />
-    <EmbeddedResource Include="Services\Web\TestData\kuzpresseconomy29-11-201971483.html" />
-    <EmbeddedResource Include="Services\Web\TestData\kuzpressiinfo260x2603535921.jpg" />
-    <EmbeddedResource Include="Services\Web\TestData\kuzpressiinfo260x2603535973.jpg" />
-    <EmbeddedResource Include="Services\Web\TestData\kuzpressiinfo260x2603535981.jpg" />
-    <EmbeddedResource Include="Services\Web\TestData\kuzpresspolitics29-11-201971551.html" />
-    <EmbeddedResource Include="Services\Web\TestData\kuzpresssociety29-11-201971535.html" />
-    <EmbeddedResource Include="Services\Web\TestData\kuzpresssport29-11-201971552.html" />
+    <EmbeddedResource Include="Resources\Logos\kuzpress.jpg" />
+    <EmbeddedResource Include="Resources\TestData\kuzpress.html" />
+    <EmbeddedResource Include="Resources\TestData\kuzpressiinfo260x2603535958.jpg" />
+    <EmbeddedResource Include="Resources\TestData\kuzpresseconomy29-11-201971483.html" />
+    <EmbeddedResource Include="Resources\TestData\kuzpressiinfo260x2603535921.jpg" />
+    <EmbeddedResource Include="Resources\TestData\kuzpressiinfo260x2603535973.jpg" />
+    <EmbeddedResource Include="Resources\TestData\kuzpressiinfo260x2603535981.jpg" />
+    <EmbeddedResource Include="Resources\TestData\kuzpresspolitics29-11-201971551.html" />
+    <EmbeddedResource Include="Resources\TestData\kuzpresssociety29-11-201971535.html" />
+    <EmbeddedResource Include="Resources\TestData\kuzpresssport29-11-201971552.html" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack" Version="1.11.17" />

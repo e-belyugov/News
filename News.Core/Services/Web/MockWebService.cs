@@ -84,7 +84,7 @@ namespace News.Core.Services.Web
                 var assembly = IntrospectionExtensions.GetTypeInfo(typeof(WebService)).Assembly;
 
                 url = url.Replace("http://", "").Replace("https://", "").Replace("/", "").Replace(".ru", "").Replace(".jpg", "");
-                string resourceName = "News.Core.Services.Web.TestData." + url + ".jpg";
+                string resourceName = "News.Core.Services.Resources.TestData." + url + ".jpg";
 
                 if (ResourceExists(resourceName))
                 {

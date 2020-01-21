@@ -20,7 +20,6 @@ namespace News.Core.Services
         private readonly IParserList _parsers;
 
         // Article database
-        private bool _onlyDatabase = true;
         private readonly IArticleDatabase _database;
         private bool _databasePrepared = false;
 
@@ -45,7 +44,7 @@ namespace News.Core.Services
         /// <summary>
         /// Getting string data from web page
         /// </summary>
-        public async Task<IEnumerable<Article>> GetArticlesAsync()
+        public async Task<IEnumerable<Article>> GetArticlesAsync(bool remotely)
         {
             try
             {
@@ -64,7 +63,7 @@ namespace News.Core.Services
 
                 // Checking for new articles
                 bool gotNewArticles = false;
-                if (!_onlyDatabase)
+                if (remotely)
                 {
                     foreach (var parser in _parsers.Parsers)
                     {

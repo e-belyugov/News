@@ -32,8 +32,7 @@ namespace News.WPF.Views
             _newsViewModel = DataContext as NewsViewModel;
 
             // Scroll to selected article
-            if (_newsViewModel != null
-                && _newsViewModel.SelectedArticle != null)
+            if (_newsViewModel != null && _newsViewModel.SelectedArticle != null)
             {
                 NewsListView.ScrollIntoView(_newsViewModel.SelectedArticle);
             }
@@ -44,7 +43,7 @@ namespace News.WPF.Views
         /// </summary>
         private void RefreshButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            _newsViewModel?.RefreshArticlesCommand.Execute();
+            _newsViewModel?.RefreshArticlesCommand.Execute(true);
         }
 
         /// <summary>

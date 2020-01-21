@@ -51,7 +51,8 @@ namespace News.Core.ViewModels
         /// <summary>
         /// Refresh articles command
         /// </summary>
-        public IMvxCommand RefreshArticlesCommand { get; private set; }
+        //public IMvxCommand RefreshArticlesCommand { get; private set; }
+        public IMvxCommand<bool> RefreshArticlesCommand { get; private set; }
 
         // -----------------------------------------------
         /// <summary>
@@ -67,18 +68,6 @@ namespace News.Core.ViewModels
                 return _navigateToArticleCommand;
             }
         }
-
-        // -----------------------------------------------
-        /// <summary>
-        /// Refresh data command
-        /// </summary>
-        //private MvxNotifyTask _refreshArticlesCommand;
-        //public IMvxCommand RefreshArticlesCommand { get; private set; }
-        //public MvxNotifyTask MyTaskNotifier
-        //{
-        //    get => _refreshArticlesCommand;
-        //    private set => SetProperty(ref _refreshArticlesCommand, value);
-        //}
 
         // -----------------------------------------------
         /// <summary>
@@ -98,7 +87,7 @@ namespace News.Core.ViewModels
         /// <summary>
         /// Load articles task
         /// </summary>
-        public MvxNotifyTask LoadArticlesTask { get; private set; }
+        private MvxNotifyTask LoadArticlesTask { get; set; }
 
         // -----------------------------------------------
         /// <summary> 
@@ -130,7 +119,7 @@ namespace News.Core.ViewModels
             Articles = new MvxObservableCollection<Article>();
 
             ArticleSelectedCommand = new MvxAsyncCommand<Article>(ArticleSelected);
-            RefreshArticlesCommand = new MvxCommand(RefreshArticles);
+            RefreshArticlesCommand = new MvxCommand<bool>(RefreshArticles);
 
             IsBusy = false;
         }
@@ -141,22 +130,23 @@ namespace News.Core.ViewModels
         /// </summary>
         public override Task Initialize()
         {
-            LoadArticlesTask = MvxNotifyTask.Create(LoadArticles);
+            //LoadArticlesTask = MvxNotifyTask.Create(LoadArticles);
 
             return base.Initialize();
         }
 
+        // -----------------------------------------------
         /// <summary>
         /// Loading articles
         /// </summary>
-        public async Task LoadArticles()
+        public async Task LoadArticles(bool remotely)
         {
             try
             {
                 _lastError = "";
                 IsBusy = true;
 
-                var result = await _articleService.GetArticlesAsync();
+                var result = await _articleService.GetArticlesAsync(remotely);
                 Articles.Clear();
                 foreach (var article in result) Articles.Add(article);
 
@@ -171,20 +161,22 @@ namespace News.Core.ViewModels
             }
         }
 
+        // -----------------------------------------------
         /// <summary>
         /// Selecting article
         /// </summary>
         private async Task ArticleSelected(Article selectedArticle)
         {
-            var result = await _navigationService.Navigate<ArticleViewModel, Article>(selectedArticle);
+            await _navigationService.Navigate<ArticleViewModel, Article>(selectedArticle);
         }
 
+        // -----------------------------------------------
         /// <summary>
         /// Refreshing articles
         /// </summary>
-        private void RefreshArticles()
+        private void RefreshArticles(bool remotely)
         {
-            LoadArticlesTask = MvxNotifyTask.Create(LoadArticles);
+            LoadArticlesTask = MvxNotifyTask.Create(LoadArticles(remotely));
             RaisePropertyChanged(() => LoadArticlesTask);
         }
     }

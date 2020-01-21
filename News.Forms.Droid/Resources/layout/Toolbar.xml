@@ -9,6 +9,7 @@
 
      <TextView android:textSize="@dimen/abc_text_size_large_material"
         android:layout_width="wrap_content"
+        android:textColor="@android:color/white"
         android:layout_height="wrap_content"
         android:text="Новости Новокузнецка"
         android:layout_gravity="left"

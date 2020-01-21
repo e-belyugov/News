@@ -1,7 +1,12 @@
-﻿using MvvmCross.Forms.Presenters.Attributes;
+﻿using System.Collections;
+using System.Collections.Generic;
+using MvvmCross.Forms.Presenters.Attributes;
 using Xamarin.Forms;
 using MvvmCross.Forms.Views;
 using News.Core.ViewModels;
+using Plugin.Toast;
+using Plugin.Toast.Abstractions;
+using Xamarin.Essentials;
 
 namespace News.Forms.UI.Pages
 {
@@ -11,6 +16,9 @@ namespace News.Forms.UI.Pages
     //[MvxMasterDetailPagePresentation(MasterDetailPosition.Detail, WrapInNavigationPage = true, NoHistory = true)]
     public partial class NewsView : MvxContentPage<NewsViewModel>
     {
+        // First run flag
+        private bool _firstRun = true;
+
         // ViewModel
         private NewsViewModel _newsViewModel;
 
@@ -27,6 +35,11 @@ namespace News.Forms.UI.Pages
         /// </summary>
         protected override void OnAppearing()
         {
+            if (_firstRun)
+            {
+                _firstRun = false;
+                RefreshButton_Clicked(null, null);
+            }
         }
 
         /// <summary>
@@ -34,15 +47,17 @@ namespace News.Forms.UI.Pages
         /// </summary>
         private void RefreshButton_Clicked(object sender, System.EventArgs e)
         {
-            //if (_newsViewModel != null) _newsViewModel.RefreshDataCommand.Execute();
-        }
-
-        /// <summary>
-        /// News ListView Binding context changed event
-        /// </summary>
-        private void NewsCollectionView_BindingContextChanged(object sender, System.EventArgs e)
-        {
             _newsViewModel = DataContext as NewsViewModel;
+            if (_newsViewModel == null) return;
+
+            var current = Connectivity.NetworkAccess;
+            bool remotely = current == NetworkAccess.Internet;
+
+            if (!remotely)
+                CrossToastPopUp.Current.ShowToastWarning("Интернет соединение отсутствует. Будут загружены статьи из памяти устройства", 
+                    ToastLength.Long);
+
+            _newsViewModel?.RefreshArticlesCommand.Execute(remotely);
         }
 
         /// <summary>
@@ -50,27 +65,8 @@ namespace News.Forms.UI.Pages
         /// </summary>
         private void HomeButton_Clicked(object sender, System.EventArgs e)
         {
-            //NewsCollectionView.ScrollTo(0);
-        }
-
-        /// <summary>
-        /// News CollectionView selection changed event
-        /// </summary>
-        private void NewsCollectionView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            //if (_newsViewModel != null) _newsViewModel.NavigateCommand.Execute();
-        }
-
-        /// <summary>
-        /// News CollectionView size changed event
-        /// </summary>
-        private void NewsCollectionView_SizeChanged(object sender, System.EventArgs e)
-        {
-            //NewsCollectionView.IsVisible = true;
-            //if (_newsViewModel != null && _newsViewModel.SelectedArticle != null)
-            //{
-            //    NewsCollectionView.ScrollTo(_newsViewModel.SelectedArticle);
-            //}
+            var itemsSource = (IList) NewsListView.ItemsSource;
+            if (itemsSource != null) NewsListView.ScrollTo(itemsSource[0], ScrollToPosition.Start, false);
         }
     }
 }

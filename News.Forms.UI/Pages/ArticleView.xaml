@@ -14,32 +14,35 @@
 
     </ContentPage.Resources>
     <ContentPage.Content>
-        <StackLayout Padding="0" BackgroundColor="LightGray">
+        <StackLayout Padding="-20" BackgroundColor="LightGray">
             <Frame>
                 <StackLayout>
-                    <Grid Width="485" Margin="0, 0, 0, 5">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <Label Grid.Column="0" Padding="5" BackgroundColor="LightGray" Text="{Binding Article.TimeStamp, StringFormat=\{0:dd.MM hh:mm\}}"/>
-                        <Label Grid.Column="2" Padding="5" BackgroundColor="LightGreen" Text="{Binding Article.SourceTitle}"/>
-                    </Grid>
-                    <Label Margin="0,-8" FontSize="Large" TextColor="#1976D2" Text="{Binding Article.Title}" VerticalTextAlignment="Center"/>
-                    <Label Margin="0,5,0,5" FontSize="Small" Text="{Binding Article.IntroText}" VerticalTextAlignment="Center"/>
-                    <Image Source="{Binding Article.Image, TargetNullValue={x:Null}, Converter={StaticResource Bic}}"
+                    <StackLayout Padding="10, 12, 10, 10">
+                        <Grid Margin="0, 0, 0, 5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Padding="5" BackgroundColor="LightGray" Text="{Binding Article.TimeStamp, StringFormat=\{0:dd.MM hh:mm\}}"/>
+                            <Label Grid.Column="2" Padding="5" BackgroundColor="LightGreen" Text="{Binding Article.SourceTitle}"/>
+                        </Grid>
+                        <Label Margin="0,-8" FontSize="Large" TextColor="#1976D2" Text="{Binding Article.Title}" VerticalTextAlignment="Center"/>
+                        <Label Margin="0,5,0,-7" TextColor="Black" FontSize="Medium" Text="{Binding Article.IntroText}" VerticalTextAlignment="Center"/>
+                    </StackLayout>
+                    <StackLayout>
+                        <Image Source="{Binding Article.Image, TargetNullValue={x:Null}, Converter={StaticResource Bic}}"
                                            IsVisible="{Binding Article.Image, Converter={helpers:NullValueBoolConverter}}"
                                            HeightRequest="300"
                                            Aspect="AspectFill"
                                            HorizontalOptions="FillAndExpand">
-                    </Image>
-                    <!--<WebView>
+                        </Image>
+                    </StackLayout>
+                    <WebView HeightRequest="100">
                         <WebView.Source>
-                            <HtmlWebViewSource Html="{Binding SelectedArticle.Text}" />
+                            <HtmlWebViewSource Html="{Binding Article.Text}" />
                         </WebView.Source>
-                    </WebView>-->
-                    <Label Margin="0,-8" FontSize="Body" TextColor="#1976D2" Text="Текст стать" VerticalTextAlignment="Center"/>
+                    </WebView>
                 </StackLayout>
             </Frame>
         </StackLayout>

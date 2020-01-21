@@ -61,7 +61,7 @@ namespace News.Core.Services
                 // Loading parser list
                 IList<ParserData> parserDataList = await _database.GetParserDataAsync();
 
-                // Checking for new articles
+                // Checking for new articles (if remotely)
                 bool gotNewArticles = false;
                 if (remotely)
                 {
@@ -92,7 +92,7 @@ namespace News.Core.Services
                 if (gotNewArticles) await _database.SaveArticlesAsync(articles);
 
                 // Sorting and filtering articles
-                articles = articles.OrderByDescending(x => x.TimeStamp).Where(x => x.New == true).Take(25).ToList();
+                articles = articles.OrderByDescending(x => x.TimeStamp).Where(x => x.New).Take(25).ToList();
 
                 return articles;
             }

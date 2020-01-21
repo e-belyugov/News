@@ -15,7 +15,7 @@
     </ContentPage.Resources>
     
     <ContentPage.Content>
-        <StackLayout>
+        <StackLayout BackgroundColor="White">
             <views:MvxListView x:Name="NewsListView"
                 IsRefreshing="{Binding IsBusy}"
                 ItemsSource="{mvx:MvxBind Articles}"
@@ -28,10 +28,10 @@
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <views:MvxViewCell>
-                            <StackLayout>
-                                <BoxView HeightRequest="10" Color="Gainsboro"></BoxView>
-                                <StackLayout Padding="0, 3, 0, 0">
-                                    <StackLayout Padding="10, 5, 10, 0">
+                            <StackLayout BackgroundColor="White">
+                                <BoxView HeightRequest="5" Color="Gainsboro"></BoxView>
+                                <StackLayout Padding="0, 0, 0, 0">
+                                    <StackLayout Padding="15, 10, 15, 5">
                                         <Grid Margin="0, 0, 0, 5">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto" />
@@ -42,7 +42,7 @@
                                             <Label Grid.Column="2" Padding="5, 3, 5, 5" BackgroundColor="LightGreen" Text="{Binding SourceTitle}"/>
                                         </Grid>
                                         <Label Margin="0,-8" FontSize="Large" TextColor="#1976D2" Text="{Binding Title}" VerticalTextAlignment="Center"/>
-                                        <Label Margin="0,5,0,5" FontSize="Medium" TextColor="Black" Text="{Binding IntroText}" VerticalTextAlignment="Center"/>
+                                        <Label Margin="0,5,0,5" FontSize="Body" TextColor="Black" Text="{Binding IntroText}" VerticalTextAlignment="Center"/>
                                     </StackLayout>
                                     <Image Source="{Binding Image, TargetNullValue={x:Null}, Converter={StaticResource bic}}"
                                            IsVisible="{Binding Image, Converter={helpers:NullValueBoolConverter}}"
@@ -52,24 +52,24 @@
                                            Aspect="AspectFill">
                                     </Image>
                                 </StackLayout>
-                                <BoxView HeightRequest="5"></BoxView>
+                                <BoxView BackgroundColor="White" HeightRequest="15"></BoxView>
                             </StackLayout>
                         </views:MvxViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </views:MvxListView>
-            <BoxView HeightRequest="1" BackgroundColor="LightGray"></BoxView>
-            <Grid>
-                <Grid Padding="10,3,10,10" BackgroundColor="White">
+            <!--<BoxView HeightRequest="1" BackgroundColor="LightGray"></BoxView>-->
+            <StackLayout BackgroundColor="White">
+                <Grid Padding="8,0,12,8">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1.5*" />
+                        <ColumnDefinition Width="2*" />
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="1.5*" />
+                        <ColumnDefinition Width="2*" />
                     </Grid.ColumnDefinitions>
-                    <Button x:Name="HomeButton" HeightRequest="70" Grid.Column="0" Text="В начало" Clicked="HomeButton_Clicked" ImageSource="home.png"/>
-                    <Button x:Name="RefreshButton" Grid.Column="2" Text="Обновить" Clicked="RefreshButton_Clicked" ImageSource="refresh.png" />
+                    <Button FontSize="Body" x:Name="HomeButton" HeightRequest="70" Grid.Column="0" Text="В начало" Clicked="HomeButton_Clicked" ImageSource="home.png"/>
+                    <Button FontSize="Body" x:Name="RefreshButton" Grid.Column="2" Text="Обновить" Clicked="RefreshButton_Clicked" ImageSource="refresh.png" />
                 </Grid>
-            </Grid>
+            </StackLayout>
         </StackLayout>
     </ContentPage.Content>
 </views:MvxContentPage>

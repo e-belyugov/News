@@ -89,7 +89,7 @@ namespace News.Core.Services.Parsing
                         oldArticle = oldArticle.Replace("<a", "<a target=\"_blank\"");
 
                         oldArticle = "<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head>"
-                            + "<font style=\"font-family:segoe ui; font-size:18px\">" + oldArticle + "</font>";
+                            + "<font style=\"font-family:segoe ui; font-size:16px\">" + oldArticle + "</font>";
                         cleaned = oldArticle;
                     }
                 }

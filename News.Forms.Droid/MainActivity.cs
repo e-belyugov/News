@@ -13,8 +13,7 @@ namespace News.Forms.Droid
 {
     [Activity(
         Label = "НК Радар",
-        //Icon = "@mipmap/ic_launcher",
-        Icon = "@drawable/icon",
+        Icon = "@mipmap/ic_launcher",
         Theme = "@style/AppTheme",
         MainLauncher = true,
         ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation,

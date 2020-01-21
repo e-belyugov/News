@@ -29,8 +29,7 @@ namespace News.Wpf.Helpers
 
         static void OnHtmlChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
         {
-            WebBrowser webBrowser = dependencyObject as WebBrowser;
-            if (webBrowser != null)
+            if (dependencyObject is WebBrowser webBrowser)
                 webBrowser.NavigateToString(e.NewValue as string ?? "&nbsp;");
         }
     }

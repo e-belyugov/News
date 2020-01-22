@@ -22,8 +22,8 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <Label Grid.Column="0" Padding="5" BackgroundColor="LightGray" Text="{Binding Article.TimeStamp, StringFormat=\{0:dd.MM hh:mm\}}"/>
-                    <Label Grid.Column="2" Padding="5" BackgroundColor="LightGreen" Text="{Binding Article.SourceTitle}"/>
+                    <Label Grid.Column="0" Padding="5, 4, 5, 5" BackgroundColor="LightGray" Text="{Binding Article.TimeStamp, StringFormat=\{0:dd.MM HH:mm\}}"/>
+                    <Label Grid.Column="2" Padding="5, 3, 5, 5" BackgroundColor="LightGreen" Text="{Binding Article.SourceTitle}"/>
                 </Grid>
                 <Label Margin="0,0" FontSize="Large" TextColor="#1976D2" Text="{Binding Article.Title}" VerticalTextAlignment="Center"/>
                 <Label Margin="0,0,0,0" TextColor="Black" FontSize="Body" Text="{Binding Article.IntroText}" VerticalTextAlignment="Center"/>
@@ -39,7 +39,7 @@
                         <HtmlWebViewSource Html="{Binding Article.Text}" />
                     </WebView.Source>
                 </helpers:ExtendedWebView>
-                <Label Padding="0, 10, 10, 0">
+                <Label Padding="1, 10, 10, 0">
                     <Label.FormattedText>
                         <FormattedString>
                             <Span Text="Ссылка на статью: " />

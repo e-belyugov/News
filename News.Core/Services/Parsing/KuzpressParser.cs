@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using News.Core.Models;
 using News.Core.Services.Web;
@@ -189,8 +190,14 @@ namespace News.Core.Services.Parsing
                             DateTime timeStamp = DateTime.MinValue;
                             if (node != null)
                             {
-                                timeStamp = Convert.ToDateTime(node.InnerText);
-                                timeStamp = timeStamp.AddHours(7);
+                                var timeString = node.InnerText.Replace(" +0300","");
+                                //timeStamp = Convert.ToDateTime(timeString);
+                                //timeStamp = DateTime.ParseExact(timeString, "ddd, dd MMM yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+
+                                if (!DateTime.TryParseExact(timeString, "ddd, dd MMM yyyy HH:mm:ss", 
+                                    CultureInfo.InvariantCulture, DateTimeStyles.None, out timeStamp)) timeStamp = DateTime.MinValue;
+
+                                timeStamp = timeStamp.AddHours(4);
                             }
 
                             // Creating article

@@ -31,14 +31,14 @@
                             <StackLayout BackgroundColor="White">
                                 <BoxView HeightRequest="5" Color="Gainsboro"></BoxView>
                                 <StackLayout Padding="0, 0, 0, 0">
-                                    <StackLayout Padding="15, 10, 15, 5">
+                                    <StackLayout Padding="15, 10, 15, 4">
                                         <Grid Margin="0, 0, 0, 5">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="*" />
                                                 <ColumnDefinition Width="Auto" />
                                             </Grid.ColumnDefinitions>
-                                            <Label Grid.Column="0" Padding="5, 4, 5, 5" BackgroundColor="LightGray" Text="{Binding TimeStamp, StringFormat=\{0:dd.MM hh:mm\}}"/>
+                                            <Label Grid.Column="0" Padding="5, 4, 5, 5" BackgroundColor="LightGray" Text="{Binding TimeStamp, StringFormat=\{0:dd.MM HH:mm\}}"/>
                                             <Label Grid.Column="2" Padding="5, 3, 5, 5" BackgroundColor="LightGreen" Text="{Binding SourceTitle}"/>
                                         </Grid>
                                         <Label Margin="0,-8" FontSize="Large" TextColor="#1976D2" Text="{Binding Title}" VerticalTextAlignment="Center"/>
@@ -58,9 +58,9 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </views:MvxListView>
-            <!--<BoxView HeightRequest="1" BackgroundColor="LightGray"></BoxView>-->
+            <BoxView Margin="0,-7,0,-2" HeightRequest="1" BackgroundColor="LightGray"></BoxView>
             <StackLayout BackgroundColor="White">
-                <Grid Padding="8,0,12,8">
+                <Grid Padding="12,5,14,12">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2*" />
                         <ColumnDefinition Width="*" />

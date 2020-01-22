@@ -88,8 +88,12 @@ namespace News.Core.Services
                 // Saving parser data
                 await _database.SaveParserDataAsync(parserDataList);
 
-                // Saving articles (if got new)
-                if (gotNewArticles) await _database.SaveArticlesAsync(articles);
+                // Processing articles (if got new)
+                if (gotNewArticles)
+                {
+                    await _database.SaveArticlesAsync(articles);
+                    await _database.DeleteOldArticlesAsync();
+                }
 
                 // Sorting and filtering articles
                 articles = articles.OrderByDescending(x => x.TimeStamp).Where(x => x.New).Take(25).ToList();

@@ -12,7 +12,7 @@ using News.Forms.UI;
 namespace News.Forms.Droid
 {
     [Activity(
-        Label = "НК Радар",
+        Label = "Новости НК",
         Icon = "@mipmap/ic_launcher",
         Theme = "@style/AppTheme",
         MainLauncher = true,

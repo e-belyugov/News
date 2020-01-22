@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using News.Core.Models;
 using SQLite;
 using System.IO;
+using System.Linq;
 using News.Core.Services.Logging;
 
 namespace News.Core.Services.Database
@@ -15,7 +16,7 @@ namespace News.Core.Services.Database
     public class ArticleDatabase : IArticleDatabase
     {
         // User version
-        private readonly int _userVersion = 73;
+        private readonly int _userVersion = 74;
 
         // Logger
         private readonly ILogger _logger;
@@ -125,7 +126,7 @@ namespace News.Core.Services.Database
         {
             try
             {
-                List<Article> articleList = await _connection.Table<Article>().ToListAsync();
+                var articleList = await _connection.Table<Article>().ToListAsync();
                 return articleList;
             }
             catch (Exception e)
@@ -146,13 +147,35 @@ namespace News.Core.Services.Database
                 {
                     if (article.Id == 0)
                     {
-                        var result = await _connection.InsertAsync(article);
+                        await _connection.InsertAsync(article);
                     }
                     else
                     {
-                        var result = await _connection.UpdateAsync(article);
+                        await _connection.UpdateAsync(article);
                     }
                 }
+                return true;
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Deleting old articles
+        /// </summary>
+        public async Task<bool> DeleteOldArticlesAsync()
+        {
+            try
+            {
+                var articleList = await _connection.Table<Article>().ToListAsync();
+                foreach (var article in articleList.Where(x => !x.New))
+                {
+                    await _connection.DeleteAsync(article);
+                }
+
                 return true;
             }
             catch (Exception e)

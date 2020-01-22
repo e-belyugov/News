@@ -1,4 +1,6 @@
-﻿using News.Forms.Droid;
+﻿using System;
+using Android.Graphics;
+using News.Forms.Droid;
 using News.Forms.UI.Helpers;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
@@ -18,6 +20,31 @@ namespace News.Forms.Droid
 
         class ExtendedWebViewClient : Android.Webkit.WebViewClient
         {
+            readonly ExtendedWebViewRenderer _renderer;
+
+            public ExtendedWebViewClient(ExtendedWebViewRenderer renderer)
+            {
+                _renderer = renderer ?? throw new ArgumentNullException("renderer");
+            }
+
+            public override void OnPageStarted(Android.Webkit.WebView view, string url, Bitmap favicon)
+            {
+                base.OnPageStarted(view, url, favicon);
+
+                var args = new WebNavigatingEventArgs(WebNavigationEvent.NewPage, new UrlWebViewSource { Url = url }, url);
+                _renderer.ElementController.SendNavigating(args);
+
+                if (args.Cancel)
+                {
+                    //_renderer.Control.StopLoading();
+                    view.GoBack();
+                }
+                else
+                {
+                    //base.OnPageStarted(view, url, favicon);
+                }
+            }
+
             public override async void OnPageFinished(WebView view, string url)
             {
                 if (_xwebView != null)
@@ -39,7 +66,7 @@ namespace News.Forms.Droid
 
             if (e.OldElement == null)
             {
-                _webView.SetWebViewClient(new ExtendedWebViewClient());
+                _webView.SetWebViewClient(new ExtendedWebViewClient(this));
             }
 
         }

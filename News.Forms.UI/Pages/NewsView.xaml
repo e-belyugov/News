@@ -48,7 +48,7 @@
                                            IsVisible="{Binding Image, Converter={helpers:NullValueBoolConverter}}"
                                            HorizontalOptions="FillAndExpand"
                                            VerticalOptions="FillAndExpand"
-                                           HeightRequest="250"
+                                           HeightRequest="400"
                                            Aspect="AspectFill">
                                     </Image>
                                 </StackLayout>

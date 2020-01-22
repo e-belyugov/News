@@ -40,7 +40,7 @@ namespace News.Core.Services.Parsing
         /// <summary>
         /// Cleaning html
         /// </summary>
-        private string GetArticleText(ParserData parserData, string html, bool clean)
+        private string GetArticleText(Article article, ParserData parserData, string html, bool clean)
         {
             string cleaned = html;
             try
@@ -87,10 +87,13 @@ namespace News.Core.Services.Parsing
                         oldArticle = oldArticle.Replace("<a>", "<font style=\"text-decoration:underline\">");
                         oldArticle = oldArticle.Replace("</a>", "</font>");
                         */
-                        oldArticle = oldArticle.Replace("<a", "<a target=\"_blank\"");
+                        //oldArticle = oldArticle.Replace("<a", "<a target=\"_blank\"");
+
+                        oldArticle = oldArticle + "<p>Ссылка на статью: <a href=\"" + article.SourceLink + "\">" + parserData.SourceTitle + "</a></p>";
 
                         oldArticle = "<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head>"
                             + "<font style=\"font-family:segoe ui; font-size:16px\">" + oldArticle + "</font>";
+
                         cleaned = oldArticle;
                     }
                 }
@@ -191,8 +194,6 @@ namespace News.Core.Services.Parsing
                             if (node != null)
                             {
                                 var timeString = node.InnerText.Replace(" +0300","");
-                                //timeStamp = Convert.ToDateTime(timeString);
-                                //timeStamp = DateTime.ParseExact(timeString, "ddd, dd MMM yyyy HH:mm:ss", CultureInfo.InvariantCulture);
 
                                 if (!DateTime.TryParseExact(timeString, "ddd, dd MMM yyyy HH:mm:ss", 
                                     CultureInfo.InvariantCulture, DateTimeStyles.None, out timeStamp)) timeStamp = DateTime.MinValue;
@@ -253,7 +254,7 @@ namespace News.Core.Services.Parsing
                 if (html != "")
                 {
                     // Article text
-                    string text = GetArticleText(parserData, html, false);
+                    string text = GetArticleText(article, parserData, html, false);
                     if (text.Contains("Skip")) return false; // Skipping article
 
                     // Article image

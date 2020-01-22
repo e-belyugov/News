@@ -15,8 +15,6 @@ namespace News.Forms.UI.Pages
     //[MvxMasterDetailPagePresentation(WrapInNavigationPage = true)]
     public partial class ArticleView : MvxContentPage<ArticleViewModel>
     {
-        public ICommand TapCommand => new Command<string>(OpenBrowser);
-
         /// <summary>
         /// Constructor
         /// </summary>
@@ -30,18 +28,38 @@ namespace News.Forms.UI.Pages
         /// </summary>
         protected override void OnAppearing()
         {
-            //ArticleWebView
         }
 
+        /// <summary>
+        /// Article view navigating event
+        /// </summary>
         private void ArticleWebView_OnNavigating(object sender, WebNavigatingEventArgs e)
         {
-            Process.Start(new ProcessStartInfo(e.Url));
+            if (e.Url.Contains("http"))
+            {
+                try
+                {
+                    var webView = sender as WebView;
+                    webView?.GoBack();
+                    Launcher.OpenAsync(new Uri(e.Url));
+                }
+                catch (Exception)
+                {
+                    e.Cancel = true;
+                }
+                e.Cancel = true;
+            }
         }
 
-        void OpenBrowser(string url)
+        private void WebView_OnNavigating(object sender, WebNavigatingEventArgs e)
         {
-            //Device.OpenUri(new Uri(url));
-            Launcher.OpenAsync(new Uri(url));
+            //throw new NotImplementedException();
+            Launcher.OpenAsync(new Uri(e.Url));
+            e.Cancel = true;
+        }
+
+        private void WebView_OnNavigated(object sender, WebNavigatedEventArgs e)
+        {
         }
     }
 }

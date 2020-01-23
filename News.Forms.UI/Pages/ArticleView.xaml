@@ -27,14 +27,14 @@
                 </Grid>
                 <Label Margin="0,0" FontSize="Large" TextColor="#1976D2" Text="{Binding Article.Title}" VerticalTextAlignment="Center"/>
                 <Label Margin="0,0,0,0" TextColor="Black" FontSize="Body" Text="{Binding Article.IntroText}" VerticalTextAlignment="Center"/>
-                <Image Source="{Binding Article.Image, TargetNullValue={x:Null}, Converter={StaticResource Bic}}"
+                <Image x:Name="ArticleImage" Source="{Binding Article.Image, TargetNullValue={x:Null}, Converter={StaticResource Bic}}"
                        IsVisible="{Binding Article.Image, Converter={helpers:NullValueBoolConverter}}"
-                       HeightRequest="400"
                        Margin="-15, 10, -15, 10"
                        Aspect="AspectFill"
+                       HeightRequest="400"
                        HorizontalOptions="FillAndExpand">
                 </Image>
-                <helpers:ExtendedWebView Margin="-7" VerticalOptions="FillAndExpand" Navigating="ArticleWebView_OnNavigating" Navigated="WebView_OnNavigated">
+                <helpers:ExtendedWebView Margin="-7" VerticalOptions="FillAndExpand" Navigating="ArticleWebView_OnNavigating">
                     <WebView.Source>
                         <HtmlWebViewSource Html="{Binding Article.Text}" />
                     </WebView.Source>

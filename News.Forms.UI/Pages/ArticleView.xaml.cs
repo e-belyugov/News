@@ -51,15 +51,9 @@ namespace News.Forms.UI.Pages
             }
         }
 
-        private void WebView_OnNavigating(object sender, WebNavigatingEventArgs e)
+        protected override void OnSizeAllocated(double width, double height)
         {
-            //throw new NotImplementedException();
-            Launcher.OpenAsync(new Uri(e.Url));
-            e.Cancel = true;
-        }
-
-        private void WebView_OnNavigated(object sender, WebNavigatedEventArgs e)
-        {
+            base.OnSizeAllocated(width, height);
         }
     }
 }

@@ -46,10 +46,9 @@
                                     </StackLayout>
                                     <Image Source="{Binding Image, TargetNullValue={x:Null}, Converter={StaticResource bic}}"
                                            IsVisible="{Binding Image, Converter={helpers:NullValueBoolConverter}}"
-                                           HorizontalOptions="FillAndExpand"
-                                           VerticalOptions="FillAndExpand"
                                            HeightRequest="400"
-                                           Aspect="AspectFill">
+                                           Aspect="AspectFill"
+                                           HorizontalOptions="FillAndExpand">
                                     </Image>
                                 </StackLayout>
                                 <BoxView BackgroundColor="White" HeightRequest="15"></BoxView>
@@ -62,9 +61,9 @@
             <StackLayout BackgroundColor="White">
                 <Grid Padding="12,5,14,12">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="130" />
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="130" />
                     </Grid.ColumnDefinitions>
                     <Button FontSize="Body" x:Name="HomeButton" HeightRequest="70" Grid.Column="0" Text="В начало" Clicked="HomeButton_Clicked" ImageSource="home.png"/>
                     <Button FontSize="Body" x:Name="RefreshButton" Grid.Column="2" Text="Обновить" Clicked="RefreshButton_Clicked" ImageSource="refresh.png" />

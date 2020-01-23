@@ -6,6 +6,7 @@ using News.Core.Models;
 using SQLite;
 using System.IO;
 using System.Linq;
+using System.Net;
 using News.Core.Services.Logging;
 
 namespace News.Core.Services.Database
@@ -16,7 +17,7 @@ namespace News.Core.Services.Database
     public class ArticleDatabase : IArticleDatabase
     {
         // User version
-        private readonly int _userVersion = 76;
+        private readonly int _userVersion = 77;
 
         // Logger
         private readonly ILogger _logger;
@@ -143,14 +144,23 @@ namespace News.Core.Services.Database
         {
             try
             {
+                // Existing articles
+                var existingArticles = await _connection.Table<Article>().ToListAsync();
+
                 foreach (var article in articles)
                 {
                     if (article.Id == 0)
                     {
+                        // Checking if article exists (before insert)
+                        var existingArticle = existingArticles.SingleOrDefault(x => x.Title == article.Title);
+                        if (existingArticle != null) continue;
+
+                        // Insert
                         await _connection.InsertAsync(article);
                     }
                     else
                     {
+                        // Update
                         await _connection.UpdateAsync(article);
                     }
                 }
@@ -170,8 +180,8 @@ namespace News.Core.Services.Database
         {
             try
             {
-                var articleList = await _connection.Table<Article>().ToListAsync();
-                foreach (var article in articleList.Where(x => !x.New))
+                var existingArticles = await _connection.Table<Article>().ToListAsync();
+                foreach (var article in existingArticles.Where(x => !x.New))
                 {
                     await _connection.DeleteAsync(article);
                 }

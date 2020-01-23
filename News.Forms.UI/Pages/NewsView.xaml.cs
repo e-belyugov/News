@@ -58,6 +58,18 @@ namespace News.Forms.UI.Pages
                     ToastLength.Long);
 
             _newsViewModel?.RefreshArticlesCommand.Execute(remotely);
+
+            ScrollToTop();
+        }
+
+        /// <summary>
+        /// Scrolling listvew to top
+        /// </summary>
+        private void ScrollToTop()
+        {
+            var itemsSource = (IList)NewsListView.ItemsSource;
+            if (itemsSource != null && itemsSource.Count != 0) 
+                NewsListView.ScrollTo(itemsSource[0], ScrollToPosition.Start, false);
         }
 
         /// <summary>
@@ -65,8 +77,7 @@ namespace News.Forms.UI.Pages
         /// </summary>
         private void HomeButton_Clicked(object sender, System.EventArgs e)
         {
-            var itemsSource = (IList) NewsListView.ItemsSource;
-            if (itemsSource != null) NewsListView.ScrollTo(itemsSource[0], ScrollToPosition.Start, false);
+            ScrollToTop();
         }
     }
 }

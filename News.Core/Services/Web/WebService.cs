@@ -7,6 +7,7 @@ using System.IO;
 using System.Net.Http;
 using System.Net;
 using News.Core.Services.Logging;
+using System.Drawing;
 
 namespace News.Core.Services.Web
 {
@@ -41,8 +42,10 @@ namespace News.Core.Services.Web
                     if (!proxyuri.Contains(url))
                     {
                         request.UseDefaultCredentials = true;
-                        request.Proxy = new WebProxy(proxyuri, false);
-                        request.Proxy.Credentials = new NetworkCredential("e_belyugov", "CrystalPalace22");
+                        request.Proxy = new WebProxy(proxyuri, false)
+                        {
+                            Credentials = new NetworkCredential("e_belyugov", "CrystalPalace22")
+                        };
                     }
                 }
                 return request;

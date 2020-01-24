@@ -30,7 +30,7 @@
                         <views:MvxViewCell>
                             <StackLayout BackgroundColor="White">
                                 <BoxView HeightRequest="5" Color="Gainsboro"></BoxView>
-                                <StackLayout Padding="0, 0, 0, 0">
+                                <!--<StackLayout Padding="0, 0, 0, 0">
                                     <StackLayout Padding="15, 10, 15, 4">
                                         <Grid Margin="0, 0, 0, 5">
                                             <Grid.ColumnDefinitions>
@@ -50,8 +50,36 @@
                                            Aspect="AspectFill"
                                            HorizontalOptions="FillAndExpand">
                                     </Image>
+                                </StackLayout>-->
+                                <StackLayout Padding="0, 0, 0, 0">
+                                    <StackLayout Padding="15, 10, 15, 4">
+                                        <Grid Margin="0, 0, 0, 5">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label Grid.Column="0" Padding="5, 4, 5, 5" BackgroundColor="LightGray" Text="{Binding TimeStamp, StringFormat=\{0:dd.MM HH:mm\}}"/>
+                                            <Label Grid.Column="2" Padding="5, 3, 5, 5" BackgroundColor="LightGreen" Text="{Binding SourceTitle}"/>
+                                        </Grid>
+                                        <Grid Margin="0, 0, 0, 5" HeightRequest="180">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="2*" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackLayout Grid.Column="1" Padding="10">
+                                                <Label Margin="0,-8" FontSize="Large" TextColor="#1976D2" Text="{Binding Title}" VerticalTextAlignment="Center"/>
+                                                <Label Margin="0,5,0,5" FontSize="Body" TextColor="Black" Text="{Binding IntroText}" VerticalTextAlignment="Center"/>
+                                            </StackLayout>
+                                            <Image Grid.Column="0" Source="{Binding Image, TargetNullValue={x:Null}, Converter={StaticResource bic}}"
+                                                   IsVisible="{Binding Image, Converter={helpers:NullValueBoolConverter}}"
+                                                   Aspect="AspectFill"
+                                                   HorizontalOptions="FillAndExpand">
+                                            </Image>
+                                        </Grid>
+                                    </StackLayout>
                                 </StackLayout>
-                                <BoxView BackgroundColor="White" HeightRequest="15"></BoxView>
+                                <BoxView BackgroundColor="White" HeightRequest="5"></BoxView>
                             </StackLayout>
                         </views:MvxViewCell>
                     </DataTemplate>

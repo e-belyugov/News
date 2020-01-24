@@ -73,6 +73,9 @@ namespace News.Core.Services.Parsing
             str = str.Replace("&mdash;", "-");
             str = str.Replace("&laquo;", "\"");
             str = str.Replace("&raquo;", "\"");
+            str = str.Replace("&#171;", "\"");
+            str = str.Replace("&#187;", "\"");
+            str = str.Replace("&#160;", " ");
 
             return str;
         }

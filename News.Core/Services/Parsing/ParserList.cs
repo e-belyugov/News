@@ -17,7 +17,9 @@ namespace News.Core.Services.Parsing
         public ParserList(IWebService webService, ILogger logger)
         {
             IParser kuzpressParser = new KuzpressParser(webService, logger);
+            IParser nktvParser = new NktvParser(webService, logger);
             Parsers.Add(kuzpressParser);
+            Parsers.Add(nktvParser);
         }
 
         /// <summary>

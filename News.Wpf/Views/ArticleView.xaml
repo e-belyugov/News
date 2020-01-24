@@ -18,7 +18,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Padding="5" Background="LightGray" Text="{Binding Article.TimeStamp, 
-                                StringFormat=\{0:dd.MM.yy\}}"/>
+                                StringFormat=\{0:dd.MM.yy HH:mm\}}"/>
                 <TextBlock Grid.Column="2" Padding="5" Background="LightGreen" Text="{Binding Article.SourceTitle}"/>
             </Grid>
             <FlowDocumentScrollViewer VerticalScrollBarVisibility="Auto">

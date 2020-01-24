@@ -17,7 +17,7 @@ namespace News.Core.Services.Database
     public class ArticleDatabase : IArticleDatabase
     {
         // User version
-        private readonly int _userVersion = 77;
+        private readonly int _userVersion = 96;
 
         // Logger
         private readonly ILogger _logger;
@@ -78,15 +78,28 @@ namespace News.Core.Services.Database
             if (parserDataList.Count == 0)
             {
                 parserDataList = new List<ParserData>() {
-                    new ParserData() 
-                    { 
-                        Id = 0, 
+
+                    new ParserData
+                    {
+                        Id = 0,
                         Period = 10,
                         TypeName = "KuzpressParser",
                         SourceMainLink = "http://kuzpress.ru",
-                        SourceParseLink = "http://kuzpress.ru/rss/rss.xml", 
-                        SourceTitle = "kuzpress.ru", 
-                        SourceEncoding = "windows-1251"} 
+                        SourceParseLink = "http://kuzpress.ru/rss/rss.xml",
+                        SourceTitle = "kuzpress.ru",
+                        SourceEncoding = "windows-1251"
+                    },
+
+                    new ParserData
+                    {
+                        Id = 0,
+                        Period = 10,
+                        TypeName = "NktvParser",
+                        SourceMainLink = "https://nk-tv.com",
+                        SourceParseLink = "https://nk-tv.com/feed",
+                        SourceTitle = "nk-tv.com",
+                        SourceEncoding = "utf-8"
+                    }
                 };
             }
 

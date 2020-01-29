@@ -14,10 +14,11 @@ namespace News.Core.Services.Database
     /// <summary>
     /// Article database
     /// </summary>
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class ArticleDatabase : IArticleDatabase
     {
         // User version
-        private readonly int _userVersion = 96;
+        private readonly int _userVersion = 105;
 
         // Logger
         private readonly ILogger _logger;
@@ -87,7 +88,8 @@ namespace News.Core.Services.Database
                         SourceMainLink = "http://kuzpress.ru",
                         SourceParseLink = "http://kuzpress.ru/rss/rss.xml",
                         SourceTitle = "kuzpress.ru",
-                        SourceEncoding = "windows-1251"
+                        SourceEncoding = "windows-1251",
+                        Enabled = true
                     },
 
                     new ParserData
@@ -98,7 +100,8 @@ namespace News.Core.Services.Database
                         SourceMainLink = "https://nk-tv.com",
                         SourceParseLink = "https://nk-tv.com/feed",
                         SourceTitle = "nk-tv.com",
-                        SourceEncoding = "utf-8"
+                        SourceEncoding = "utf-8",
+                        Enabled = true
                     }
                 };
             }

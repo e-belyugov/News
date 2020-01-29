@@ -10,7 +10,9 @@
 
     <ContentPage.Resources>
         <ResourceDictionary>
-            <helpers:ByteToImageFieldConverter x:Key="bic" />
+            <helpers:ByteToImageFieldConverter x:Key="ByteToImageFieldConverter" />
+            <helpers:BoolToGridLengthConverter x:Key="BoolToGridLengthConverter" />
+            <helpers:BoolToGridHeightConverter x:Key="BoolToGridHeightConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
     
@@ -30,49 +32,40 @@
                         <views:MvxViewCell>
                             <StackLayout BackgroundColor="White">
                                 <BoxView HeightRequest="5" Color="Gainsboro"></BoxView>
-                                <!--<StackLayout Padding="0, 0, 0, 0">
-                                    <StackLayout Padding="15, 10, 15, 4">
-                                        <Grid Margin="0, 0, 0, 5">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="Auto" />
-                                            </Grid.ColumnDefinitions>
-                                            <Label Grid.Column="0" Padding="5, 4, 5, 5" BackgroundColor="LightGray" Text="{Binding TimeStamp, StringFormat=\{0:dd.MM HH:mm\}}"/>
-                                            <Label Grid.Column="2" Padding="5, 3, 5, 5" BackgroundColor="LightGreen" Text="{Binding SourceTitle}"/>
-                                        </Grid>
-                                        <Label Margin="0,-8" FontSize="Large" TextColor="#1976D2" Text="{Binding Title}" VerticalTextAlignment="Center"/>
-                                        <Label Margin="0,5,0,5" FontSize="Body" TextColor="Black" Text="{Binding IntroText}" VerticalTextAlignment="Center"/>
-                                    </StackLayout>
-                                    <Image Source="{Binding Image, TargetNullValue={x:Null}, Converter={StaticResource bic}}"
-                                           IsVisible="{Binding Image, Converter={helpers:NullValueBoolConverter}}"
-                                           HeightRequest="400"
-                                           Aspect="AspectFill"
-                                           HorizontalOptions="FillAndExpand">
-                                    </Image>
-                                </StackLayout>-->
                                 <StackLayout Padding="0, 0, 0, 0">
                                     <StackLayout Padding="15, 10, 15, 4">
                                         <Grid Margin="0, 0, 0, 5">
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="Auto"/>
                                                 <ColumnDefinition Width="*" />
                                                 <ColumnDefinition Width="Auto" />
                                             </Grid.ColumnDefinitions>
                                             <Label Grid.Column="0" Padding="5, 4, 5, 5" BackgroundColor="LightGray" Text="{Binding TimeStamp, StringFormat=\{0:dd.MM HH:mm\}}"/>
-                                            <Label Grid.Column="2" Padding="5, 3, 5, 5" BackgroundColor="LightGreen" Text="{Binding SourceTitle}"/>
+                                            <Label Padding="5, 3, 5, 5" Grid.Column="2" Text="{Binding SourceTitle}">
+                                                <Label.Triggers>
+                                                    <DataTrigger TargetType="Label" Binding="{Binding SourceTitle}" Value="kuzpress.ru">
+                                                        <Setter Property="BackgroundColor" Value="LightGreen" />
+                                                    </DataTrigger>
+                                                    <DataTrigger TargetType="Label" Binding="{Binding SourceTitle}" Value="nk-tv.com">
+                                                        <Setter Property="BackgroundColor" Value="Gold" />
+                                                    </DataTrigger>
+                                                </Label.Triggers>
+                                            </Label>
                                         </Grid>
-                                        <Grid Margin="0, 0, 0, 5" HeightRequest="180">
+                                        <Grid Margin="0, 0, 0, 5" HeightRequest="{Binding HasImage, Converter={StaticResource BoolToGridHeightConverter}}">
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="{Binding HasImage, Converter={StaticResource BoolToGridLengthConverter}}" />
                                                 <ColumnDefinition Width="2*" />
                                             </Grid.ColumnDefinitions>
                                             <StackLayout Grid.Column="1" Padding="10">
-                                                <Label Margin="0,-8" FontSize="Large" TextColor="#1976D2" Text="{Binding Title}" VerticalTextAlignment="Center"/>
-                                                <Label Margin="0,5,0,5" FontSize="Body" TextColor="Black" Text="{Binding IntroText}" VerticalTextAlignment="Center"/>
+                                                <Label Margin="0,-8" FontSize="Large" TextColor="#1976D2" Text="{Binding Title}" 
+                                                       VerticalTextAlignment="Center"/>
+                                                <Label Margin="0,5,0,5" FontSize="Body" TextColor="Black" Text="{Binding IntroText}" 
+                                                       LineBreakMode="TailTruncation" MaxLines="3" VerticalTextAlignment="Center"/>
                                             </StackLayout>
-                                            <Image Grid.Column="0" Source="{Binding Image, TargetNullValue={x:Null}, Converter={StaticResource bic}}"
-                                                   IsVisible="{Binding Image, Converter={helpers:NullValueBoolConverter}}"
+                                            <Image Grid.Column="0" Source="{Binding Image, TargetNullValue={x:Null}, 
+                                                        Converter={StaticResource ByteToImageFieldConverter}}"
+                                                   IsVisible="{Binding HasImage}"
                                                    Aspect="AspectFill"
                                                    HorizontalOptions="FillAndExpand">
                                             </Image>
@@ -86,14 +79,14 @@
                 </ListView.ItemTemplate>
             </views:MvxListView>
             <BoxView Margin="0,-7,0,-2" HeightRequest="1" BackgroundColor="LightGray"></BoxView>
-            <StackLayout BackgroundColor="White">
+            <StackLayout x:Name="ButtonStackLayout" BackgroundColor="White" HeightRequest="80">
                 <Grid Padding="12,5,14,12">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="130" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="130" />
                     </Grid.ColumnDefinitions>
-                    <Button FontSize="Body" x:Name="HomeButton" HeightRequest="70" Grid.Column="0" Text="В начало" Clicked="HomeButton_Clicked" ImageSource="home.png"/>
+                    <Button FontSize="Body" HeightRequest="70" x:Name="HomeButton" Grid.Column="0" Text="В начало" Clicked="HomeButton_Clicked" ImageSource="home.png"/>
                     <Button FontSize="Body" x:Name="RefreshButton" Grid.Column="2" Text="Обновить" Clicked="RefreshButton_Clicked" ImageSource="refresh.png" />
                 </Grid>
             </StackLayout>

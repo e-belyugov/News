@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace News.Core.Services.Parsing
     /// <summary>
     /// Nktv parser
     /// </summary>
+    [SuppressMessage("ReSharper", "StringIndexOfIsCultureSpecific.1")]
     public class NktvParser : IParser
     {
         // Parsed articles 
@@ -44,8 +46,19 @@ namespace News.Core.Services.Parsing
             string cleaned = html;
             try
             {
+                cleaned = cleaned.Replace("<h2>","<p><strong>");
+                cleaned = cleaned.Replace("</h2>", "</p>");
+
                 cleaned = cleaned.SubstringBetweenSubstrings("<p><strong>", "</div><!-- END Post Content. -->");
                 cleaned = "<p><strong>" + cleaned;
+
+                if (
+                    cleaned.Contains("КузПресс")
+                    || cleaned.Contains("youtube")
+                    || cleaned.Contains("<table")
+                    ) return "Skip";
+
+                cleaned = cleaned.Replace("width=\"850\" height=\"478\"", "width=\"100%\" height=\"100%\"");
 
                 cleaned = cleaned + "<p>Ссылка на статью: <a href=\"" + article.SourceLink + "\">" + parserData.SourceTitle + "</a></p>";
 
@@ -137,6 +150,9 @@ namespace News.Core.Services.Parsing
                                 introText = node.InnerHtml;
                                 introText = introText.Replace("<![CDATA[", "").Replace("&#8230;]]>","...");
                                 introText = introText.RemoveSpecialTags();
+
+                                var dotIndex = introText.IndexOf(".");
+                                if (dotIndex != -1) introText = introText.Substring(0, dotIndex + 1);
                             }
 
                             // Article time stamp
@@ -158,7 +174,7 @@ namespace News.Core.Services.Parsing
                             if (
                                 title != null
                                 && link != null
-                                && introText != null
+                                && introText != ""
                                 && timeStamp != DateTime.MinValue
                                 )
                             {
@@ -241,6 +257,7 @@ namespace News.Core.Services.Parsing
                     // Saving article fields
                     article.Text = text;
                     article.Image = image;
+                    article.HasImage = image != null;
                 }
 
                 return true;

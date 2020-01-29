@@ -55,5 +55,10 @@ namespace News.Core.Models
         /// Parser last data
         /// </summary>
         public string LastData { get; set; }
+
+        /// <summary>
+        /// Enabled flag
+        /// </summary>
+        public bool Enabled { get; set; }
     }
 }

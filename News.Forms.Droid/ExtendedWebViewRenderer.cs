@@ -6,7 +6,9 @@ using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using WebView = Android.Webkit.WebView;
 
+#pragma warning disable 612
 [assembly: ExportRenderer(typeof(ExtendedWebView), typeof(ExtendedWebViewRenderer))]
+#pragma warning restore 612
 namespace News.Forms.Droid
 {
     /// <summary>

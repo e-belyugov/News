@@ -79,5 +79,15 @@ namespace News.Forms.UI.Pages
         {
             ScrollToTop();
         }
+
+        /// <summary>
+        /// OnSizeAllocated event
+        /// </summary>
+        protected override void OnSizeAllocated(double width, double height)
+        {
+            base.OnSizeAllocated(width, height);
+
+            ButtonStackLayout.HeightRequest = width > height ? 200 : 85;
+        }
     }
 }

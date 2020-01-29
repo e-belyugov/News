@@ -23,12 +23,21 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <Label Grid.Column="0" Padding="5, 4, 5, 5" BackgroundColor="LightGray" Text="{Binding Article.TimeStamp, StringFormat=\{0:dd.MM HH:mm\}}"/>
-                    <Label Grid.Column="2" Padding="5, 3, 5, 5" BackgroundColor="LightGreen" Text="{Binding Article.SourceTitle}"/>
+                    <Label Padding="5, 3, 5, 5" Grid.Column="2" Text="{Binding Article.SourceTitle}">
+                        <Label.Triggers>
+                            <DataTrigger TargetType="Label" Binding="{Binding Article.SourceTitle}" Value="kuzpress.ru">
+                                <Setter Property="BackgroundColor" Value="LightGreen" />
+                            </DataTrigger>
+                            <DataTrigger TargetType="Label" Binding="{Binding Article.SourceTitle}" Value="nk-tv.com">
+                                <Setter Property="BackgroundColor" Value="Gold" />
+                            </DataTrigger>
+                        </Label.Triggers>
+                    </Label>
                 </Grid>
                 <Label Margin="0,0" FontSize="Large" TextColor="#1976D2" Text="{Binding Article.Title}" VerticalTextAlignment="Center"/>
                 <Label Margin="0,0,0,0" TextColor="Black" FontSize="Body" Text="{Binding Article.IntroText}" VerticalTextAlignment="Center"/>
                 <Image x:Name="ArticleImage" Source="{Binding Article.Image, TargetNullValue={x:Null}, Converter={StaticResource Bic}}"
-                       IsVisible="{Binding Article.Image, Converter={helpers:NullValueBoolConverter}}"
+                       IsVisible="{Binding Article.HasImage}"
                        Margin="-15, 10, -15, 10"
                        Aspect="AspectFill"
                        HeightRequest="400"

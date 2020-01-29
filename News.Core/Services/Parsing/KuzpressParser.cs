@@ -288,6 +288,7 @@ namespace News.Core.Services.Parsing
                     // Saving article fields
                     article.Text = text;
                     article.Image = image;
+                    article.HasImage = image != null;
                 }
 
                 return true;

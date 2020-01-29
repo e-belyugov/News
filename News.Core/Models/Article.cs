@@ -57,6 +57,11 @@ namespace News.Core.Models
         public byte[] Image { get; set; }
 
         /// <summary>
+        /// Article image flag
+        /// </summary>
+        public bool HasImage { get; set; }
+
+        /// <summary>
         /// New article flag
         /// </summary>
         public bool New { get; set; }

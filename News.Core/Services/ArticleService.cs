@@ -69,7 +69,7 @@ namespace News.Core.Services
                     {
                         string parserType = parser.ToString(); // Parser type
 
-                        var parserData = parserDataList.FirstOrDefault(x => parserType.Contains(x.TypeName));
+                        var parserData = parserDataList.FirstOrDefault(x => parserType.Contains(x.TypeName) && x.Enabled);
                         if (
                             parserData != null
                             && DateTime.Now >= parserData.LastTimeStamp.AddSeconds(parserData.Period) // Checking parsing period
@@ -96,7 +96,8 @@ namespace News.Core.Services
                 }
 
                 // Sorting and filtering articles
-                articles = articles.OrderByDescending(x => x.TimeStamp).Where(x => x.New).Take(25).ToList();
+                //articles = articles.OrderByDescending(x => x.TimeStamp).Where(x => x.New).Take(25).ToList();
+                articles = articles.OrderByDescending(x => x.TimeStamp).Where(x => x.New).ToList();
 
                 return articles;
             }

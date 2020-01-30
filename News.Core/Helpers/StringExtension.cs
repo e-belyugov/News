@@ -68,7 +68,7 @@ namespace News.Core.Services.Parsing
         public static string RemoveSpecialTags(this string str)
         {
             str = str.Replace("&quot;", "\"");
-            str = str.Replace("&nbsp;", "");
+            str = str.Replace("&nbsp;", " ");
             str = str.Replace("&hellip;", "...");
             str = str.Replace("&mdash;", "-");
             str = str.Replace("&laquo;", "\"");

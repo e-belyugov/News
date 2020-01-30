@@ -44,10 +44,13 @@
                                             <Label Padding="5, 3, 5, 5" Grid.Column="2" Text="{Binding SourceTitle}">
                                                 <Label.Triggers>
                                                     <DataTrigger TargetType="Label" Binding="{Binding SourceTitle}" Value="kuzpress.ru">
-                                                        <Setter Property="BackgroundColor" Value="LightGreen" />
+                                                        <Setter Property="BackgroundColor" Value="PaleTurquoise" />
                                                     </DataTrigger>
                                                     <DataTrigger TargetType="Label" Binding="{Binding SourceTitle}" Value="nk-tv.com">
                                                         <Setter Property="BackgroundColor" Value="Gold" />
+                                                    </DataTrigger>
+                                                    <DataTrigger TargetType="Label" Binding="{Binding SourceTitle}" Value="vashgorod.ru">
+                                                        <Setter Property="BackgroundColor" Value="LightGreen" />
                                                     </DataTrigger>
                                                 </Label.Triggers>
                                             </Label>
@@ -59,7 +62,7 @@
                                             </Grid.ColumnDefinitions>
                                             <StackLayout Grid.Column="1" Padding="10">
                                                 <Label Margin="0,-8" FontSize="Large" TextColor="#1976D2" Text="{Binding Title}" 
-                                                       VerticalTextAlignment="Center"/>
+                                                       LineBreakMode="TailTruncation" MaxLines="4" VerticalTextAlignment="Center"/>
                                                 <Label Margin="0,5,0,5" FontSize="Body" TextColor="Black" Text="{Binding IntroText}" 
                                                        LineBreakMode="TailTruncation" MaxLines="3" VerticalTextAlignment="Center"/>
                                             </StackLayout>

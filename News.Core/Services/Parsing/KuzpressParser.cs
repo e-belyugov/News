@@ -171,7 +171,8 @@ namespace News.Core.Services.Parsing
                             if (existingArticle != null)
                             {
                                 existingArticle.New = true;
-                                continue;
+                                //continue;
+                                break;
                             }
 
                             // Article link
@@ -299,87 +300,5 @@ namespace News.Core.Services.Parsing
                 return false;
             }
         }
-
-        /*
-        /// <summary>
-        /// Parsing article 
-        /// </summary>
-        private async Task<bool> ParseArticle(ParserData parserData, string link, Article article)
-        {
-            // Loading article text from web
-            string html = await _webService.GetDataAsync(link, Encoding.GetEncoding(parserData.SourceEncoding));
-
-            if (html != "")
-            {
-                HtmlDocument articleDoc = new HtmlDocument();
-
-                html = CleanHtml(html); // Cleaning html
-                if (html.Contains("Skip")) return false; // Skipping article
-
-                articleDoc.LoadHtml(html);
-
-                var articlesHeaders = articleDoc.DocumentNode.SelectNodes("//div[@class='outer-info']");
-
-                if (articlesHeaders != null && articlesHeaders.Count > 0)
-                {
-                    string text = "";
-                    byte[] image = null;
-                    var articleItem = articlesHeaders[0];
-
-                    foreach (HtmlNode articleNode in articleItem.ChildNodes)
-                    {
-                        if (
-                            articleNode.Name == "p"
-                            )
-                        {
-                            var innerText = articleNode.InnerText;
-                            innerText = innerText.Trim();
-
-                            // Article text
-                            if (innerText != "")
-                            {
-                                text = text.RemoveSpecialTags();
-                                text += innerText + Environment.NewLine;
-                            }
-                        }
-
-                        // Article image
-                        if (articleNode.Name == "a" && image == null)
-                        {
-                            var imgNode = articleNode.ChildNodes["img"];
-                            var attribute = imgNode?.Attributes["src"];
-                            if (attribute != null)
-                            {
-                                var imageLink = parserData.SourceMainLink + attribute.Value;
-                                if (Path.HasExtension(imageLink)) image = await _webService.GetImageAsync(imageLink);
-                            }
-                        }
-                    }
-
-                    // No article text
-                    if (text == "") return false;
-
-                    // Replacing custom tags
-                    text = text.Replace("<br /><br />", Environment.NewLine);
-                    text = text.TrimEnd('\r', '\n', ' ');
-                    text = text.Replace("^h", "<Bold>");
-                    text = text.Replace("h^", "</Bold>");
-                    text = text.Replace("^*", "<Italic>");
-                    text = text.Replace("*^", "</Italic>");
-
-                    // Saving article fields
-                    article.Text = text;
-                    article.Image = image;
-                }
-                else
-                {
-                    // No article key tags found
-                    return false;
-                }
-            }
-
-            return true;
-        }
-        */
     }
 }

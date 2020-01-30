@@ -17,9 +17,13 @@ namespace News.Core.Services.Parsing
         public ParserList(IWebService webService, ILogger logger)
         {
             IParser kuzpressParser = new KuzpressParser(webService, logger);
-            IParser nktvParser = new NktvParser(webService, logger);
             Parsers.Add(kuzpressParser);
+
+            IParser nktvParser = new NktvParser(webService, logger);
             Parsers.Add(nktvParser);
+
+            IParser vashgorodParser = new VashgorodParser(webService, logger);
+            Parsers.Add(vashgorodParser);
         }
 
         /// <summary>

@@ -134,7 +134,8 @@ namespace News.Core.Services.Parsing
                             if (existingArticle != null)
                             {
                                 existingArticle.New = true;
-                                continue;
+                                //continue;
+                                break;
                             }
 
                             // Article link
@@ -193,7 +194,7 @@ namespace News.Core.Services.Parsing
                                 // Parsing article
                                 var result = await ParseArticle(parserData, link, article);
 
-                                //// Adding article to list
+                                // Adding article to list
                                 if (result) _articles.Add(article);
 
                                 //break;

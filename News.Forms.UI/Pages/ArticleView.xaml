@@ -26,10 +26,13 @@
                     <Label Padding="5, 3, 5, 5" Grid.Column="2" Text="{Binding Article.SourceTitle}">
                         <Label.Triggers>
                             <DataTrigger TargetType="Label" Binding="{Binding Article.SourceTitle}" Value="kuzpress.ru">
-                                <Setter Property="BackgroundColor" Value="LightGreen" />
+                                <Setter Property="BackgroundColor" Value="PaleTurquoise" />
                             </DataTrigger>
                             <DataTrigger TargetType="Label" Binding="{Binding Article.SourceTitle}" Value="nk-tv.com">
                                 <Setter Property="BackgroundColor" Value="Gold" />
+                            </DataTrigger>
+                            <DataTrigger TargetType="Label" Binding="{Binding Article.SourceTitle}" Value="vashgorod.ru">
+                                <Setter Property="BackgroundColor" Value="LightGreen" />
                             </DataTrigger>
                         </Label.Triggers>
                     </Label>
@@ -40,7 +43,7 @@
                        IsVisible="{Binding Article.HasImage}"
                        Margin="-15, 10, -15, 10"
                        Aspect="AspectFill"
-                       HeightRequest="400"
+                       HeightRequest="300"
                        HorizontalOptions="FillAndExpand">
                 </Image>
                 <helpers:ExtendedWebView Margin="-7" VerticalOptions="FillAndExpand" Navigating="ArticleWebView_OnNavigating">

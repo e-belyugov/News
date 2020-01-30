@@ -50,7 +50,6 @@ namespace News.Core.Services.Parsing
                 // Article timestamp
                 var timeString =
                     cleaned.SubstringBetweenSubstrings("<meta itemprop=\"datePublished\" content=\"", "+07:00");
-                //if (!DateTime.TryParseExact(timeString, "ddd, dd MMM yyyy HH:mm:ss",
                 if (!DateTime.TryParseExact(timeString, "yyyy-MM-ddTHH:mm:ss",
                     CultureInfo.InvariantCulture, DateTimeStyles.None, out var timeStamp))
                     timeStamp = DateTime.MinValue;
@@ -61,6 +60,8 @@ namespace News.Core.Services.Parsing
                     "<div id=\"beacon-article-end\"></div>");
                 cleaned = cleaned.Replace(" dir=\"ltr\"", "").Trim();
                 cleaned = cleaned.Replace(" align=\"JUSTIFY\"", "").Trim();
+                cleaned = cleaned.RemoveTagWithContent("img");
+                cleaned = cleaned.Replace("<p><strong></strong></p>", "");
 
                 if (
                     cleaned.Contains("youtube")

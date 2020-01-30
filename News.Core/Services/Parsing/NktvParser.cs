@@ -47,7 +47,7 @@ namespace News.Core.Services.Parsing
             try
             {
                 cleaned = cleaned.Replace("<h2>","<p><strong>");
-                cleaned = cleaned.Replace("</h2>", "</p>");
+                cleaned = cleaned.Replace("</h2>", "</strong></p>");
 
                 cleaned = cleaned.SubstringBetweenSubstrings("<p><strong>", "</div><!-- END Post Content. -->");
                 cleaned = "<p><strong>" + cleaned;

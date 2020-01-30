@@ -97,6 +97,17 @@ namespace News.Core.Services.Parsing
             }
 
             return str;
-        } 
+        }
+
+        /// <summary>
+        /// Removing tag with content
+        /// </summary>
+        public static string RemoveTagWithContent(this string str, string tagName)
+        {
+            var substr = str.SubstringBetweenSubstrings("<" + tagName,">");
+            str = str.Replace("<" + tagName + substr + ">", "");
+
+            return str;
+        }
     }
 }

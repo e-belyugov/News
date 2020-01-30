@@ -181,8 +181,8 @@ namespace News.Core.Services.Parsing
                             if (existingArticle != null)
                             {
                                 existingArticle.New = true;
-                                //continue;
-                                break;
+                                continue;
+                                //break;
                             }
 
                             // Creating article

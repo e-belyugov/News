@@ -56,6 +56,8 @@ namespace News.Core.Services.Parsing
                     cleaned.Contains("КузПресс")
                     || cleaned.Contains("youtube")
                     || cleaned.Contains("<table")
+                    || cleaned.Contains("vk.com/video")
+                    || cleaned.Contains("360tv")
                     ) return "Skip";
 
                 cleaned = cleaned.Replace("width=\"850\" height=\"478\"", "width=\"100%\" height=\"100%\"");

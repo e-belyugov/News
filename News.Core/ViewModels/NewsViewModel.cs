@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using MvvmCross.ViewModels;
 using MvvmCross.Navigation;
 using MvvmCross.Commands;
@@ -12,6 +13,7 @@ namespace News.Core.ViewModels
     /// <summary>
     /// News ViewModel
     /// </summary>
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class NewsViewModel : MvxViewModel
     {
         // Article service
@@ -39,7 +41,7 @@ namespace News.Core.ViewModels
         /// <summary>
         /// Article selected command
         /// </summary>
-        public IMvxCommand<Article> ArticleSelectedCommand { get; private set; }
+        public IMvxCommand<Article> ArticleSelectedCommand { get; }
 
         // -----------------------------------------------
         /// <summary>
@@ -49,10 +51,15 @@ namespace News.Core.ViewModels
 
         // -----------------------------------------------
         /// <summary>
+        /// Load articles command
+        /// </summary>
+        public IMvxCommand<bool> LoadArticlesCommand { get; }
+
+        // -----------------------------------------------
+        /// <summary>
         /// Refresh articles command
         /// </summary>
-        //public IMvxCommand RefreshArticlesCommand { get; private set; }
-        public IMvxCommand<bool> RefreshArticlesCommand { get; private set; }
+        public IMvxCommand<bool> RefreshArticlesCommand { get; }
 
         // -----------------------------------------------
         /// <summary>
@@ -120,35 +127,59 @@ namespace News.Core.ViewModels
 
             ArticleSelectedCommand = new MvxAsyncCommand<Article>(ArticleSelected);
             RefreshArticlesCommand = new MvxCommand<bool>(RefreshArticles);
+            LoadArticlesCommand = new MvxCommand<bool>(LoadArticles);
 
             IsBusy = false;
         }
 
         // -----------------------------------------------
         /// <summary>
-        /// Initializing ViewModel
+        /// Loading articles task
         /// </summary>
-        public override Task Initialize()
-        {
-            //LoadArticlesTask = MvxNotifyTask.Create(LoadArticles);
-
-            return base.Initialize();
-        }
-
-        // -----------------------------------------------
-        /// <summary>
-        /// Loading articles
-        /// </summary>
-        public async Task LoadArticles(bool remotely)
+        private async Task LoadArticles(bool firstRun, bool remotely)
         {
             try
             {
                 _lastError = "";
                 IsBusy = true;
 
-                var result = await _articleService.GetArticlesAsync(remotely);
-                Articles.Clear();
-                foreach (var article in result) Articles.Add(article);
+                //var result = await _articleService.GetArticlesAsync(remotely);
+                //Articles.Clear();
+                //foreach (var article in result) Articles.Add(article);
+
+                // Result
+                IEnumerable<Article> result;
+
+                // First run
+                if (firstRun)
+                {
+                    // Local articles
+                    result = await _articleService.GetLocalArticlesAsync();
+                    Articles.Clear();
+                    foreach (var article in result) Articles.Add(article);
+                }
+
+                // Getting remore data
+                if (remotely)
+                {
+                    // Old data
+                    var oldCount = Articles.Count;
+                    var oldTitle = Articles.Any() ? Articles[0].Title : "";
+
+                    // All articles
+                    result = await _articleService.GetArticlesAsync(localArticles: Articles);
+
+                    // New data
+                    var newCount = Articles.Count;
+                    var newTitle = Articles.Any() ? Articles[0].Title : "";
+
+                    // Checking for new data
+                    if (newCount != oldCount || oldTitle != newTitle)
+                    {
+                        Articles.Clear();
+                        foreach (var article in result) Articles.Add(article);
+                    }
+                }
 
                 _lastError = _articleService.LastError;
                 await RaisePropertyChanged(nameof(LastError));
@@ -174,9 +205,19 @@ namespace News.Core.ViewModels
         /// <summary>
         /// Refreshing articles
         /// </summary>
+        private void LoadArticles(bool remotely)
+        {
+            LoadArticlesTask = MvxNotifyTask.Create(LoadArticles(true, remotely));
+            RaisePropertyChanged(() => LoadArticlesTask);
+        }
+
+        // -----------------------------------------------
+        /// <summary>
+        /// Refreshing articles
+        /// </summary>
         private void RefreshArticles(bool remotely)
         {
-            LoadArticlesTask = MvxNotifyTask.Create(LoadArticles(remotely));
+            LoadArticlesTask = MvxNotifyTask.Create(LoadArticles(false, remotely));
             RaisePropertyChanged(() => LoadArticlesTask);
         }
     }

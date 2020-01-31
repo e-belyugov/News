@@ -66,6 +66,8 @@ namespace News.Core.Services.Parsing
                 if (
                     cleaned.Contains("youtube")
                     || cleaned.Contains("<table")
+                    || cleaned.Contains("vk.com/video")
+                    || cleaned.Contains("360tv")
                     ) return "Skip";
 
                 // Article intro text

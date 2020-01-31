@@ -16,7 +16,17 @@ namespace News.Core.Services
         /// <summary>
         /// Getting string data from web page
         /// </summary>
-        Task<IEnumerable<Article>> GetArticlesAsync(bool remotely);
+        //Task<IEnumerable<Article>> GetArticlesAsync(bool remotely);
+
+        /// <summary>
+        /// Getting all articles
+        /// </summary>
+        Task<IEnumerable<Article>> GetArticlesAsync(IEnumerable<Article> localArticles);
+
+        /// <summary>
+        /// Getting local articles
+        /// </summary>
+        Task<IEnumerable<Article>> GetLocalArticlesAsync();
 
         /// <summary>
         /// Last error description

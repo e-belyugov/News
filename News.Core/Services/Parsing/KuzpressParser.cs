@@ -48,7 +48,10 @@ namespace News.Core.Services.Parsing
                 string oldArticle = cleaned.SubstringBetweenSubstrings("</h1>", "<div class=\"newsLine\">");
 
                 // Filter by article text
-                bool skip = oldArticle.Contains("youtube") || oldArticle.Contains("<table");
+                bool skip = oldArticle.Contains("youtube") 
+                            || oldArticle.Contains("<table")
+                            || cleaned.Contains("vk.com/video")
+                            || cleaned.Contains("360tv");
 
                 if (!skip)
                 {

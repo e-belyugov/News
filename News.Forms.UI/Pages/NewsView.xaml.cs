@@ -37,8 +37,8 @@ namespace News.Forms.UI.Pages
         {
             if (_firstRun)
             {
-                _firstRun = false;
                 RefreshButton_Clicked(null, null);
+                _firstRun = false;
             }
         }
 
@@ -57,7 +57,10 @@ namespace News.Forms.UI.Pages
                 CrossToastPopUp.Current.ShowToastWarning("Интернет соединение отсутствует. Будут загружены статьи из памяти устройства", 
                     ToastLength.Long);
 
-            _newsViewModel?.RefreshArticlesCommand.Execute(remotely);
+            if (_firstRun)
+                _newsViewModel?.LoadArticlesCommand.Execute(remotely);
+            else
+                _newsViewModel?.RefreshArticlesCommand.Execute(remotely);
 
             ScrollToTop();
         }

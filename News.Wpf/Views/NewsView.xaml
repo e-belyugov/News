@@ -48,7 +48,7 @@
                     <DataTemplate>
                         <Border BorderBrush="LightGray" Margin="5" Width="749" BorderThickness="1">
                             <StackPanel Margin="20" Orientation="Horizontal">
-                                <Image Source="{Binding Image, TargetNullValue={x:Null}}" Width="200" HorizontalAlignment="Left"/>
+                                <Image Source="{Binding SmallImage, TargetNullValue={x:Null}}" Width="200" HorizontalAlignment="Left"/>
                                 <StackPanel Orientation="Vertical" Margin="20, 0, 0, 0">
                                     <Grid Width="485" Margin="0, 0, 0, 10">
                                         <Grid.ColumnDefinitions>

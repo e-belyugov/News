@@ -55,9 +55,9 @@
                                                 </Label.Triggers>
                                             </Label>
                                         </Grid>
-                                        <Grid Margin="0, 0, 0, 5" HeightRequest="{Binding HasImage, Converter={StaticResource BoolToGridHeightConverter}}">
+                                        <Grid Margin="0, 0, 0, 5" HeightRequest="{Binding HasSmallImage, Converter={StaticResource BoolToGridHeightConverter}}">
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="{Binding HasImage, Converter={StaticResource BoolToGridLengthConverter}}" />
+                                                <ColumnDefinition Width="{Binding HasSmallImage, Converter={StaticResource BoolToGridLengthConverter}}" />
                                                 <ColumnDefinition Width="2*" />
                                             </Grid.ColumnDefinitions>
                                             <StackLayout Grid.Column="1" Padding="10">
@@ -66,9 +66,9 @@
                                                 <Label Margin="0,5,0,5" FontSize="Body" TextColor="Black" Text="{Binding IntroText}" 
                                                        LineBreakMode="TailTruncation" MaxLines="3" VerticalTextAlignment="Center"/>
                                             </StackLayout>
-                                            <Image Grid.Column="0" Source="{Binding Image, TargetNullValue={x:Null}, 
+                                            <Image Grid.Column="0" Source="{Binding SmallImage, TargetNullValue={x:Null}, 
                                                         Converter={StaticResource ByteToImageFieldConverter}}"
-                                                   IsVisible="{Binding HasImage}"
+                                                   IsVisible="{Binding HasSmallImage}"
                                                    Aspect="AspectFill"
                                                    HorizontalOptions="FillAndExpand">
                                             </Image>

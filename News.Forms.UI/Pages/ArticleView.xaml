@@ -39,8 +39,15 @@
                 </Grid>
                 <Label Margin="0,0" FontSize="Large" TextColor="#1976D2" Text="{Binding Article.Title}" VerticalTextAlignment="Center"/>
                 <Label Margin="0,0,0,0" TextColor="Black" FontSize="Body" Text="{Binding Article.IntroText}" VerticalTextAlignment="Center"/>
-                <Image x:Name="ArticleImage" Source="{Binding Article.Image, TargetNullValue={x:Null}, Converter={StaticResource Bic}}"
-                       IsVisible="{Binding Article.HasImage}"
+                <!--<Image x:Name="ArticleImage" Source="{Binding Article.SmallImage, TargetNullValue={x:Null}, Converter={StaticResource Bic}}"
+                       IsVisible="{Binding Article.HasSmallImage}"
+                       Margin="-15, 10, -15, 10"
+                       Aspect="AspectFill"
+                       HeightRequest="300"
+                       HorizontalOptions="FillAndExpand">
+                </Image>-->
+                <Image x:Name="ArticleImage" Source="{Binding Article.LargeImageLink, TargetNullValue={x:Null}}"
+                       IsVisible="{Binding Article.HasLargeImage}"
                        Margin="-15, 10, -15, 10"
                        Aspect="AspectFill"
                        HeightRequest="300"

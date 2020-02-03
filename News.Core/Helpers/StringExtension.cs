@@ -17,12 +17,21 @@ namespace News.Core.Services.Parsing
         /// </summary>
         public static string SubstringBetweenSubstrings(this string str, string startString, string endString)
         {
-            int startIndex = str.IndexOf(startString) + startString.Length;
-            int endIndex = str.IndexOf(endString, startIndex);
+            int startIndex = str.IndexOf(startString);
+            if (startIndex != -1)
+            {
+                startIndex = startIndex + startString.Length;
+                int endIndex = str.IndexOf(endString, startIndex);
 
-            if (startIndex != -1 && endIndex != -1)
-                str = str.Substring(startIndex, endIndex - startIndex);
-            else str = "";
+                if (endIndex != -1)
+                    str = str.Substring(startIndex, endIndex - startIndex);
+                else 
+                    str = "";
+            }
+            else
+            {
+                str = "";
+            }
 
             return str;
         }
@@ -77,6 +86,8 @@ namespace News.Core.Services.Parsing
             str = str.Replace("&#187;", "\"");
             str = str.Replace("&#160;", " ");
             str = str.Replace("&#8212;", "-");
+            str = str.Replace("&#8470;", "№");
+            str = str.Replace("&thinsp;", " ");
 
             return str;
         }
@@ -106,6 +117,20 @@ namespace News.Core.Services.Parsing
         {
             var substr = str.SubstringBetweenSubstrings("<" + tagName,">");
             str = str.Replace("<" + tagName + substr + ">", "");
+
+            return str;
+        }
+
+        /// <summary>
+        /// Getting first img link
+        /// </summary>
+        public static string GetImgHref(this string str)
+        {
+            var substr = str.SubstringBetweenSubstrings("<img", ">");
+            if (substr != "")
+                str = substr.SubstringBetweenSubstrings("src=\"", "\"");
+            else
+                str = "";
 
             return str;
         }

@@ -60,6 +60,12 @@ namespace News.Core.Services.Parsing
                     "<div id=\"beacon-article-end\"></div>");
                 cleaned = cleaned.Replace(" dir=\"ltr\"", "").Trim();
                 cleaned = cleaned.Replace(" align=\"JUSTIFY\"", "").Trim();
+
+                // Article large image link
+                article.LargeImageLink = cleaned.GetImgHref();
+                article.HasLargeImage = article.LargeImageLink != "";
+
+                // Removing images
                 cleaned = cleaned.RemoveTagWithContent("img");
                 cleaned = cleaned.Replace("<p><strong></strong></p>", "");
 
@@ -168,14 +174,14 @@ namespace News.Core.Services.Parsing
                             }
 
                             // Article image
-                            byte[] image = null;
+                            byte[] smallImage = null;
                             var figureNode = articleNode.ChildNodes["figure"];
                             var styleAttribute = figureNode?.Attributes["style"];
                             if (styleAttribute != null)
                             {
                                 var imageLink = styleAttribute.Value;
                                 imageLink = imageLink.Replace("background-image: url(", "").Replace(")", "");
-                                image = await _webService.GetImageAsync(imageLink);
+                                smallImage = await _webService.GetImageAsync(imageLink);
                             }
 
                             // Checking if article exists already
@@ -196,8 +202,8 @@ namespace News.Core.Services.Parsing
                                 SourceTitle = parserData.SourceTitle,
                                 SourceLink = link,
                                 Title = title,
-                                Image = image,
-                                HasImage = image != null,
+                                SmallImage = smallImage,
+                                HasSmallImage = smallImage != null,
                                 New = true
                             };
 

@@ -46,8 +46,17 @@ namespace News.Core.Services.Parsing
             string cleaned = html;
             try
             {
+                // Article large image link
+                var imgBlock = cleaned.SubstringBetweenSubstrings("<div id=\"content\"", "<!-- END Featured Image. -->");
+                article.LargeImageLink = imgBlock.GetImgHref();
+                article.HasLargeImage = article.LargeImageLink != "";
+
+                // Article full text
                 cleaned = cleaned.Replace("<h2>","<p><strong>");
                 cleaned = cleaned.Replace("</h2>", "</strong></p>");
+                cleaned = cleaned.Replace("<ol><li><strong>", "<p><strong>");
+                cleaned = cleaned.Replace("</strong></li></ol>", "</strong></p>");
+                if (!cleaned.Contains("<p><strong>")) return "Skip"; // Article beginning not detected
 
                 cleaned = cleaned.SubstringBetweenSubstrings("<p><strong>", "</div><!-- END Post Content. -->");
                 cleaned = "<p><strong>" + cleaned;
@@ -61,6 +70,7 @@ namespace News.Core.Services.Parsing
                     ) return "Skip";
 
                 cleaned = cleaned.Replace("width=\"850\" height=\"478\"", "width=\"100%\" height=\"100%\"");
+                cleaned = cleaned.Replace("<ul", "<ul style=\"list-style-type: none; margin-left:-120px\"");
 
                 cleaned = cleaned + "<p>Ссылка на статью: <a href=\"" + article.SourceLink + "\">" + parserData.SourceTitle + "</a></p>";
 
@@ -232,7 +242,7 @@ namespace News.Core.Services.Parsing
                     if (text.Contains("Skip")) return false; // Skipping article
 
                     // Article image
-                    byte[] image = null;
+                    byte[] smallimage = null;
                     var articleDoc = new HtmlDocument();
                     articleDoc.LoadHtml(html);
                     var articlesHeaders = articleDoc.DocumentNode.SelectNodes("//div[@class='bdaia-post-featured-image']");
@@ -249,7 +259,7 @@ namespace News.Core.Services.Parsing
                                 {
                                     //var imageLink = parserData.SourceMainLink + attribute.Value;
                                     var imageLink = attribute.Value;
-                                    if (Path.HasExtension(imageLink)) image = await _webService.GetImageAsync(imageLink);
+                                    if (Path.HasExtension(imageLink)) smallimage = await _webService.GetImageAsync(imageLink);
                                 }
 
                                 break;
@@ -259,8 +269,8 @@ namespace News.Core.Services.Parsing
 
                     // Saving article fields
                     article.Text = text;
-                    article.Image = image;
-                    article.HasImage = image != null;
+                    article.SmallImage = smallimage;
+                    article.HasSmallImage = smallimage != null;
                 }
 
                 return true;

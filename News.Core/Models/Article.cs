@@ -52,15 +52,24 @@ namespace News.Core.Models
         public string SourceLink { get; set; }
 
         /// <summary>
-        /// Article image
+        /// Article small image
         /// </summary>
-        public byte[] Image { get; set; }
+        public byte[] SmallImage { get; set; }
 
         /// <summary>
-        /// Article image flag
+        /// Article small image flag
         /// </summary>
-        public bool HasImage { get; set; }
+        public bool HasSmallImage { get; set; }
 
+        /// <summary>
+        /// Article large image link
+        /// </summary>
+        public string LargeImageLink { get; set; }
+
+        /// <summary>
+        /// Article large image flag
+        /// </summary>
+        public bool HasLargeImage { get; set; }
         /// <summary>
         /// New article flag
         /// </summary>

@@ -48,7 +48,7 @@ namespace News.Forms.UI.Pages
         private void RefreshButton_Clicked(object sender, System.EventArgs e)
         {
             _newsViewModel = DataContext as NewsViewModel;
-            if (_newsViewModel == null) return;
+            if (_newsViewModel == null || _newsViewModel.IsBusy) return;
 
             var current = Connectivity.NetworkAccess;
             bool remotely = current == NetworkAccess.Internet;

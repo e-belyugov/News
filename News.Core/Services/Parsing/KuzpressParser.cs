@@ -40,65 +40,32 @@ namespace News.Core.Services.Parsing
         /// <summary>
         /// Cleaning html
         /// </summary>
-        private string GetArticleText(Article article, ParserData parserData, string html, bool clean)
+        private string GetArticleText(Article article, ParserData parserData, string html)
         {
             string cleaned = html;
             try
             {
-                string oldArticle = cleaned.SubstringBetweenSubstrings("</h1>", "<div class=\"newsLine\">");
+                cleaned = cleaned.SubstringBetweenSubstrings("</h1>", "<div class=\"newsLine\">");
 
                 // Filter by article text
-                bool skip = oldArticle.Contains("youtube") 
-                            || oldArticle.Contains("<table")
+                bool skip = cleaned.Contains("youtube") 
+                            || cleaned.Contains("<table")
                             || cleaned.Contains("vk.com/video")
                             || cleaned.Contains("360tv");
 
                 if (!skip)
                 {
-                    if (clean)
-                    {
-                        // Cleaning html 
+                    // Replacing small headers
+                    cleaned = cleaned.Replace("h4", "h3");
+                    cleaned = cleaned.Replace("h5", "h3");
+                    cleaned = cleaned.Replace("h6", "h3");
+                    cleaned = cleaned.Replace("src=\"/i", "src=\"" + parserData.SourceMainLink + "/i");
+                    cleaned = cleaned.Replace("src=", "width=\"500\" src=");
 
-                        string newArticle = oldArticle;
+                    cleaned = cleaned + "<p>Ссылка на статью: <a href=\"" + article.SourceLink + "\">" + parserData.SourceTitle + "</a></p>";
 
-                        newArticle = newArticle.Replace("<p></h5></p>", "</h5");
-
-                        newArticle = newArticle.ReplaceTags("<strong", "</strong>", "h");
-                        newArticle = newArticle.ReplaceTags("<span", "</span>", "*");
-                        newArticle = newArticle.ReplaceTags("<div", "</div>", "*");
-                        newArticle = newArticle.ReplaceTags("<h2", "</h2>", "h");
-                        newArticle = newArticle.ReplaceTags("<h3", "</h3>", "h"); 
-                        newArticle = newArticle.ReplaceTags("<h4", "</h4>", "h");
-                        newArticle = newArticle.ReplaceTags("<h5", "</h5>", "h");
-                        newArticle = newArticle.ReplaceTags("<h6", "</h6>", "h");
-                        newArticle = newArticle.ReplaceTags("<h7", "</h7>", "h");
-
-                        if (Regex.Matches(newArticle, "<p").Count == 1) newArticle = newArticle.Replace("</p>", "</p><p>") + "</p>";
-
-                        cleaned = cleaned.Replace(oldArticle, newArticle);
-                    }
-                    else
-                    {
-                        oldArticle = oldArticle.Replace("h4", "h3");
-                        oldArticle = oldArticle.Replace("h5", "h3");
-                        oldArticle = oldArticle.Replace("h6", "h3");
-                        oldArticle = oldArticle.Replace("src=\"/i", "src=\"" + parserData.SourceMainLink + "/i");
-                        oldArticle = oldArticle.Replace("src=", "width=\"500\" src=");
-
-                        /*
-                        oldArticle = oldArticle.ReplaceSubstringBetweenSubstrings("<a", ">", "");
-                        oldArticle = oldArticle.Replace("<a>", "<font style=\"text-decoration:underline\">");
-                        oldArticle = oldArticle.Replace("</a>", "</font>");
-                        */
-                        //oldArticle = oldArticle.Replace("<a", "<a target=\"_blank\"");
-
-                        oldArticle = oldArticle + "<p>Ссылка на статью: <a href=\"" + article.SourceLink + "\">" + parserData.SourceTitle + "</a></p>";
-
-                        oldArticle = "<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head>"
-                            + "<font style=\"font-family:segoe ui; font-size:16px\">" + oldArticle + "</font>";
-
-                        cleaned = oldArticle;
-                    }
+                    cleaned = "<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head>"
+                        + "<font style=\"font-family:segoe ui; font-size:16px\">" + cleaned + "</font>";
                 }
                 else
                 {
@@ -258,11 +225,18 @@ namespace News.Core.Services.Parsing
                 if (html != "")
                 {
                     // Article text
-                    string text = GetArticleText(article, parserData, html, false);
+                    string text = GetArticleText(article, parserData, html);
                     if (text.Contains("Skip")) return false; // Skipping article
 
+                    // Article large image link
+                    article.LargeImageLink = text.GetImgHref();
+                    article.HasLargeImage = article.LargeImageLink != "";
+
+                    // Removing images
+                    text = text.RemoveTagWithContent("img");
+
                     // Article image
-                    byte[] image = null;
+                    byte[] smallImage = null;
                     var articleDoc = new HtmlDocument();
                     articleDoc.LoadHtml(html);
                     var articlesHeaders = articleDoc.DocumentNode.SelectNodes("//div[@class='outer-info']");
@@ -272,14 +246,23 @@ namespace News.Core.Services.Parsing
 
                         foreach (HtmlNode articleNode in articleItem.ChildNodes)
                         {
-                            if (articleNode.Name == "a" && image == null)
+                            if (articleNode.Name == "a" && smallImage == null)
                             {
                                 var imgNode = articleNode.ChildNodes["img"];
                                 var attribute = imgNode?.Attributes["src"];
                                 if (attribute != null)
                                 {
                                     var imageLink = parserData.SourceMainLink + attribute.Value;
-                                    if (Path.HasExtension(imageLink)) image = await _webService.GetImageAsync(imageLink);
+                                    if (Path.HasExtension(imageLink))
+                                    {
+                                        smallImage = await _webService.GetImageAsync(imageLink);
+                                        if (!article.HasLargeImage)
+                                        {
+                                            // Small image instead of large
+                                            article.LargeImageLink = imageLink;
+                                            article.HasLargeImage = true;
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -291,8 +274,8 @@ namespace News.Core.Services.Parsing
 
                     // Saving article fields
                     article.Text = text;
-                    article.Image = image;
-                    article.HasImage = image != null;
+                    article.SmallImage = smallImage;
+                    article.HasSmallImage = smallImage != null;
                 }
 
                 return true;

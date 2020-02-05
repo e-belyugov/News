@@ -1,12 +1,15 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using MvvmCross.Forms.Presenters.Attributes;
 using Xamarin.Forms;
 using MvvmCross.Forms.Views;
 using News.Core.ViewModels;
+using News.Forms.UI.Helpers;
 using Plugin.Toast;
 using Plugin.Toast.Abstractions;
 using Xamarin.Essentials;
+using Xamarin.Forms.PlatformConfiguration;
 
 namespace News.Forms.UI.Pages
 {
@@ -39,6 +42,11 @@ namespace News.Forms.UI.Pages
             {
                 RefreshButton_Clicked(null, null);
                 _firstRun = false;
+
+                // Developer function
+                IDevice device = DependencyService.Get<IDevice>();
+                string deviceIdentifier = device.GetIdentifier();
+                if (deviceIdentifier == "c14df6fcfd5ca219") ErrorButton.IsVisible = true;
             }
         }
 
@@ -80,6 +88,9 @@ namespace News.Forms.UI.Pages
         /// </summary>
         private void HomeButton_Clicked(object sender, System.EventArgs e)
         {
+            //IDevice device = DependencyService.Get<IDevice>();
+            //string deviceIdentifier = device.GetIdentifier();
+
             ScrollToTop();
         }
 
@@ -90,7 +101,17 @@ namespace News.Forms.UI.Pages
         {
             base.OnSizeAllocated(width, height);
 
-            ButtonStackLayout.HeightRequest = width > height ? 200 : 85;
+            var errorScrollViewHeight = ErrorScrollView.IsVisible ? 130 : 0;
+
+            ButtonStackLayout.HeightRequest = width > height ? 200 + errorScrollViewHeight : 85 + errorScrollViewHeight;
+        }
+
+        /// <summary>
+        /// Error button click
+        /// </summary>
+        private void ErrorButton_OnClicked(object sender, EventArgs e)
+        {
+            ErrorScrollView.IsVisible = !ErrorScrollView.IsVisible;
         }
     }
 }

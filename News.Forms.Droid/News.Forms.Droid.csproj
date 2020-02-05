@@ -63,6 +63,7 @@
     <AndroidCreatePackagePerAbi>false</AndroidCreatePackagePerAbi>
     <AndroidKeyStore>false</AndroidKeyStore>
     <AndroidSigningKeyStore>C:\Users\e_belyugov\AppData\Local\Xamarin\Mono for Android\Keystore\laboratory.also\laboratory.also.keystore</AndroidSigningKeyStore>
+    <MandroidI18n>Other</MandroidI18n>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Android.Export" />
@@ -74,6 +75,7 @@
     <Reference Include="System.Numerics.Vectors" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AndroidDevice.cs" />
     <Compile Include="ExtendedWebViewRenderer.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.designer.cs" />

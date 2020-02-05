@@ -18,6 +18,9 @@
     
     <ContentPage.Content>
         <StackLayout BackgroundColor="White">
+            <ScrollView x:Name="ErrorScrollView" IsVisible="False">
+                <Label HeightRequest="1000" Text="{Binding LastError}"></Label>
+            </ScrollView>
             <views:MvxListView x:Name="NewsListView"
                 IsRefreshing="{Binding IsBusy}"
                 ItemsSource="{mvx:MvxBind Articles}"
@@ -82,15 +85,16 @@
                 </ListView.ItemTemplate>
             </views:MvxListView>
             <BoxView Margin="0,-7,0,-2" HeightRequest="1" BackgroundColor="LightGray"></BoxView>
-            <StackLayout x:Name="ButtonStackLayout" BackgroundColor="White" HeightRequest="80">
+            <StackLayout x:Name="ButtonStackLayout" BackgroundColor="White" HeightRequest="85">
                 <Grid Padding="12,5,14,12">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="130" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="130" />
                     </Grid.ColumnDefinitions>
-                    <Button FontSize="Body" HeightRequest="70" x:Name="HomeButton" Grid.Column="0" Text="В начало" Clicked="HomeButton_Clicked" ImageSource="home.png"/>
-                    <Button FontSize="Body" x:Name="RefreshButton" Grid.Column="2" Text="Обновить" Clicked="RefreshButton_Clicked" ImageSource="refresh.png" />
+                    <Button x:Name="HomeButton" FontSize="Body" HeightRequest="75" Grid.Column="0" Text="В начало" Clicked="HomeButton_Clicked" ImageSource="home.png"/>
+                    <Button x:Name="ErrorButton" IsVisible="False" FontSize="Body" BackgroundColor="White" Grid.Column="1" Clicked="ErrorButton_OnClicked" />
+                    <Button x:Name="RefreshButton" FontSize="Body" Grid.Column="2" Text="Обновить" Clicked="RefreshButton_Clicked" ImageSource="refresh.png" />
                 </Grid>
             </StackLayout>
         </StackLayout>

@@ -141,6 +141,7 @@ namespace News.Core.ViewModels
             try
             {
                 _lastError = "";
+                await RaisePropertyChanged(nameof(LastError));
                 IsBusy = true;
 
                 //var result = await _articleService.GetArticlesAsync(remotely);

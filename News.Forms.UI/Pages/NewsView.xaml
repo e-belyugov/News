@@ -19,7 +19,7 @@
     <ContentPage.Content>
         <StackLayout BackgroundColor="White">
             <ScrollView x:Name="ErrorScrollView" IsVisible="False">
-                <Label HeightRequest="1000" Text="{Binding LastError}"></Label>
+                <Label HeightRequest="600" Text="{Binding LastError}"></Label>
             </ScrollView>
             <views:MvxListView x:Name="NewsListView"
                 IsRefreshing="{Binding IsBusy}"

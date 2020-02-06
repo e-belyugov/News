@@ -88,9 +88,6 @@ namespace News.Forms.UI.Pages
         /// </summary>
         private void HomeButton_Clicked(object sender, System.EventArgs e)
         {
-            //IDevice device = DependencyService.Get<IDevice>();
-            //string deviceIdentifier = device.GetIdentifier();
-
             ScrollToTop();
         }
 

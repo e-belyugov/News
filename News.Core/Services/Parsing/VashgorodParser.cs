@@ -45,7 +45,10 @@ namespace News.Core.Services.Parsing
             string cleaned = html;
             try
             {
-                if (cleaned.Contains("На правах рекламы")) return "Skip";
+                if (
+                    cleaned.Contains("На правах рекламы")
+                    || cleaned.Contains("Билайн")
+                ) return "Skip";
 
                 // Article timestamp
                 var timeString =
@@ -89,9 +92,15 @@ namespace News.Core.Services.Parsing
                             introText = introText.Replace("<a>", "").Replace("</a>", "");
                         }
                     }
+
+                    // Removing span tags
+                    for (var i = 0; i <= 5; i++) introText = introText.RemoveTagWithContent("span");
+                    introText = introText.Replace("</span>", "");
+
                     article.IntroText = introText;
                 }
 
+                // Article reference
                 cleaned = cleaned + "<p>Ссылка на сайт: <a href=\"" + parserData.SourceMainLink + "\">" + parserData.SourceTitle + "</a></p>";
 
                 cleaned = "<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head>"

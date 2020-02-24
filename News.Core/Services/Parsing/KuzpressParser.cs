@@ -91,18 +91,25 @@ namespace News.Core.Services.Parsing
                 // Preparing clean result list
                 _articles.Clear();
 
+
                 // Loading web data
+                _logger.Info("KUZPRESS : Begin main source request");
                 string html = await _webService.GetDataAsync(parserData.SourceParseLink,
                     Encoding.GetEncoding(parserData.SourceEncoding));
+                _logger.Info("KUZPRESS : End main source request");
 
                 // Saving last parsing time 
                 parserData.LastTimeStamp = DateTime.Now;
 
                 // Parsing main page 
+                _logger.Info("KUZPRESS : Begin main source document loading");
                 HtmlNode.ElementsFlags.Remove("link");
                 HtmlDocument doc = new HtmlDocument();
                 doc.LoadHtml(html);
+                _logger.Info("KUZPRESS : End main source document loading");
+                _logger.Info("KUZPRESS : Begin main source items parsing");
                 var articleItems = doc.DocumentNode.SelectNodes("//item");
+                _logger.Info("KUZPRESS : End main source items parsing");
 
                 if (articleItems != null)
                 {
@@ -129,15 +136,19 @@ namespace News.Core.Services.Parsing
                                 }
 
                                 // New data
+                                _logger.Info("KUZPRESS : Begin new article flag unset");
                                 parserData.LastData = title;
                                 foreach (var article in existingArticles.Where(x =>
                                     x.SourceMainLink == parserData.SourceMainLink))
                                     article.New = false;
+                                _logger.Info("KUZPRESS : End new article flag unset");
                             }
 
                             // Checking if article exists already
-                            var existingArticle = existingArticles.SingleOrDefault(x =>
+                            _logger.Info("KUZPRESS : Begin checking existing article");
+                            var existingArticle = existingArticles.FirstOrDefault(x =>
                                 x.SourceMainLink == parserData.SourceMainLink && x.Title == title);
+                            _logger.Info("KUZPRESS : End checking existing article");
                             if (existingArticle != null)
                             {
                                 existingArticle.New = true;

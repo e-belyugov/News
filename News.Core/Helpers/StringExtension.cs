@@ -88,6 +88,9 @@ namespace News.Core.Services.Parsing
             str = str.Replace("&#8212;", "-");
             str = str.Replace("&#8470;", "№");
             str = str.Replace("&thinsp;", " ");
+            str = str.Replace("&deg;C", " градусов");
+            str = str.Replace("&bdquo;", "\"");
+            str = str.Replace("&ldquo;", "\"");
 
             return str;
         }

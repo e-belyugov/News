@@ -141,7 +141,7 @@ namespace News.Core.Services.Parsing
                             }
 
                             // Checking if article exists already
-                            var existingArticle = existingArticles.SingleOrDefault(x =>
+                            var existingArticle = existingArticles.FirstOrDefault(x =>
                                 x.SourceMainLink == parserData.SourceMainLink && x.Title == title);
                             if (existingArticle != null)
                             {

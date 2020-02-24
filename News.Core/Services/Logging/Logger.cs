@@ -25,7 +25,7 @@ namespace News.Core.Services.Logging
         /// </summary>
         public void Info(string infoMessage)
         {
-
+            Debug.WriteLine(DateTime.Now + " " + infoMessage);
         }
 
         /// <summary>

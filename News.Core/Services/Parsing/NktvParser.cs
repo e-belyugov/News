@@ -200,14 +200,20 @@ namespace News.Core.Services.Parsing
                                     Title = title,
                                     IntroText = introText,
                                     TimeStamp = timeStamp,
-                                    New = true
+                                    New = true,
+                                    Loaded = false
                                 };
 
+                                /*
                                 // Parsing article
                                 var result = await ParseArticle(parserData, link, article);
 
                                 // Adding article to list
                                 if (result) _articles.Add(article);
+                                */
+
+                                // Adding article to list
+                                _articles.Add(article);
 
                                 //break;
                             }

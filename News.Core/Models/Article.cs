@@ -70,9 +70,15 @@ namespace News.Core.Models
         /// Article large image flag
         /// </summary>
         public bool HasLargeImage { get; set; }
+
         /// <summary>
         /// New article flag
         /// </summary>
         public bool New { get; set; }
+
+        /// <summary>
+        /// Loaded flag
+        /// </summary>
+        public bool Loaded { get; set; }
     }
 }

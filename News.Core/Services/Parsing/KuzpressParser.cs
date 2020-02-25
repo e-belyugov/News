@@ -93,23 +93,23 @@ namespace News.Core.Services.Parsing
 
 
                 // Loading web data
-                _logger.Info("KUZPRESS : Begin main source request");
+                //_logger.Info("KUZPRESS : Begin main source REQUEST");
                 string html = await _webService.GetDataAsync(parserData.SourceParseLink,
                     Encoding.GetEncoding(parserData.SourceEncoding));
-                _logger.Info("KUZPRESS : End main source request");
+                //_logger.Info("KUZPRESS : End main source REQUEST");
 
                 // Saving last parsing time 
                 parserData.LastTimeStamp = DateTime.Now;
 
                 // Parsing main page 
-                _logger.Info("KUZPRESS : Begin main source document loading");
+                //_logger.Info("KUZPRESS : Begin main source document LOADING");
                 HtmlNode.ElementsFlags.Remove("link");
                 HtmlDocument doc = new HtmlDocument();
                 doc.LoadHtml(html);
-                _logger.Info("KUZPRESS : End main source document loading");
-                _logger.Info("KUZPRESS : Begin main source items parsing");
+                //_logger.Info("KUZPRESS : End main source document LOADING");
+                //_logger.Info("KUZPRESS : Begin main source items PARSING");
                 var articleItems = doc.DocumentNode.SelectNodes("//item");
-                _logger.Info("KUZPRESS : End main source items parsing");
+                //_logger.Info("KUZPRESS : End main source items PARSING");
 
                 if (articleItems != null)
                 {
@@ -136,25 +136,27 @@ namespace News.Core.Services.Parsing
                                 }
 
                                 // New data
-                                _logger.Info("KUZPRESS : Begin new article flag unset");
+                                //_logger.Info("KUZPRESS : Begin new article flag UNSETTING");
                                 parserData.LastData = title;
                                 foreach (var article in existingArticles.Where(x =>
                                     x.SourceMainLink == parserData.SourceMainLink))
                                     article.New = false;
-                                _logger.Info("KUZPRESS : End new article flag unset");
+                                //_logger.Info("KUZPRESS : End new article flag UNSETTING");
                             }
 
                             // Checking if article exists already
-                            _logger.Info("KUZPRESS : Begin checking existing article");
+                            //_logger.Info("KUZPRESS : Begin checking EXISTING article");
                             var existingArticle = existingArticles.FirstOrDefault(x =>
                                 x.SourceMainLink == parserData.SourceMainLink && x.Title == title);
-                            _logger.Info("KUZPRESS : End checking existing article");
+                            //_logger.Info("KUZPRESS : End checking EXISTING article");
                             if (existingArticle != null)
                             {
                                 existingArticle.New = true;
                                 continue;
                                 //break;
                             }
+
+                            //_logger.Info("KUZPRESS : Begin parsing ARTICLE");
 
                             // Article link
                             node = item.ChildNodes["link"];
@@ -183,6 +185,8 @@ namespace News.Core.Services.Parsing
                                 timeStamp = timeStamp.AddHours(4);
                             }
 
+                            //_logger.Info("KUZPRESS : End parsing ARTICLE");
+
                             // Creating article
                             if (
                                 title != null
@@ -200,14 +204,22 @@ namespace News.Core.Services.Parsing
                                     Title = title,
                                     IntroText = introText,
                                     TimeStamp = timeStamp,
-                                    New = true
+                                    New = true,
+                                    Loaded = false
                                 };
 
+                                /*
                                 // Parsing article
+                                _logger.Info("KUZPRESS : Begin article REQUEST");
                                 var result = await ParseArticle(parserData, link, article);
+                                _logger.Info("KUZPRESS : End article REQUEST");
 
                                 // Adding article to list
                                 if (result) _articles.Add(article);
+                                */
+
+                                // Adding article to list
+                                _articles.Add(article);
                             }
                         }
                     }
@@ -266,7 +278,9 @@ namespace News.Core.Services.Parsing
                                     var imageLink = parserData.SourceMainLink + attribute.Value;
                                     if (Path.HasExtension(imageLink))
                                     {
+                                        _logger.Info("KUZPRESS : Begin article image REQUEST");
                                         smallImage = await _webService.GetImageAsync(imageLink);
+                                        _logger.Info("KUZPRESS : End article image REQUEST");
                                         if (!article.HasLargeImage)
                                         {
                                             // Small image instead of large

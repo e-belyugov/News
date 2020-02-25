@@ -108,12 +108,16 @@ namespace News.Core.Services
                 // Preparing database
                 if (!_databasePrepared)
                 {
+                    //_logger.Info("DATABASE : begin PREPARING");
                     await _database.PrepareAsync();
                     _databasePrepared = true;
+                    //_logger.Info("DATABASE : end PREPARING");
                 }
 
                 // Loading articles from database
+                //_logger.Info("DATABASE : begin LOADING");
                 var articles = await _database.GetArticlesAsync();
+                //_logger.Info("DATABASE : end LOADING");
 
                 // Sorting and filtering articles
                 articles = articles.OrderByDescending(x => x.TimeStamp).Where(x => x.New).ToList();

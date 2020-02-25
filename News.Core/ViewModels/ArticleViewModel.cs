@@ -12,6 +12,7 @@ namespace News.Core.ViewModels
     /// <summary>
     /// Article ViewModel
     /// </summary>
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class ArticleViewModel : MvxViewModel<Article>
     {
         // Navigation service

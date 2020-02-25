@@ -25,7 +25,7 @@ namespace News.Core.Services.Logging
         /// </summary>
         public void Info(string infoMessage)
         {
-            Debug.WriteLine(DateTime.Now + " " + infoMessage);
+            Debug.WriteLine( Environment.NewLine + DateTime.Now.ToString("hh:mm:ss.fff") + " NK-NEWS " + infoMessage + Environment.NewLine);
         }
 
         /// <summary>

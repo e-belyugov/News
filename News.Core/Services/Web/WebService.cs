@@ -35,19 +35,20 @@ namespace News.Core.Services.Web
             try
             {
                 var request = HttpWebRequest.Create(url);
-                IWebProxy proxy = HttpWebRequest.GetSystemWebProxy();
-                if (proxy != null)
-                {
-                    string proxyuri = proxy.GetProxy(request.RequestUri).ToString();
-                    if (!proxyuri.Contains(url))
-                    {
-                        request.UseDefaultCredentials = true;
-                        request.Proxy = new WebProxy(proxyuri, false)
-                        {
-                            Credentials = new NetworkCredential("e_belyugov", "CrystalPalace22")
-                        };
-                    }
-                }
+                //IWebProxy proxy = HttpWebRequest.GetSystemWebProxy();
+                //if (proxy != null)
+                //{
+                //    string proxyuri = proxy.GetProxy(request.RequestUri).ToString();
+                //    if (!proxyuri.Contains(url))
+                //    {
+                //        request.UseDefaultCredentials = true;
+                //        request.Proxy = new WebProxy(proxyuri, false)
+                //        {
+                //            Credentials = new NetworkCredential("e_belyugov", "CrystalPalace22")
+                //        };
+                //    }
+                //}
+                request.Proxy = null;
                 return request;
             }
             catch (Exception e)
@@ -69,13 +70,33 @@ namespace News.Core.Services.Web
 
                 if (request != null)
                 {
+                    //_logger.Info("--- WEBSERVICE : Begin GETRESPONSE");
+                    request.Proxy = null;
                     using (var response = await request.GetResponseAsync())
                     {
+                        //_logger.Info("--- WEBSERVICE : End GETRESPONSE");
+
                         HttpWebResponse webResponse = response as HttpWebResponse;
+
+                        //_logger.Info("--- WEBSERVICE : Begin GETRESPONSESTREAM");
                         using (var stream = response.GetResponseStream())
-                        using (var reader = new StreamReader(stream, encoding))
                         {
-                            content = reader.ReadToEnd();
+                            //using (var reader = new StreamReader(stream, encoding))
+                            //{
+                            //    content = reader.ReadToEnd();
+                            //}
+                            //_logger.Info("--- WEBSERVICE : End GETRESPONSESTREAM");
+
+                            if (stream != null)
+                                using (var buffer = new BufferedStream(stream))
+                                {
+                                    //_logger.Info("--- WEBSERVICE : Begin READING");
+                                    using (StreamReader reader = new StreamReader(buffer, encoding))
+                                    {
+                                        content = reader.ReadToEnd();
+                                    }
+                                    //_logger.Info("--- WEBSERVICE : End READING");
+                                }
                         }
                     }
                 }

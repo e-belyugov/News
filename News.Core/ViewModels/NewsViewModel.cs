@@ -140,8 +140,9 @@ namespace News.Core.ViewModels
         {
             try
             {
-                _lastError = "";
-                await RaisePropertyChanged(nameof(LastError));
+                //_lastError = "";
+                //await RaisePropertyChanged(nameof(LastError));
+                LastError = "";
                 IsBusy = true;
 
                 //var result = await _articleService.GetArticlesAsync(remotely);
@@ -182,12 +183,11 @@ namespace News.Core.ViewModels
                     }
                 }
 
-                _lastError = _articleService.LastError;
-                await RaisePropertyChanged(nameof(LastError));
-
-                IsBusy = false;
+                //_lastError = _articleService.LastError;
+                //await RaisePropertyChanged(nameof(LastError));
+                LastError = _articleService.LastError;
             }
-            catch (Exception)
+            finally
             { 
                 IsBusy = false;
             }
@@ -199,7 +199,21 @@ namespace News.Core.ViewModels
         /// </summary>
         private async Task ArticleSelected(Article selectedArticle)
         {
-            await _navigationService.Navigate<ArticleViewModel, Article>(selectedArticle);
+            try
+            {
+                LastError = "";
+                IsBusy = true;
+
+                if (!selectedArticle.Loaded) await _articleService.GetArticleAsync(selectedArticle);
+
+                await _navigationService.Navigate<ArticleViewModel, Article>(selectedArticle);
+
+                LastError = _articleService.LastError;
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         // -----------------------------------------------

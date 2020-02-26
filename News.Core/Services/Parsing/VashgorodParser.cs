@@ -135,7 +135,8 @@ namespace News.Core.Services.Parsing
                 // Parsing main page 
                 HtmlDocument doc = new HtmlDocument();
                 doc.LoadHtml(html);
-                var articleItems = doc.DocumentNode.SelectNodes("//article[contains(@class,'vg-item')]");
+                //var articleItems = doc.DocumentNode.SelectNodes("//article[contains(@class,'vg-item')]");
+                var articleItems = doc.DocumentNode.SelectNodes("//article[contains(@class,'vg-item') and not (contains(@class,'vg-item--adv'))]");
 
                 if (articleItems != null)
                 {
@@ -246,7 +247,7 @@ namespace News.Core.Services.Parsing
         /// <summary>
         /// Parsing article 
         /// </summary>
-        private async Task<bool> ParseArticle(ParserData parserData, string link, Article article)
+        public async Task<bool> ParseArticle(ParserData parserData, string link, Article article)
         {
             try
             {

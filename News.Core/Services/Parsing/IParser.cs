@@ -12,8 +12,13 @@ namespace News.Core.Services.Parsing
     public interface IParser
     {
         /// <summary>
-        /// Parsing html
+        /// Parsing articles
         /// </summary>
         Task<IList<Article>> Parse(ParserData parserData, IList<Article> existingArticles);
+
+        /// <summary>
+        /// Parsing article
+        /// </summary>
+        Task<bool> ParseArticle(ParserData parserData, string link, Article article);
     }
 }

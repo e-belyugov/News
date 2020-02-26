@@ -37,6 +37,11 @@ namespace News.Core.Services.Database
         Task<bool> SaveArticlesAsync(IList<Article> articles);
 
         /// <summary>
+        /// Saving article to database
+        /// </summary>
+        Task<bool> SaveArticleAsync(Article article);
+
+        /// <summary>
         /// Deleting old articles
         /// </summary>
         Task<bool> DeleteOldArticlesAsync();

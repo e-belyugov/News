@@ -98,6 +98,47 @@ namespace News.Core.Services
             }
         }
 
+
+        /// <summary>
+        /// Getting article
+        /// </summary>
+        public async Task<Article> GetArticleAsync(Article article)
+        {
+            try
+            {
+                // Loading parser data
+                IList<ParserData> parserDataList = await _database.GetParserDataAsync();
+                var parserData = parserDataList.FirstOrDefault(x => article.SourceMainLink.Contains(x.SourceMainLink) && x.Enabled);
+
+                // Parsing article
+                if (parserData != null)
+                {
+                    foreach (var parser in _parsers.Parsers)
+                    {
+                        string parserType = parser.ToString(); // Parser type
+                        if (parserType.Contains(parserData.TypeName))
+                        {
+                            var result = await parser.ParseArticle(parserData, article.SourceLink, article);
+                            if (result)
+                            {
+                                // Saving article
+                                article.Loaded = true;
+                                await _database.SaveArticleAsync(article);
+                            }
+                            break;
+                        }
+                    }
+                }
+
+                return article;
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e);
+                return article;
+            }
+        }
+
         /// <summary>
         /// Getting local articles
         /// </summary>

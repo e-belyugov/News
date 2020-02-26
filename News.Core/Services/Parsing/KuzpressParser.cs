@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using System.Linq;
 using System.IO;
+using MvvmCross.Binding.Binders;
 using News.Core.Helpers;
 
 namespace News.Core.Services.Parsing
@@ -27,6 +28,9 @@ namespace News.Core.Services.Parsing
 
         // Logger
         private readonly ILogger _logger;
+
+        // Image links dictionary
+        private readonly Dictionary<string, string> _imageLinks = new Dictionary<string, string>();
 
         /// <summary>
         /// Constructor
@@ -49,7 +53,7 @@ namespace News.Core.Services.Parsing
 
                 // Filter by article text
                 bool skip = cleaned.Contains("youtube") 
-                            || cleaned.Contains("<table")
+                            //|| cleaned.Contains("<table")
                             || cleaned.Contains("vk.com/video")
                             || cleaned.Contains("360tv");
 
@@ -142,6 +146,28 @@ namespace News.Core.Services.Parsing
                                     x.SourceMainLink == parserData.SourceMainLink))
                                     article.New = false;
                                 //_logger.Info("KUZPRESS : End new article flag UNSETTING");
+
+                                // Loading and parsing main source html
+                                string mainHtml = await _webService.GetDataAsync(parserData.SourceMainLink,
+                                    Encoding.GetEncoding(parserData.SourceEncoding));
+                                _imageLinks.Clear();
+                                var mainDoc = new HtmlDocument();
+                                mainDoc.LoadHtml(mainHtml);
+                                var mainDocHeaders = mainDoc.DocumentNode.SelectNodes("//img[contains(@class,'anons')]");
+                                foreach (var mainDocNode in mainDocHeaders)
+                                {
+                                    var imageLink = mainDocNode.Attributes["src"]?.Value;
+                                    if (imageLink != null)
+                                    {
+                                        imageLink = parserData.SourceMainLink + imageLink;
+                                        var articleLink = mainDocNode.ParentNode?.Attributes["href"]?.Value;
+                                        if (articleLink != null && !_imageLinks.ContainsKey(articleLink))
+                                        {
+                                            articleLink = parserData.SourceMainLink + articleLink;
+                                            _imageLinks.Add(articleLink, imageLink);
+                                        }
+                                    }
+                                }
                             }
 
                             // Checking if article exists already
@@ -218,6 +244,15 @@ namespace News.Core.Services.Parsing
                                 if (result) _articles.Add(article);
                                 */
 
+                                // Article small image
+                                _imageLinks.TryGetValue(link, out var imageLink);
+                                article.HasSmallImage = false;
+                                if (imageLink != null)
+                                {
+                                    article.SmallImage = await _webService.GetImageAsync(imageLink);
+                                    article.HasSmallImage = true;
+                                }
+
                                 // Adding article to list
                                 _articles.Add(article);
                             }
@@ -238,7 +273,7 @@ namespace News.Core.Services.Parsing
         /// <summary>
         /// Parsing article 
         /// </summary>
-        private async Task<bool> ParseArticle(ParserData parserData, string link, Article article)
+        public async Task<bool> ParseArticle(ParserData parserData, string link, Article article)
         {
             try
             {
@@ -247,6 +282,24 @@ namespace News.Core.Services.Parsing
 
                 if (html != "")
                 {
+                    // Article reserved large image link
+                    string reservedImageLink = "";
+                    if (!article.HasSmallImage)
+                    {
+                        var mainDoc = new HtmlDocument();
+                        mainDoc.LoadHtml(html);
+                        var mainDocHeaders = mainDoc.DocumentNode.SelectNodes("//img[contains(@class,'anons')]");
+                        if (mainDocHeaders != null)
+                        {
+                            foreach (var mainDocNode in mainDocHeaders)
+                            {
+                                reservedImageLink = mainDocNode.Attributes["src"]?.Value;
+                                if (reservedImageLink != null) reservedImageLink = parserData.SourceMainLink + reservedImageLink;
+                                break;
+                            }
+                        }
+                    }
+
                     // Article text
                     string text = GetArticleText(article, parserData, html);
                     if (text.Contains("Skip")) return false; // Skipping article
@@ -254,10 +307,30 @@ namespace News.Core.Services.Parsing
                     // Article large image link
                     article.LargeImageLink = text.GetImgHref();
                     article.HasLargeImage = article.LargeImageLink != "";
+                    if (!article.HasLargeImage)
+                    {
+                        if (article.HasSmallImage)
+                        {
+                            // Small image instead of large
+                            _imageLinks.TryGetValue(link, out var imageLink);
+                            article.LargeImageLink = imageLink;
+                            article.HasLargeImage = true;
+                        }
+                        else
+                        {
+                            if (!string.IsNullOrEmpty(reservedImageLink))
+                            {
+                                article.LargeImageLink = reservedImageLink;
+                                article.HasLargeImage = true;
+                            }
+                        }
+
+                    }
 
                     // Removing images
                     text = text.RemoveTagWithContent("img");
 
+                    /*
                     // Article image
                     byte[] smallImage = null;
                     var articleDoc = new HtmlDocument();
@@ -278,9 +351,9 @@ namespace News.Core.Services.Parsing
                                     var imageLink = parserData.SourceMainLink + attribute.Value;
                                     if (Path.HasExtension(imageLink))
                                     {
-                                        _logger.Info("KUZPRESS : Begin article image REQUEST");
+                                        //_logger.Info("KUZPRESS : Begin article image REQUEST");
                                         smallImage = await _webService.GetImageAsync(imageLink);
-                                        _logger.Info("KUZPRESS : End article image REQUEST");
+                                        //_logger.Info("KUZPRESS : End article image REQUEST");
                                         if (!article.HasLargeImage)
                                         {
                                             // Small image instead of large
@@ -292,6 +365,7 @@ namespace News.Core.Services.Parsing
                             }
                         }
                     }
+                    */
 
                     // Logo if no image
                     //var resourceHelper = new ResourceHelper(_logger);
@@ -299,8 +373,10 @@ namespace News.Core.Services.Parsing
 
                     // Saving article fields
                     article.Text = text;
+                    /*
                     article.SmallImage = smallImage;
                     article.HasSmallImage = smallImage != null;
+                    */
                 }
 
                 return true;

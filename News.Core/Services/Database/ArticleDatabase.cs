@@ -18,7 +18,7 @@ namespace News.Core.Services.Database
     public class ArticleDatabase : IArticleDatabase
     {
         // User version
-        private readonly int _userVersion = 169;
+        private readonly int _userVersion = 192;
 
         // Logger
         private readonly ILogger _logger;
@@ -192,6 +192,23 @@ namespace News.Core.Services.Database
                         await _connection.UpdateAsync(article);
                     }
                 }
+                return true;
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Saving article to database
+        /// </summary>
+        public async Task<bool> SaveArticleAsync(Article article)
+        {
+            try
+            {
+                await _connection.UpdateAsync(article);
                 return true;
             }
             catch (Exception e)

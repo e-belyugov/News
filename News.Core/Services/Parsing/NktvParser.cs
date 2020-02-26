@@ -29,6 +29,9 @@ namespace News.Core.Services.Parsing
         // Logger
         private readonly ILogger _logger;
 
+        // Image links dictionary
+        private readonly Dictionary<string, string> _imageLinks = new Dictionary<string, string>();
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -61,6 +64,7 @@ namespace News.Core.Services.Parsing
                 cleaned = cleaned.SubstringBetweenSubstrings("<p><strong>", "</div><!-- END Post Content. -->");
                 cleaned = "<p><strong>" + cleaned;
 
+                /*
                 if (
                     cleaned.Contains("КузПресс")
                     || cleaned.Contains("youtube")
@@ -68,6 +72,7 @@ namespace News.Core.Services.Parsing
                     || cleaned.Contains("vk.com/video")
                     || cleaned.Contains("360tv")
                     ) return "Skip";
+                */
 
                 cleaned = cleaned.Replace("width=\"850\" height=\"478\"", "width=\"100%\" height=\"100%\"");
                 cleaned = cleaned.Replace("<ul", "<ul style=\"list-style-type: none; margin-left:-120px\"");
@@ -103,7 +108,7 @@ namespace News.Core.Services.Parsing
                 // Saving last parsing time 
                 parserData.LastTimeStamp = DateTime.Now;
 
-                // Parsing main page 
+                // Parsing data
                 HtmlNode.ElementsFlags.Remove("link");
                 HtmlDocument doc = new HtmlDocument();
                 doc.LoadHtml(html);
@@ -138,17 +143,49 @@ namespace News.Core.Services.Parsing
                                 foreach (var article in existingArticles.Where(x =>
                                     x.SourceMainLink == parserData.SourceMainLink))
                                     article.New = false;
+
+                                // Loading and parsing main source html
+                                string mainHtml = await _webService.GetDataAsync(parserData.SourceMainLink,
+                                    Encoding.GetEncoding(parserData.SourceEncoding));
+                                _imageLinks.Clear();
+                                var mainDoc = new HtmlDocument();
+                                mainDoc.LoadHtml(mainHtml);
+                                var mainDocHeaders = mainDoc.DocumentNode.SelectNodes("//div[contains(@class,'block-article-img-container')]");
+                                foreach (var mainDocNode in mainDocHeaders)
+                                {
+                                    var aArticleNode = mainDocNode?.ChildNodes["a"];
+                                    var articleLink = aArticleNode?.Attributes["href"]?.Value;
+                                    if (articleLink != null)
+                                    {
+                                        var imageLink = aArticleNode?.ChildNodes["img"]?.Attributes["src"]?.Value;
+                                        if (!_imageLinks.ContainsKey(articleLink)) _imageLinks.Add(articleLink, imageLink);
+                                    }
+                                }
                             }
 
                             // Checking if article exists already
                             var existingArticle = existingArticles.FirstOrDefault(x =>
-                                x.SourceMainLink == parserData.SourceMainLink && x.Title == title);
+                            x.SourceMainLink == parserData.SourceMainLink && x.Title == title);
                             if (existingArticle != null)
                             {
                                 existingArticle.New = true;
                                 continue;
                                 //break;
                             }
+
+                            // Article categories
+                            bool hasVideo = false;
+                            var nodes = item.SelectNodes("category");
+                            foreach (var categoryNode in nodes)
+                            {
+                                var categoryText = categoryNode.InnerHtml;
+                                if (categoryText.Contains("Видео"))
+                                {
+                                    hasVideo = true;
+                                    break;
+                                }
+                            }
+                            if (hasVideo) continue; // Skip article with video
 
                             // Article link
                             node = item.ChildNodes["link"];
@@ -212,6 +249,15 @@ namespace News.Core.Services.Parsing
                                 if (result) _articles.Add(article);
                                 */
 
+                                // Article small image
+                                _imageLinks.TryGetValue(link, out var imageLink);
+                                article.HasSmallImage = false;
+                                if (imageLink != null)
+                                {
+                                    article.SmallImage = await _webService.GetImageAsync(imageLink);
+                                    article.HasSmallImage = true;
+                                }
+
                                 // Adding article to list
                                 _articles.Add(article);
 
@@ -234,7 +280,7 @@ namespace News.Core.Services.Parsing
         /// <summary>
         /// Parsing article 
         /// </summary>
-        private async Task<bool> ParseArticle(ParserData parserData, string link, Article article)
+        public async Task<bool> ParseArticle(ParserData parserData, string link, Article article)
         {
             try
             {
@@ -247,6 +293,7 @@ namespace News.Core.Services.Parsing
                     string text = GetArticleText(article, parserData, html);
                     if (text.Contains("Skip")) return false; // Skipping article
 
+                    /*
                     // Article image
                     byte[] smallimage = null;
                     var articleDoc = new HtmlDocument();
@@ -267,16 +314,18 @@ namespace News.Core.Services.Parsing
                                     var imageLink = attribute.Value;
                                     if (Path.HasExtension(imageLink)) smallimage = await _webService.GetImageAsync(imageLink);
                                 }
-
                                 break;
                             }
                         }
                     }
+                    */
 
                     // Saving article fields
                     article.Text = text;
+                    /*
                     article.SmallImage = smallimage;
                     article.HasSmallImage = smallimage != null;
+                    */
                 }
 
                 return true;

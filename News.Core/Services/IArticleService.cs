@@ -14,14 +14,14 @@ namespace News.Core.Services
     public interface IArticleService
     {
         /// <summary>
-        /// Getting string data from web page
-        /// </summary>
-        //Task<IEnumerable<Article>> GetArticlesAsync(bool remotely);
-
-        /// <summary>
         /// Getting all articles
         /// </summary>
         Task<IEnumerable<Article>> GetArticlesAsync(IEnumerable<Article> localArticles);
+
+        /// <summary>
+        /// Getting article
+        /// </summary>
+        Task<Article> GetArticleAsync(Article article);
 
         /// <summary>
         /// Getting local articles

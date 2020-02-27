@@ -52,10 +52,11 @@ namespace News.Core.Services.Parsing
                 cleaned = cleaned.SubstringBetweenSubstrings("</h1>", "<div class=\"newsLine\">");
 
                 // Filter by article text
-                bool skip = cleaned.Contains("youtube") 
-                            //|| cleaned.Contains("<table")
-                            || cleaned.Contains("vk.com/video")
-                            || cleaned.Contains("360tv");
+                //bool skip = cleaned.Contains("youtube") 
+                //            || cleaned.Contains("<table")
+                //            || cleaned.Contains("vk.com/video")
+                //            || cleaned.Contains("360tv");
+                bool skip = false;
 
                 if (!skip)
                 {
@@ -65,6 +66,7 @@ namespace News.Core.Services.Parsing
                     cleaned = cleaned.Replace("h6", "h3");
                     cleaned = cleaned.Replace("src=\"/i", "src=\"" + parserData.SourceMainLink + "/i");
                     cleaned = cleaned.Replace("src=", "width=\"500\" src=");
+                    cleaned = cleaned.RemoveTagWithContent("iframe");
 
                     cleaned = cleaned + "<p>Ссылка на статью: <a href=\"" + article.SourceLink + "\">" + parserData.SourceTitle + "</a></p>";
 

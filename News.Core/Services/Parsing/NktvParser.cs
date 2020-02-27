@@ -55,6 +55,8 @@ namespace News.Core.Services.Parsing
                 article.HasLargeImage = article.LargeImageLink != "";
 
                 // Article full text
+                cleaned = cleaned.Replace("<h1>", "<p><strong>");
+                cleaned = cleaned.Replace("</h1>", "</strong></p>");
                 cleaned = cleaned.Replace("<h2>","<p><strong>");
                 cleaned = cleaned.Replace("</h2>", "</strong></p>");
                 cleaned = cleaned.Replace("<ol><li><strong>", "<p><strong>");

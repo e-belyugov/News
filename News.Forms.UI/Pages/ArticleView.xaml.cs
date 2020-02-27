@@ -5,6 +5,8 @@ using MvvmCross.Forms.Presenters.Attributes;
 using Xamarin.Forms;
 using MvvmCross.Forms.Views;
 using News.Core.ViewModels;
+using Plugin.Toast;
+using Plugin.Toast.Abstractions;
 using Xamarin.Essentials;
 
 namespace News.Forms.UI.Pages
@@ -28,6 +30,12 @@ namespace News.Forms.UI.Pages
         /// </summary>
         protected override void OnAppearing()
         {
+            var current = Connectivity.NetworkAccess;
+            bool hasConnection = current == NetworkAccess.Internet;
+
+            if (!hasConnection)
+                CrossToastPopUp.Current.ShowToastWarning("Интернет соединение отсутствует. Статья не будет загружена полностью",
+                    ToastLength.Long);
         }
 
         /// <summary>

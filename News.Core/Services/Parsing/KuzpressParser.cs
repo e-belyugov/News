@@ -379,9 +379,11 @@ namespace News.Core.Services.Parsing
                     article.SmallImage = smallImage;
                     article.HasSmallImage = smallImage != null;
                     */
+
+                    return true;
                 }
 
-                return true;
+                return false;
             }
             catch (Exception e)
             {

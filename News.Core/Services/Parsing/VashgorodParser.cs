@@ -28,6 +28,9 @@ namespace News.Core.Services.Parsing
         // Logger
         private readonly ILogger _logger;
 
+        // Article times dictionary
+        private readonly Dictionary<string, DateTime> _articleTimes = new Dictionary<string, DateTime>();
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -72,12 +75,17 @@ namespace News.Core.Services.Parsing
                 cleaned = cleaned.RemoveTagWithContent("img");
                 cleaned = cleaned.Replace("<p><strong></strong></p>", "");
 
+                // Removing video
+                cleaned = cleaned.RemoveTagWithContent("iframe");
+
+                /*
                 if (
                     cleaned.Contains("youtube")
                     || cleaned.Contains("<table")
                     || cleaned.Contains("vk.com/video")
                     || cleaned.Contains("360tv")
                     ) return "Skip";
+                */
 
                 // Article intro text
                 var introText = cleaned.SubstringBetweenSubstrings("<p><strong>", "</strong></p>").RemoveSpecialTags().Trim();
@@ -183,6 +191,16 @@ namespace News.Core.Services.Parsing
                                     articleItem.New = false;
                             }
 
+                            // Checking if article exists already
+                            var existingArticle = existingArticles.FirstOrDefault(x =>
+                                x.SourceMainLink == parserData.SourceMainLink && x.Title == title);
+                            if (existingArticle != null)
+                            {
+                                existingArticle.New = true;
+                                continue;
+                                //break;
+                            }
+
                             // Article image
                             byte[] smallImage = null;
                             var figureNode = articleNode.ChildNodes["figure"];
@@ -194,14 +212,21 @@ namespace News.Core.Services.Parsing
                                 smallImage = await _webService.GetImageAsync(imageLink);
                             }
 
-                            // Checking if article exists already
-                            var existingArticle = existingArticles.FirstOrDefault(x =>
-                                x.SourceMainLink == parserData.SourceMainLink && x.Title == title);
-                            if (existingArticle != null)
+                            // Article time
+                            var timeStamp = DateTime.Now;
+                            var timeString = articleNode.ChildNodes["div"]?.ChildNodes["time"]?.ChildNodes["div"]?.InnerText;
+                            //var timeString = timeNode?[0]?.InnerText;
+                            if (!String.IsNullOrEmpty(timeString))
                             {
-                                existingArticle.New = true;
-                                continue;
-                                //break;
+                                if (timeString.Contains("назад"))
+                                {
+                                    int multiplier = 1;
+                                    if (timeString.Contains("ч.")) multiplier = multiplier * 60;
+                                    timeString = timeString.Replace("ч. назад", "").Replace("мин назад", "");
+                                    timeString = timeString.Trim();
+                                    timeStamp = timeStamp.AddMinutes(-Convert.ToInt32(timeString) * multiplier);
+                                }
+                                if (timeString.Contains("вчера")) timeStamp = timeStamp.Date.AddHours(-7);
                             }
 
                             // Creating article
@@ -214,6 +239,7 @@ namespace News.Core.Services.Parsing
                                 Title = title,
                                 SmallImage = smallImage,
                                 HasSmallImage = smallImage != null,
+                                TimeStamp = timeStamp,
                                 New = true,
                                 Loaded = false
                             };

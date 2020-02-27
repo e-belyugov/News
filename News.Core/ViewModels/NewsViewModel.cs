@@ -185,6 +185,7 @@ namespace News.Core.ViewModels
 
                 //_lastError = _articleService.LastError;
                 //await RaisePropertyChanged(nameof(LastError));
+                IsBusy = false;
                 LastError = _articleService.LastError;
             }
             finally
@@ -204,10 +205,20 @@ namespace News.Core.ViewModels
                 LastError = "";
                 IsBusy = true;
 
-                if (!selectedArticle.Loaded) await _articleService.GetArticleAsync(selectedArticle);
+                if (!selectedArticle.Loaded)
+                {
+                    await _articleService.GetArticleAsync(selectedArticle);
+                    var article = Articles.FirstOrDefault(x => x.Id == selectedArticle.Id);
+                    if (article != null)
+                    {
+                        article.IntroText = selectedArticle.IntroText;
+                        await RaisePropertyChanged(nameof(Articles));
+                    }
+                }
 
                 await _navigationService.Navigate<ArticleViewModel, Article>(selectedArticle);
 
+                IsBusy = false;
                 LastError = _articleService.LastError;
             }
             finally

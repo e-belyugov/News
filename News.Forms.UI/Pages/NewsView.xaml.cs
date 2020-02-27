@@ -38,16 +38,15 @@ namespace News.Forms.UI.Pages
         /// </summary>
         protected override void OnAppearing()
         {
-            if (_firstRun)
-            {
-                RefreshButton_Clicked(null, null);
-                _firstRun = false;
+            if (!_firstRun) return;
 
-                // Developer function
-                IDevice device = DependencyService.Get<IDevice>();
-                string deviceIdentifier = device.GetIdentifier();
-                if (deviceIdentifier == "c14df6fcfd5ca219") ErrorButton.IsVisible = true;
-            }
+            RefreshButton_Clicked(null, null);
+            _firstRun = false;
+
+            // Developer function
+            IDevice device = DependencyService.Get<IDevice>();
+            string deviceIdentifier = device.GetIdentifier();
+            if (deviceIdentifier == "c14df6fcfd5ca219") ErrorButton.IsVisible = true;
         }
 
         /// <summary>

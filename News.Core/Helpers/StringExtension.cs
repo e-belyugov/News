@@ -116,7 +116,7 @@ namespace News.Core.Services.Parsing
         /// <summary>
         /// Removing tag with content
         /// </summary>
-        public static string RemoveTagWithContent(this string str, string tagName)
+        public static string RemoveTagWithContent (this string str, string tagName)
         {
             var substr = str.SubstringBetweenSubstrings("<" + tagName,">");
             str = str.Replace("<" + tagName + substr + ">", "");

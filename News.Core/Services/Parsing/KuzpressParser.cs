@@ -66,7 +66,9 @@ namespace News.Core.Services.Parsing
                     cleaned = cleaned.Replace("h6", "h3");
                     cleaned = cleaned.Replace("src=\"/i", "src=\"" + parserData.SourceMainLink + "/i");
                     cleaned = cleaned.Replace("src=", "width=\"500\" src=");
-                    cleaned = cleaned.RemoveTagWithContent("iframe");
+
+                    // Removing video
+                    for (int i = 0; i < 3; i++) cleaned = cleaned.RemoveTagWithContent("iframe");
 
                     cleaned = cleaned + "<p>Ссылка на статью: <a href=\"" + article.SourceLink + "\">" + parserData.SourceTitle + "</a></p>";
 
@@ -185,6 +187,9 @@ namespace News.Core.Services.Parsing
                             }
 
                             //_logger.Info("KUZPRESS : Begin parsing ARTICLE");
+
+                            // Skipping article with video
+                            if (title.ToUpper().Contains("ВИДЕО")) continue;
 
                             // Article link
                             node = item.ChildNodes["link"];

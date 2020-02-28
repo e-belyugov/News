@@ -18,7 +18,7 @@ namespace News.Core.Services.Database
     public class ArticleDatabase : IArticleDatabase
     {
         // User version
-        private readonly int _userVersion = 213;
+        private readonly int _userVersion = 214;
 
         // Logger
         private readonly ILogger _logger;
@@ -89,7 +89,7 @@ namespace News.Core.Services.Database
                         SourceParseLink = "http://kuzpress.ru/rss/rss.xml",
                         SourceTitle = "kuzpress.ru",
                         SourceEncoding = "windows-1251",
-                        Enabled = true
+                        Enabled = false
                     },
 
                     new ParserData
@@ -101,7 +101,7 @@ namespace News.Core.Services.Database
                         SourceParseLink = "https://nk-tv.com/feed",
                         SourceTitle = "nk-tv.com",
                         SourceEncoding = "utf-8",
-                        Enabled = true
+                        Enabled = false
                     },
 
                     new ParserData

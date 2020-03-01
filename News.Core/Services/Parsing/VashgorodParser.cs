@@ -66,7 +66,8 @@ namespace News.Core.Services.Parsing
                     "<div id=\"beacon-article-end\"></div>");
                 cleaned = cleaned.Replace(" dir=\"ltr\"", "").Trim();
                 cleaned = cleaned.Replace(" align=\"JUSTIFY\"", "").Trim();
-                cleaned = cleaned.Replace("height: 100%", "").Trim();
+                //cleaned = cleaned.Replace("height: 100%", "");
+                cleaned = cleaned.Replace("height: 100%", "width: 100%");
 
                 // Article large image link
                 article.LargeImageLink = cleaned.GetImgHref();

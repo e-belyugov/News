@@ -191,6 +191,10 @@ namespace News.Core.Services.Parsing
                                 foreach (var articleItem in existingArticles.Where(x =>
                                     x.SourceMainLink == parserData.SourceMainLink))
                                     articleItem.New = false;
+
+                                // Loading and parsing main source html
+                                //string mainHtml = await _webService.GetDataAsync("https://vk.com/vashgorod?own=0&count=20",
+                                //    Encoding.GetEncoding(parserData.SourceEncoding));
                             }
 
                             // Checking if article exists already

@@ -202,6 +202,7 @@ namespace News.Core.Services.Parsing
                                 introText = node.InnerHtml;
                                 introText = introText.Replace("<![CDATA[", "").Replace("&#8230;]]>","...");
                                 introText = introText.RemoveSpecialTags();
+                                introText = introText.Replace("г.", "");
 
                                 var dotIndex = introText.IndexOf(".");
                                 if (dotIndex != -1) introText = introText.Substring(0, dotIndex + 1);

@@ -10,6 +10,11 @@ using HtmlAgilityPack;
 using News.Core.Models;
 using News.Core.Services.Logging;
 using News.Core.Services.Web;
+using VkNet;
+using VkNet.Model;
+using VkNet.Model.Attachments;
+using VkNet.Model.RequestParams;
+using Article = News.Core.Models.Article;
 
 namespace News.Core.Services.Parsing
 {
@@ -48,26 +53,28 @@ namespace News.Core.Services.Parsing
             string cleaned = html;
             try
             {
-                if (
-                    cleaned.Contains("На правах рекламы")
-                    || cleaned.Contains("Билайн")
-                ) return "Skip";
+                //if (
+                //    cleaned.Contains("На правах рекламы")
+                //    || cleaned.Contains("Билайн")
+                //) return "Skip";
 
                 // Article timestamp
+                /*
                 var timeString =
                     cleaned.SubstringBetweenSubstrings("<meta itemprop=\"datePublished\" content=\"", "+07:00");
                 if (!DateTime.TryParseExact(timeString, "yyyy-MM-ddTHH:mm:ss",
                     CultureInfo.InvariantCulture, DateTimeStyles.None, out var timeStamp))
                     timeStamp = DateTime.MinValue;
                 article.TimeStamp = timeStamp;
+                */
 
                 // Article full text
                 cleaned = cleaned.SubstringBetweenSubstrings("<div id=\"beacon-article-start\"></div>",
                     "<div id=\"beacon-article-end\"></div>");
                 cleaned = cleaned.Replace(" dir=\"ltr\"", "").Trim();
                 cleaned = cleaned.Replace(" align=\"JUSTIFY\"", "").Trim();
-                //cleaned = cleaned.Replace("height: 100%", "");
-                cleaned = cleaned.Replace("height: 100%", "width: 100%");
+                cleaned = cleaned.Replace("height: 100%", "");
+                cleaned = cleaned.Replace("height: 100px", "width: 100%");
 
                 // Article large image link
                 article.LargeImageLink = cleaned.GetImgHref();
@@ -150,6 +157,8 @@ namespace News.Core.Services.Parsing
 
                 if (articleItems != null)
                 {
+                    WallGetObject intros = null; // Initializing intros
+
                     int articleCount = 0;
                     foreach (HtmlNode item in articleItems)
                     {
@@ -192,9 +201,15 @@ namespace News.Core.Services.Parsing
                                     x.SourceMainLink == parserData.SourceMainLink))
                                     articleItem.New = false;
 
-                                // Loading and parsing main source html
-                                //string mainHtml = await _webService.GetDataAsync("https://vk.com/vashgorod?own=0&count=20",
-                                //    Encoding.GetEncoding(parserData.SourceEncoding));
+                                // Loading intro text data
+                                VkApi api = new VkApi();
+                                api.Authorize(new ApiAuthParams
+                                {
+                                    AccessToken =
+                                        "71d33a9d71d33a9d71d33a9d8b71bcc543771d371d33a9d2f894e375f753ada3162788e"
+                                });
+                                intros = api.Wall.Get(new WallGetParams {OwnerId = 0, Domain = "vashgorod", Count = 30},
+                                    true);
                             }
 
                             // Checking if article exists already
@@ -220,7 +235,8 @@ namespace News.Core.Services.Parsing
 
                             // Article time
                             var timeStamp = DateTime.Now;
-                            var timeString = articleNode.ChildNodes["div"]?.ChildNodes["time"]?.ChildNodes["div"]?.InnerText;
+                            var timeString = articleNode.ChildNodes["div"]?.ChildNodes["time"]?.ChildNodes["div"]
+                                ?.InnerText;
                             //var timeString = timeNode?[0]?.InnerText;
                             if (!String.IsNullOrEmpty(timeString))
                             {
@@ -232,7 +248,30 @@ namespace News.Core.Services.Parsing
                                     timeString = timeString.Trim();
                                     timeStamp = timeStamp.AddMinutes(-Convert.ToInt32(timeString) * multiplier);
                                 }
+
                                 if (timeString.Contains("вчера")) timeStamp = timeStamp.Date.AddHours(-7);
+                            }
+
+                            // Article intro text
+                            string introText = "";
+                            if (intros != null)
+                            {
+                                for (int i = 0; i <= intros.WallPosts.Count - 1; i++)
+                                {
+                                    var post = intros.WallPosts[i];
+                                    if (post.Attachment.Instance is Link linkAttachment)
+                                    {
+                                        var articleLink = link.Replace("?from=main_feed", "");
+                                        articleLink = articleLink.Substring(articleLink.IndexOf("news/") + 5);
+                                        var vkLink = linkAttachment.Uri.AbsoluteUri;
+                                        vkLink = vkLink.Substring(vkLink.IndexOf("news/") + 5);
+                                        if (articleLink == vkLink)
+                                        {
+                                            introText = linkAttachment.Description;
+                                            break;
+                                        }
+                                    }
+                                }
                             }
 
                             // Creating article
@@ -243,6 +282,7 @@ namespace News.Core.Services.Parsing
                                 SourceTitle = parserData.SourceTitle,
                                 SourceLink = link,
                                 Title = title,
+                                IntroText = introText,
                                 SmallImage = smallImage,
                                 HasSmallImage = smallImage != null,
                                 TimeStamp = timeStamp,

@@ -36,5 +36,6 @@
     <PackageReference Include="MvvmCross" Version="6.4.1" />
     <PackageReference Include="MvvmCross.Plugin.Json" Version="6.4.1" />
     <PackageReference Include="sqlite-net-pcl" Version="1.6.292" />
+    <PackageReference Include="VkNet" Version="1.49.0" />
   </ItemGroup>
 </Project>

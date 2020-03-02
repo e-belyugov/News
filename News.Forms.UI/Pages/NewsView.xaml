@@ -66,19 +66,19 @@
                                             <StackLayout Grid.Column="1" Padding="10">
                                                 <Label Margin="0,-8" FontSize="Large" TextColor="#1976D2" Text="{Binding Title}" 
                                                        LineBreakMode="TailTruncation" MaxLines="4" VerticalTextAlignment="Center">
-                                                    <Label.Triggers>
+                                                    <!--<Label.Triggers>
                                                         <DataTrigger TargetType="Label" Binding="{Binding SourceTitle}" Value="vashgorod.ru">
                                                             <Setter Property="MaxLines" Value="6" />
                                                         </DataTrigger>
-                                                    </Label.Triggers>
+                                                    </Label.Triggers>-->
                                                 </Label>
                                                 <Label Margin="0,5,0,5" FontSize="Body" TextColor="Black" Text="{Binding IntroText}" 
                                                        LineBreakMode="TailTruncation" MaxLines="3" VerticalTextAlignment="Center">
-                                                    <Label.Triggers>
+                                                    <!--<Label.Triggers>
                                                         <DataTrigger TargetType="Label" Binding="{Binding SourceTitle}" Value="vashgorod.ru">
                                                             <Setter Property="IsVisible" Value="false" />
                                                         </DataTrigger>
-                                                    </Label.Triggers>
+                                                    </Label.Triggers>-->
                                                 </Label>
                                             </StackLayout>
                                             <Image Grid.Column="0" Source="{Binding SmallImage, TargetNullValue={x:Null}, 

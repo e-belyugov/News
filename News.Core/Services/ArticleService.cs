@@ -134,6 +134,7 @@ namespace News.Core.Services
             }
             catch (Exception e)
             {
+                article.Loaded = false;
                 _logger.Error(e);
                 return article;
             }

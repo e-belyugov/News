@@ -97,7 +97,7 @@ namespace News.Core.Services.Parsing
                 */
 
                 // Article intro text
-                var introText = cleaned.SubstringBetweenSubstrings("<p><strong>", "</strong></p>").RemoveSpecialTags().Trim();
+                var introText = cleaned.SubstringBetweenSubstrings("<p><strong>", "</strong></p>").ReplaceSpecialSymbols().Trim();
                 if (introText != "" && !introText.Contains("img"))
                 {
                     for (var i = 0; i <= 1; i++)
@@ -180,7 +180,7 @@ namespace News.Core.Services.Parsing
                             if (headerNode != null)
                             {
                                 title = headerNode.InnerText;
-                                title = title.RemoveSpecialTags().Trim();
+                                title = title.ReplaceSpecialSymbols().Trim();
                             }
 
                             // Checking data validity
@@ -268,6 +268,7 @@ namespace News.Core.Services.Parsing
                                         if (articleLink == vkLink)
                                         {
                                             introText = linkAttachment.Description;
+                                            introText = introText.ReplaceSpecialSymbols();
                                             break;
                                         }
                                     }

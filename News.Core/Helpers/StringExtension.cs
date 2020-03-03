@@ -74,7 +74,7 @@ namespace News.Core.Services.Parsing
         /// <summary>
         /// Removing special tags
         /// </summary>
-        public static string RemoveSpecialTags(this string str)
+        public static string ReplaceSpecialSymbols(this string str)
         {
             str = str.Replace("&quot;", "\"");
             str = str.Replace("&nbsp;", " ");
@@ -91,6 +91,8 @@ namespace News.Core.Services.Parsing
             str = str.Replace("&deg;C", " градусов");
             str = str.Replace("&bdquo;", "\"");
             str = str.Replace("&ldquo;", "\"");
+            str = str.Replace("&amp;#163;", "£");
+            str = str.Replace("&amp;#36;", "$");
 
             return str;
         }

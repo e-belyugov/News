@@ -129,7 +129,7 @@ namespace News.Core.Services.Parsing
                         {
                             // Article title
                             var title = node.InnerText;
-                            title = title.RemoveSpecialTags();
+                            title = title.ReplaceSpecialSymbols();
 
                             // Checking new data
                             if (articleCount == 1)
@@ -201,7 +201,7 @@ namespace News.Core.Services.Parsing
                             {
                                 introText = node.InnerHtml;
                                 introText = introText.Replace("<![CDATA[", "").Replace("&#8230;]]>","...");
-                                introText = introText.RemoveSpecialTags();
+                                introText = introText.ReplaceSpecialSymbols();
                                 introText = introText.Replace(" г.", "");
 
                                 var dotIndex = introText.IndexOf(". ");

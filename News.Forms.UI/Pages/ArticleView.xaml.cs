@@ -30,11 +30,15 @@ namespace News.Forms.UI.Pages
         /// </summary>
         protected override void OnAppearing()
         {
+            var articleViewModel = DataContext as ArticleViewModel;
+            var loaded = articleViewModel != null && articleViewModel.Article.Loaded;
+            if (loaded) return;
+
             var current = Connectivity.NetworkAccess;
             bool hasConnection = current == NetworkAccess.Internet;
 
             if (!hasConnection)
-                CrossToastPopUp.Current.ShowToastWarning("Интернет соединение отсутствует. Статья не будет загружена полностью",
+                CrossToastPopUp.Current.ShowToastWarning("Интернет соединение отсутствует. Статья может быть загружена не полностью",
                     ToastLength.Long);
         }
 

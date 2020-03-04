@@ -93,6 +93,7 @@ namespace News.Core.Services.Parsing
             str = str.Replace("&ldquo;", "\"");
             str = str.Replace("&amp;#163;", "£");
             str = str.Replace("&amp;#36;", "$");
+            str = str.Replace("&#8230;", "...");
 
             return str;
         }

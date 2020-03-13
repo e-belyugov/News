@@ -74,6 +74,8 @@ namespace News.Core.Services.Parsing
                 cleaned = cleaned.Replace(" dir=\"ltr\"", "").Trim();
                 cleaned = cleaned.Replace(" align=\"JUSTIFY\"", "").Trim();
                 cleaned = cleaned.Replace("height: 100%", "");
+                cleaned = cleaned.Replace("height: 75%", "");
+                cleaned = cleaned.Replace("width=\"75%\"", "width=\"100%\"");
                 cleaned = cleaned.Replace("height: 100px", "width: 100%");
 
                 // Article large image link

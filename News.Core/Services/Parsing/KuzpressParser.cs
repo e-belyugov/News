@@ -291,7 +291,8 @@ namespace News.Core.Services.Parsing
                 {
                     // Article reserved large image link
                     string reservedImageLink = "";
-                    if (!article.HasSmallImage)
+                    //if (!article.HasSmallImage)
+                    if (true)
                     {
                         var mainDoc = new HtmlDocument();
                         mainDoc.LoadHtml(html);
@@ -319,12 +320,15 @@ namespace News.Core.Services.Parsing
                         if (article.HasSmallImage)
                         {
                             // Small image instead of large
-                            _imageLinks.TryGetValue(link, out var imageLink);
-                            article.LargeImageLink = imageLink;
-                            article.HasLargeImage = true;
+                            if (_imageLinks.TryGetValue(link, out var imageLink))
+                            {
+                                article.LargeImageLink = imageLink;
+                                article.HasLargeImage = true;
+                            }
                         }
-                        else
+                        if (!article.HasLargeImage)
                         {
+                            // Reserved image
                             if (!string.IsNullOrEmpty(reservedImageLink))
                             {
                                 article.LargeImageLink = reservedImageLink;

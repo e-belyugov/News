@@ -46,7 +46,8 @@ namespace News.Forms.UI.Pages
             // Developer function
             IDevice device = DependencyService.Get<IDevice>();
             string deviceIdentifier = device.GetIdentifier();
-            if (deviceIdentifier == "c14df6fcfd5ca219") ErrorButton.IsVisible = true;
+            //if (deviceIdentifier == "c14df6fcfd5ca219") ErrorButton.IsVisible = true;
+            if (deviceIdentifier == "2388142fa3d41190") ErrorButton.IsVisible = true;
         }
 
         /// <summary>

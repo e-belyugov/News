@@ -14,7 +14,6 @@ namespace News.Forms.Droid
     [Activity(
         Label = "Новости НК",
         Icon = "@mipmap/ic_launcher",
-        RoundIcon = "@mipmap/ic_launcher_round",
         Theme = "@style/AppTheme",
         MainLauncher = true,
         ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation,

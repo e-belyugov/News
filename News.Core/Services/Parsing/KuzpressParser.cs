@@ -194,7 +194,11 @@ namespace News.Core.Services.Parsing
                             // Article link
                             node = item.ChildNodes["link"];
                             string link = "";
-                            if (node != null) link = node.InnerText;
+                            if (node != null)
+                            {
+                                link = node.InnerText;
+                                link = link.Replace("http:", "https:");
+                            }
 
                             // Article intro text
                             node = item.ChildNodes["description"];
@@ -252,9 +256,8 @@ namespace News.Core.Services.Parsing
                                 */
 
                                 // Article small image
-                                _imageLinks.TryGetValue(link, out var imageLink);
                                 article.HasSmallImage = false;
-                                if (imageLink != null)
+                                if (_imageLinks.TryGetValue(link, out var imageLink))
                                 {
                                     article.SmallImage = await _webService.GetImageAsync(imageLink);
                                     article.HasSmallImage = true;

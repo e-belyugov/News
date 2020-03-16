@@ -205,7 +205,7 @@ namespace News.Core.ViewModels
                 LastError = "";
                 IsBusy = true;
 
-                if (!selectedArticle.Loaded)
+                if (!selectedArticle.Loaded || String.IsNullOrEmpty(selectedArticle.Text))
                 {
                     await _articleService.GetArticleAsync(selectedArticle);
                     var article = Articles.FirstOrDefault(x => x.Id == selectedArticle.Id);

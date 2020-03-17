@@ -258,6 +258,7 @@ namespace News.Core.Services.Parsing
                             string introText = "";
                             if (intros != null)
                             {
+                                var introFound = false;
                                 for (int i = 0; i <= intros.WallPosts.Count - 1; i++)
                                 {
                                     var post = intros.WallPosts[i];
@@ -271,10 +272,12 @@ namespace News.Core.Services.Parsing
                                         {
                                             introText = linkAttachment.Description;
                                             introText = introText.ReplaceSpecialSymbols();
+                                            introFound = true;
                                             break;
                                         }
                                     }
                                 }
+                                if (!introFound) continue; // Skipping article without intro text
                             }
 
                             // Creating article

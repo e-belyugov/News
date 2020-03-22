@@ -94,6 +94,7 @@ namespace News.Core.Services.Parsing
             str = str.Replace("&amp;#163;", "£");
             str = str.Replace("&amp;#36;", "$");
             str = str.Replace("&#8230;", "...");
+            str = str.Replace("&amp;#8209;", "-");
 
             return str;
         }

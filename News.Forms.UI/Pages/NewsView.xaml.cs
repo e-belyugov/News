@@ -98,7 +98,7 @@ namespace News.Forms.UI.Pages
         {
             base.OnSizeAllocated(width, height);
 
-            var errorScrollViewHeight = ErrorScrollView.IsVisible ? 80 : 0;
+            var errorScrollViewHeight = ErrorScrollView.IsVisible ? 60 : 0;
 
             ButtonStackLayout.HeightRequest = width > height ? 200 + errorScrollViewHeight : 85 + errorScrollViewHeight;
         }

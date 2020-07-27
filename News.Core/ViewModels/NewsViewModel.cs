@@ -161,7 +161,7 @@ namespace News.Core.ViewModels
                     foreach (var article in result) Articles.Add(article);
                 }
 
-                // Getting remore data
+                // Getting remote data
                 if (remotely)
                 {
                     // Old data
